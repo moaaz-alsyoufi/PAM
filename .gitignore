@@ -1,1 +1,17 @@
+# Node modules
 /node_modules
+
+# Capacitor iOS build files
+ios/App/App.xcodeproj/project.xcworkspace/
+ios/App/App.xcodeproj/xcuserdata/
+ios/App/App.xcworkspace/xcuserdata/
+ios/App/Pods/
+ios/App/build/
+
+# Capacitor Android build files
+android/.gradle/
+android/app/build/
+android/build/
+
+/dist
+/.vs
