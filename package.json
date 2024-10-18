@@ -1,0 +1,60 @@
+{
+  "name": "daisyui-react-admin",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --open",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "latest": "yarn upgrade-interactive --latest"
+  },
+  "engines": {
+    "node": ">=18.18.0"
+  },
+  "dependencies": {
+    "@hookform/resolvers": "^3.3.4",
+    "@iconify/icons-lucide": "^1.2.135",
+    "@iconify/react": "^4.1.1",
+    "apexcharts": "^3.47.0",
+    "axios": "^1.6.8",
+    "axios-mock-adapter": "^1.22.0",
+    "clsx": "^2.1.0",
+    "daisyui": "^4.7.3",
+    "dayjs": "^1.11.10",
+    "filepond": "^4.30.6",
+    "filepond-plugin-image-preview": "^4.6.12",
+    "react": "^18.2.0",
+    "react-apexcharts": "^1.4.1",
+    "react-dom": "^18.2.0",
+    "react-filepond": "^7.1.2",
+    "react-helmet-async": "^2.0.4",
+    "react-hook-form": "^7.51.1",
+    "react-router-dom": "^6.22.3",
+    "simplebar": "^6.2.5",
+    "simplebar-react": "^3.2.4",
+    "sonner": "^1.4.3",
+    "tailwind-merge": "^2.2.2",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@trivago/prettier-plugin-sort-imports": "^4.3.0",
+    "@types/react": "^18.2.67",
+    "@types/react-dom": "^18.2.22",
+    "@typescript-eslint/eslint-plugin": "^7.3.1",
+    "@typescript-eslint/parser": "^7.3.1",
+    "@vitejs/plugin-react": "^4.2.1",
+    "autoprefixer": "^10.4.18",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.6",
+    "eslint-plugin-tailwindcss": "^3.15.1",
+    "path": "^0.12.7",
+    "prettier": "^3.2.5",
+    "prettier-plugin-tailwindcss": "^0.5.12",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5.4.2",
+    "vite": "^5.1.6"
+  }
+}
