@@ -1,82 +1,75 @@
-import googleMiniImage from "@/assets/images/brand-logo/google-mini.svg";
-
+import { useState } from "react";
 import eyeIcon from "@iconify/icons-lucide/eye";
 import eyeOffIcon from "@iconify/icons-lucide/eye-off";
 import keyRoundIcon from "@iconify/icons-lucide/key-round";
 import logInIcon from "@iconify/icons-lucide/log-in";
-import mailIcon from "@iconify/icons-lucide/mail";
-
+import userIcon from "@iconify/icons-lucide/user-2";
 import { Link } from "react-router-dom";
-
 import { Button, Checkbox } from "@/components/daisyui";
-
 import Icon from "@/components/Icon";
 import Logo from "@/components/Logo";
 import PageMetaData from "@/components/PageMetaData";
 import FormInput from "@/components/forms/FormInput";
 import routes from "@/services/routes";
-
 import ThemeToggle from "../components/ThemeToggle";
 import useLogin from "./use-login";
 
 const LoginPage = () => {
   const { isLoading, control, onSubmit, showPassword, toggleShowPassword } =
     useLogin();
+  const [isTermsAgreed, setIsTermsAgreed] = useState<boolean>(false);
 
   return (
     <>
       <PageMetaData title={"Login"} />
-      <div className="flex flex-col items-stretch p-8 lg:p-16">
+      <div className="flex flex-col w-full items-stretch py-16 px-8 lg:p-16 space-y-12">
         <div className="flex items-center justify-between">
           <Logo />
           <ThemeToggle />
         </div>
-        <h3 className="mt-12 text-center text-xl font-semibold lg:mt-24">
-          Login
-        </h3>
-        <h3 className="mt-2 text-center text-sm text-base-content/70">
-          Seamless Access, Secure Connection: Your Gateway to a Personalized
-          Experience.
-        </h3>
-        <div className="mt-10">
-          <div>
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text">Email Address</span>
+        <div className="text-center space-y-3">
+          <h3 className="text-3xl font-semibold">Login</h3>
+          <h3 className="text-lg text-base-content/70">
+            Seamless Access : Your Gateway to your Portal!.
+          </h3>
+        </div>
+        <div className="space-y-12">
+          <div className="space-y-6">
+            <div className="form-control ">
+              <label className="label ">
+                <span className="label-text text-base">Username</span>
               </label>
               <FormInput
-                size="sm"
+                size="md"
                 startIcon={
                   <Icon
-                    icon={mailIcon}
+                    icon={userIcon}
                     className="text-base-content/80"
                     fontSize={18}
                   />
                 }
                 control={control}
-                name={"email"}
-                placeholder="Email Address"
+                name={"username"}
                 className="w-full focus:border-transparent focus:outline-0"
                 bordered={false}
                 borderOffset={false}
               ></FormInput>
             </div>
-            <div className="form-control mt-3">
+            <div className="form-control">
               <label className="label">
-                <span className="label-text">Password</span>
+                <span className="label-text  text-base">Password</span>
               </label>
               <FormInput
-                size="sm"
+                size="md"
                 startIcon={
                   <Icon
                     icon={keyRoundIcon}
-                    className="text-base-content/80"
+                    className="text-base-content/80 form-control"
                     fontSize={18}
                   />
                 }
                 control={control}
                 name={"password"}
-                placeholder="Password"
                 type={showPassword ? "text" : "password"}
                 className="w-full focus:border-transparent focus:outline-0"
                 bordered={false}
@@ -109,21 +102,20 @@ const LoginPage = () => {
               <label className="label">
                 <span className="label-text"></span>
                 <Link
-                  className="label-text text-xs text-base-content/80"
+                  className="label-text text-sm text-base-content/80"
                   to={routes.auth.forgotPassword}
                 >
                   Forgot Password?
                 </Link>
               </label>
             </div>
-            <div className="mt-3 flex items-center gap-3">
+            <div className="flex items-center gap-3">
               <Checkbox
-                name="agreement"
-                id="agreement"
-                size="xs"
+                size="sm"
                 color="primary"
+                onChange={() => setIsTermsAgreed(!isTermsAgreed)}
               />
-              <label htmlFor="agreement">
+              <label className="text-lg">
                 I agree with{" "}
                 <span className="cursor-pointer text-primary underline">
                   terms and conditions
@@ -131,7 +123,7 @@ const LoginPage = () => {
               </label>
             </div>
           </div>
-          <div className="mt-6">
+          <div className="space-y-4">
             <Button
               color="primary"
               loading={isLoading}
@@ -139,30 +131,20 @@ const LoginPage = () => {
               className="gap-3 text-base"
               fullWidth
               startIcon={<Icon icon={logInIcon} fontSize={16} />}
+              disabled={!isTermsAgreed || isLoading}
             >
               Login
             </Button>
+            <p className="text-center text-base-content/80">
+              Haven&apos;t account{" "}
+              <Link
+                className="text-primary  hover:underline"
+                to={routes.auth.register}
+              >
+                Create One
+              </Link>
+            </p>
           </div>
-          <div className="mt-4">
-            <Button
-              size={"md"}
-              fullWidth
-              className="flex items-center gap-3 border-base-content/10  !text-base-content hover:border-transparent hover:bg-base-content/10"
-              variant={"outline"}
-            >
-              <img src={googleMiniImage} className="size-6" alt="" />
-              <span className="text-base">Login with Google</span>
-            </Button>
-          </div>
-          <p className="mt-6 text-center text-sm text-base-content/80">
-            Haven&apos;t account{" "}
-            <Link
-              className="text-primary  hover:underline"
-              to={routes.auth.register}
-            >
-              Create One
-            </Link>
-          </p>
         </div>
       </div>
     </>
