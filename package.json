@@ -14,6 +14,9 @@
     "node": ">=18.18.0"
   },
   "dependencies": {
+    "@capacitor/cli": "^6.1.2",
+    "@capacitor/core": "^6.1.2",
+    "@capacitor/ios": "^6.1.2",
     "@hookform/resolvers": "^3.9.0",
     "@iconify/icons-lucide": "^1.2.135",
     "@iconify/react": "^5.0.2",
