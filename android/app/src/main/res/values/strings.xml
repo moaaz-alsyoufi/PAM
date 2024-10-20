@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">PAM PORTAL</string>
+    <string name="title_activity_main">PAM PORTAL</string>
+    <string name="package_name">com.karamentreprises.pam</string>
+    <string name="custom_url_scheme">com.karamentreprises.pam</string>
+</resources>
