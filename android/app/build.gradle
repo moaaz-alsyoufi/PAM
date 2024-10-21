@@ -3,6 +3,16 @@ apply plugin: 'com.android.application'
 android {
     namespace "com.karamentreprises.pam"
     compileSdk rootProject.ext.compileSdkVersion
+
+    signingConfigs {
+        release {
+            keyAlias 'my-key-alias'
+            keyPassword 'simplepwd'
+            storeFile file('../acfportalkey23.jks')  // Path to the keystore
+            storePassword 'simplepwd'
+        }
+    }
+
     defaultConfig {
         applicationId "com.karamentreprises.pam"
         minSdkVersion rootProject.ext.minSdkVersion
@@ -18,7 +28,8 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            signingConfig signingConfigs.release
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
