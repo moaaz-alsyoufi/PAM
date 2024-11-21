@@ -45,12 +45,10 @@ const useLogin = () => {
       const response = await axios.post(`${ACTIVE_API_URL}login`, loginDate);
 
       toaster.success("Login successful...");
-      setLoggedInUser(response.data.token);
-
-      console.log(response.data.token);
+      setLoggedInUser(response.data.token, response.data.token);
 
       setIsLoading(false);
-      navigate(routes.dashboards.ecommerce);
+      navigate(routes.dashboard.index);
     } catch (error: any) {
       console.log("error: ", error);
 
