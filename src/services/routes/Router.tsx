@@ -1,5 +1,11 @@
 import { Suspense } from "react";
-import { Navigate, Route, Routes, useLocation } from "react-router-dom";
+import {
+  Navigate,
+  Route,
+  RouteProps,
+  Routes,
+  useLocation,
+} from "react-router-dom";
 
 import AdminLayout from "@/components/layout/admin";
 import AuthLayout from "@/components/layout/auth";
@@ -7,16 +13,25 @@ import routes from "@/services/routes";
 import allRoutes from "@/services/routes/all_routes";
 import { useAuthContext } from "@/states/auth";
 
-const Router = () => {
+const Router = (props: RouteProps) => {
   const { isLoggedIn } = useAuthContext();
   const location = useLocation();
 
   return (
     <Routes>
-      {/* Redirect root "/" to the login page */}
-      <Route path="/" element={<Navigate to={routes.auth.login} replace />} />
+      {/* Root Path */}
+      <Route
+        path="/"
+        element={
+          isLoggedIn() ? (
+            <Navigate to={routes.dashboard.index} replace />
+          ) : (
+            <Navigate to={routes.auth.login} replace />
+          )
+        }
+      />
 
-      {/* Admin routes */}
+      {/* Admin routes with AdminLayout */}
       <Route>
         {allRoutes.admin.map((route, index) => (
           <Route
@@ -24,7 +39,7 @@ const Router = () => {
             path={route.path}
             element={
               isLoggedIn() ? (
-                <AdminLayout>{route.element}</AdminLayout>
+                <AdminLayout {...props}>{route.element}</AdminLayout>
               ) : (
                 <Navigate
                   to={routes.auth.login + `?redirectTo=${location.pathname}`}
@@ -36,13 +51,13 @@ const Router = () => {
         ))}
       </Route>
 
-      {/* Auth routes */}
+      {/* Auth routes with AuthLayout */}
       <Route>
         {allRoutes.auth.map((route, index) => (
           <Route
             key={"auth-" + index}
             path={route.path}
-            element={<AuthLayout>{route.element}</AuthLayout>}
+            element={<AuthLayout {...props}>{route.element}</AuthLayout>}
           />
         ))}
       </Route>
