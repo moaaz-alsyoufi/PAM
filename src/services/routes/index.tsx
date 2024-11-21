@@ -1,80 +1,57 @@
 const routes = {
-    landing: "/landing",
-    home: "/dashboards/ecommerce",
-    docs: "/docs/introduction",
-    auth: {
-        login: "/auth/login",
-        register: "/auth/register",
-        forgotPassword: "/auth/forgot-password",
-        resetPassword: "/auth/reset-password",
+  auth: {
+    login: "/auth/login",
+    register: "/auth/register",
+    forgotPassword: "/auth/forgot-password",
+    resetPassword: "/auth/reset-password",
+  },
+  dashboard: {
+    index: "/dashboard",
+    orders: {
+      index: "/dashboard/orders",
+      show: (id: number | string) => `/dashboard/orders/${id}`,
     },
-    dashboards: {
-        ecommerce: "/dashboards/ecommerce",
+    products: {
+      index: "/dashboard/products",
     },
-    apps: {
-        ecommerce: {
-            orders: {
-                index: "/apps/ecommerce/orders",
-                show: (id: number | string) => `/apps/ecommerce/orders/${id}`,
-            },
-            products: {
-                index: "/apps/ecommerce/products",
-            },
-            customers: {
-                index: "/apps/ecommerce/customers",
-            },
-            sellers: {
-                index: "/apps/ecommerce/sellers",
-            },
-            shops: {
-                index: "/apps/ecommerce/shops",
-            },
-        },
-        fileManager: {
-            home: "/apps/file-manager",
-        },
-        chat: {
-            home: "/apps/chat",
-        },
+    users: {
+      index: "/dashboard/users",
     },
-    ui: {
-        components: {
-            accordion: "/ui/components/accordion",
-            alert: "/ui/components/alert",
-            avatar: "/ui/components/avatar",
-            badge: "/ui/components/badge",
-            breadcrumb: "/ui/components/breadcrumb",
-            button: "/ui/components/button",
-            countdown: "/ui/components/countdown",
-            drawer: "/ui/components/drawer",
-            dropdown: "/ui/components/dropdown",
-            loading: "/ui/components/loading",
-            menu: "/ui/components/menu",
-            modal: "/ui/components/modal",
-            pagination: "/ui/components/pagination",
-            progress: "/ui/components/progress",
-            step: "/ui/components/step",
-            tab: "/ui/components/tab",
-            timeline: "/ui/components/timeline",
-            toast: "/ui/components/toast",
-            tooltip: "/ui/components/tooltip",
-        },
-        forms: {
-            checkbox: "/ui/forms/checkbox",
-            file: "/ui/forms/file",
-            input: "/ui/forms/input",
-            radio: "/ui/forms/radio",
-            range: "/ui/forms/range",
-            rating: "/ui/forms/rating",
-            toggle: "/ui/forms/toggle",
-        },
+    chat: {
+      index: "/dashboard/chat",
+      send: (id: number | string) => `/dashboard/chat?receiverId=${id}`,
     },
-    pages: {},
-    externalLinks: {
-        discord: "https://discord.com/invite/S6TZxycVHs",
-        purchase: "https://daisyui.com/store/",
-        daisyui: "https://daisyui.com",
+    payments: {
+      index: "/dashboard/payments",
     },
+    delivery: {
+      index: "/dashboard/delivery",
+    },
+    deliveryEntity: {
+      index: "/dashboard/delivery-entities",
+    },
+    map: {
+      index: "/dashboard/map",
+    },
+  },
 };
 
 export default routes;
+
+export const flatRoutes = [
+  routes.dashboard.index,
+  routes.dashboard.orders.index,
+  routes.dashboard.chat.index,
+];
+
+export const adminRoutes = [
+  routes.dashboard.index,
+  routes.dashboard.products.index,
+  routes.dashboard.users.index,
+  routes.dashboard.deliveryEntity.index,
+  routes.dashboard.orders.index,
+  routes.dashboard.delivery.index,
+  routes.dashboard.payments.index,
+  routes.dashboard.map.index,
+  routes.dashboard.chat.index,
+];
