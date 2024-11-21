@@ -1,42 +1,51 @@
 import { useCallback } from "react";
-
 import createHookedContext from "@/hooks/create-hooked-context";
 import useSessionStorage from "@/hooks/use-session-storage";
-import { IAuthState, IAuthUser } from "@/types/auth";
+import { IAuthState } from "@/types/auth";
+import { IUser } from "@/types/apps/ecommerce";
+
+let accessToken: string | null = null;
 
 const useHook = () => {
-  const [state, setState] = useSessionStorage<IAuthState>(
-    "__PAM_REACT_ADMIN_AUTH__",
-    {}
+  const [authState, setState] = useSessionStorage<IAuthState>(
+    "__PAM_ADMIN_AUTH__",
+    { user: undefined, token: undefined }
   );
 
-  const setLoggedInUser = (user: IAuthUser) => {
-    updateState({ user });
+  accessToken = authState.token ?? null;
+
+  const setLoggedInUser = (user: IUser, token: string) => {
+    accessToken = token;
+    updateState({ user, token });
   };
 
   const updateState = (changes: Partial<IAuthState>) => {
-    setState({
-      ...state,
+    setState((prevState) => ({
+      ...prevState,
       ...changes,
-    });
+    }));
   };
 
   const isLoggedIn = useCallback(() => {
-    return true;
-    return state.user != null;
-  }, [state.user]);
+    return authState.user != null && accessToken != null;
+  }, [authState.user]);
 
   const logout = () => {
+    accessToken = null;
     updateState({
       user: undefined,
+      token: undefined,
     });
   };
 
+  const getToken = () => accessToken;
+
   return {
-    state,
+    authState,
     setLoggedInUser,
     isLoggedIn,
     logout,
+    getToken,
   };
 };
 
