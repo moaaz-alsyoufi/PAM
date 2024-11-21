@@ -1,5 +1,6 @@
-import { IAuthUser } from "./user";
+import { IUser } from "../apps/ecommerce";
 
 export type IAuthState = {
-    user?: IAuthUser;
+  user?: IUser;
+  token?: string;
 };
