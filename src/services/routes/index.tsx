@@ -15,7 +15,7 @@ const routes = {
       index: "/dashboard/products",
     },
     users: {
-      index: "/dashboard/users",
+      index: "/dashboard/users", 
     },
     chat: {
       index: "/dashboard/chat",
@@ -25,15 +25,40 @@ const routes = {
       index: "/dashboard/payments",
     },
     delivery: {
-      index: "/dashboard/delivery",
+      index: "/dashboard/delivery", 
     },
     deliveryEntity: {
       index: "/dashboard/delivery-entities",
     },
     map: {
       index: "/dashboard/map",
-    },
+    }
   },
+  // Add missing routes
+  landing: "/",
+  dashboards: {
+    ecommerce: "/dashboard",
+  },
+  ui: {
+    components: {
+      accordion: "/ui/components/accordion",
+    }
+  },
+  apps: {
+    chat: {
+      home: "/apps/chat",
+    },
+    ecommerce: {
+      orders: {
+        show: (id: number | string) => `/apps/ecommerce/orders/${id}`,
+      }
+    }
+  },
+  externalLinks: {
+    discord: "https://discord.gg/example",
+    purchase: "https://example.com/purchase",
+    daisyui: "https://daisyui.com"
+  }
 };
 
 export default routes;
