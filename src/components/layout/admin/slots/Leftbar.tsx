@@ -4,7 +4,6 @@ import SimpleBar from "simplebar-react";
 import "simplebar/dist/simplebar.css";
 
 import { Menu, MenuDetails, MenuItem, MenuTitle } from "@/components/daisyui";
-
 import Icon from "@/components/Icon";
 import Logo from "@/components/Logo";
 import { getActivatedLeftbarParentKeys } from "@/helpers/layout/admin/leftbar";
@@ -14,9 +13,11 @@ import { IMenuItem } from "@/types/layout/admin";
 const LeftMenuItem = ({
   menuItem,
   activated,
+  isAdmin,
 }: {
   menuItem: IMenuItem;
   activated: Set<string>;
+  isAdmin: boolean;
 }) => {
   const { icon, isTitle, label, children, url } = menuItem;
 
@@ -44,10 +45,15 @@ const LeftMenuItem = ({
     );
   }
 
+  // Filter children based on admin role
+  const filteredChildren = isAdmin
+    ? children
+    : children.filter((child) => !child.notAdmin);
+
   return (
     <MenuItem className="mb-0.5">
       <MenuDetails
-        open={selected}
+        open={true}
         label={
           <div className="flex items-center gap-2">
             {icon && <Icon icon={icon} fontSize={18} />}
@@ -55,8 +61,13 @@ const LeftMenuItem = ({
           </div>
         }
       >
-        {children.map((item, index) => (
-          <LeftMenuItem menuItem={item} key={index} activated={activated} />
+        {filteredChildren.map((item) => (
+          <LeftMenuItem
+            menuItem={item}
+            key={item.key}
+            activated={activated}
+            isAdmin={isAdmin}
+          />
         ))}
       </MenuDetails>
     </MenuItem>
@@ -71,10 +82,11 @@ const Leftbar = ({
   menuItems: IMenuItem[];
 }) => {
   const { pathname } = useLocation();
+  const isAdmin = true;
 
   const activatedParents = useMemo(
     () => new Set(getActivatedLeftbarParentKeys(menuItems, pathname)),
-    [pathname]
+    [pathname, menuItems]
   );
 
   return (
@@ -88,13 +100,16 @@ const Leftbar = ({
       </div>
       <SimpleBar className="h-[calc(100vh-64px)] lg:h-[calc(100vh-230px)] ">
         <Menu className="mb-6">
-          {menuItems.map((item, index) => (
-            <LeftMenuItem
-              menuItem={item}
-              key={index}
-              activated={activatedParents}
-            />
-          ))}
+          {menuItems
+            .filter((item) => isAdmin || !item.notAdmin)
+            .map((item) => (
+              <LeftMenuItem
+                menuItem={item}
+                key={item.key}
+                activated={activatedParents}
+                isAdmin={isAdmin}
+              />
+            ))}
         </Menu>
       </SimpleBar>
     </div>
