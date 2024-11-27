@@ -35,11 +35,17 @@ const filterMenuItems = (
     .map((item) => ({
       ...item,
       children: item.children
-        ? item.children.filter((child) => !child.notAdmin || userRoleId === 1)
+        ? item.children.filter(
+            (child) => !child.notAdmin || userRoleId === 1 || userRoleId === 9
+          )
         : [],
     }))
     .filter(
-      (item) => item.children.length > 0 || !item.notAdmin || userRoleId === 1
+      (item) =>
+        item.children.length > 0 ||
+        !item.notAdmin ||
+        userRoleId === 1 ||
+        userRoleId === 9
     );
 };
 
@@ -107,28 +113,31 @@ const Topbar = () => {
           >
             <DropdownToggle
               button={false}
-              className={`relative hover:bg-blue-100 hover:text-blue-900 flex flex-col justify-center items-center h-full w-full rounded-full hover:cursor-pointer ${
+              className={`relative  hover:bg-blue-100 hover:text-blue-900  flex flex-col justify-center items-center h-full w-full rounded-full hover:cursor-pointer ${
                 isChildActive
-                  ? "bg-blue-200 hover:bg-blue-200 text-blue-900"
-                  : ""
+                  ? "bg-blue-200 hover:bg-blue-200 text-blue-900 dark:bg-blue-500 dark:hover:bg-blue-500 dark:text-base-content"
+                  : "text-base-content hover:text-base-content/80 "
               }`}
             >
               {selectedDropdown === item.key && (
-                <div className="absolute -top-[34px] left-1/2 transform -translate-x-1/2 w-4 h-4 rotate-45 bg-base-100 dark:bg-base-content z-50" />
+                <div className="absolute -top-9 left-1/2 transform -translate-x-1/2 w-6 h-8 rotate-180 z-50">
+                  <div className="absolute inset-0 bg-transparent [clip-path:polygon(0_0,100%_0,50%_50%)]"></div>
+                  <div className="absolute inset-0 bg-base-100 [clip-path:polygon(50%_50%,0_100%,100%_100%)]"></div>
+                </div>
               )}
 
               <Icon icon={item.icon || ""} fontSize={24} />
             </DropdownToggle>
-            <DropdownMenu className="mt-4 w-52 dark:bg-base-content dark:text-base-100 mb-6 shadow-xl">
+            <DropdownMenu className="mb-8 w-52">
               {/* Arrow pointing to the toggle */}
               {item.children.map((child) => (
                 <DropdownItem
                   key={child.key}
                   onClick={() => navigate(child.url || "")}
-                  className={`text-sm/none h-full w-full flex items-center space-x-2 hover:bg-blue-100 hover:text-blue-900 ${
+                  className={`text-sm/none h-full w-full flex items-center space-x-2 z-100 ${
                     isActive(child.url)
-                      ? "bg-blue-200 text-blue-900 hover:bg-blue-200"
-                      : ""
+                      ? "bg-blue-200 text-blue-900 hover:bg-blue-200 dark:bg-blue-500 dark:hover:bg-blue-500 dark:text-base-content"
+                      : "text-base-content hover:text-base-content/80 "
                   }`}
                 >
                   <Icon icon={child.icon || ""} fontSize={24} />
@@ -144,7 +153,7 @@ const Topbar = () => {
           <Link
             key={item.key}
             to={item.url || "#"}
-            className={`hover:bg-blue-100 hover:text-blue-900 flex flex-col justify-center items-center h-full w-full rounded-full cursor-pointer ${isActive(item.url) ? "bg-blue-200 hover:bg-blue-200 text-blue-900" : ""}`}
+            className={`  flex flex-col justify-center items-center h-full w-full rounded-full cursor-pointer ${isActive(item.url) ? "bg-blue-300 hover:bg-blue-300 text-blue-900 dark:bg-blue-500 dark:hover:bg-blue-500 dark:text-base-content" : "text-base-content hover:text-base-content/80 "}`}
           >
             <Icon icon={item.icon || ""} fontSize={24} />
           </Link>
@@ -157,27 +166,31 @@ const Topbar = () => {
     <>
       {/* sm screen */}
       {isLoggedIn() && filteredMenuItems.length !== 0 && (
-        <div className="md:hidden btm-nav z-50 fixed bottom-4 flex w-full max-w-[90%] rounded-full shadow-xl p-2 mx-auto space-x-1 dark:bg-base-content dark:text-base-100  border border-base-300">
+        <div
+          className={cn(
+            "md:hidden btm-nav z-50 flex w-full shadow-xl p-2 mx-auto space-x-1 fixed bottom-4 max-w-[90%] rounded-full  border border-base-300"
+            // { "bottom-8": isIOS }
+          )}
+        >
           {renderMenuItems(filteredMenuItems)}
 
           {/* Account Dropdown */}
           <Dropdown vertical="top" end>
             <DropdownToggle
               button={false}
-              className="relative hover:bg-blue-100 hover:text-blue-900 rounded-full hover:cursor-pointer flex flex-col justify-center items-center h-full w-full"
+              className="relative rounded-full hover:cursor-pointer flex flex-col justify-center items-center h-full w-full text-base-content hover:text-base-content/80"
               onFocus={() => setSelectedAccountDropdown(true)}
               onBlur={() => setSelectedAccountDropdown(false)}
             >
               {selectedAccountDropdown && (
-                <div className="absolute -top-[34px] left-1/2 transform -translate-x-1/2 w-4 h-4 rotate-45 bg-base-100 dark:bg-base-content z-50" />
+                <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 w-4 h-4 rotate-45 bg-base-100 z-50" />
               )}
               <Icon icon={userIcon} fontSize={24} className="mb-0.5" />
             </DropdownToggle>
-            <DropdownMenu className="mt-4 w-52 dark:bg-base-content dark:text-base-100 mb-6 shadow-xl">
+            <DropdownMenu className="mb-8 w-52">
               <DropdownItem>
-                <p className="text-sm/none">
-                  {authState.user?.name ?? "User Name"}
-                </p>
+                {/* <p className="text-sm/none">{authState.user?.name}</p> */}
+                <p className="text-sm/none">User Name</p>
               </DropdownItem>
               <hr className="-mx-2 my-1 border-base-content/10" />
               <DropdownItem onClick={handleSpanClick}>
@@ -227,12 +240,13 @@ const Topbar = () => {
                 button={false}
               >
                 <div className="flex items-center gap-2">
-                  <p className="text-sm/none">
-                    {authState.user?.name ?? "User Name"}
-                  </p>
+                  <div className="flex items-center space-x-2">
+                    {/* <p className="text-sm/none">{authState.user?.name}</p> */}
+                    <p className="text-sm/none">User Name</p>
+                  </div>
                 </div>
               </DropdownToggle>
-              <DropdownMenu className="mt-4 w-52">
+              <DropdownMenu className="mb-8 w-52">
                 <hr className="-mx-2 my-1 border-base-content/10" />
 
                 <DropdownItem className="text-error" onClick={deleteAccount}>
@@ -264,7 +278,7 @@ const Topbar = () => {
               >
                 Account
               </DropdownToggle>
-              <DropdownMenu className="mt-4 w-52">
+              <DropdownMenu className="mb-8 w-52">
                 <DropdownItem onClick={() => navigate(routes.auth.login)}>
                   <p className="text-sm/none my-1 border-base-content/10">
                     Login
