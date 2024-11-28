@@ -7,51 +7,70 @@ const routes = {
   },
   dashboard: {
     index: "/dashboard",
-    orders: {
-      index: "/dashboard/orders",
-      show: (id: number | string) => `/dashboard/orders/${id}`,
+    requests: {
+      index: "/dashboard/operations/requests",
     },
-    products: {
-      index: "/dashboard/products",
+    purchaseOrders: {
+      index: "/dashboard/operations/purchase-orders",
     },
-    users: {
-      index: "/dashboard/users",
+    deliveryNotes: {
+      index: "/dashboard/operations/delivery-notes",
     },
-    chat: {
-      index: "/dashboard/chat",
-      send: (id: number | string) => `/dashboard/chat?receiverId=${id}`,
+    paymentOrders: {
+      index: "/dashboard/operations/payment-orders",
     },
-    payments: {
-      index: "/dashboard/payments",
+    returnSlips: {
+      index: "/dashboard/operations/return-slips",
     },
-    delivery: {
-      index: "/dashboard/delivery",
+    siteMovement: {
+      index: "/dashboard/reports/site_movement",
     },
-    deliveryEntity: {
-      index: "/dashboard/delivery-entities",
+    procurementStatistics: {
+      index: "/dashboard/reports/procurement-statistics",
     },
-    map: {
-      index: "/dashboard/map",
+    paymentStatistics: {
+      index: "/dashboard/reports/payment-statistics",
+    },
+    siteStock: {
+      index: "/dashboard/reports/site-stock",
+    },
+
+    ai: {
+      index: "/dashboard/ai",
+    },
+    tutorials: {
+      index: "/dashboard/tutorials",
+    },
+  },
+
+  adminTools: {
+    companies: {
+      index: "/admin-tools/companies",
+    },
+    administrators: {
+      index: "/admin-tools/administrators",
+    },
+    costCodeLibrary: {
+      index: "/admin-tools/cost-code-library",
+    },
+    categoriesAndItems: {
+      index: "/admin-tools/categories-and-items",
+    },
+    branchData: {
+      sites: {
+        index: "/admin-tools/branch-data/sites",
+      },
+      users: {
+        index: "/admin-tools/branch-data/users",
+      },
+      suppliers: {
+        index: "/admin-tools/branch-data/suppliers",
+      },
+      subcontractors: {
+        index: "/admin-tools/branch-data/subcontractors",
+      },
     },
   },
 };
 
 export default routes;
-
-export const flatRoutes = [
-  routes.dashboard.index,
-  routes.dashboard.orders.index,
-  routes.dashboard.chat.index,
-];
-
-export const adminRoutes = [
-  routes.dashboard.index,
-  routes.dashboard.products.index,
-  routes.dashboard.users.index,
-  routes.dashboard.deliveryEntity.index,
-  routes.dashboard.orders.index,
-  routes.dashboard.delivery.index,
-  routes.dashboard.payments.index,
-  routes.dashboard.map.index,
-  routes.dashboard.chat.index,
-];
