@@ -20,6 +20,11 @@ const dashboardRoutes: RoutesProps[] = [
     element: cw(lazy(() => import("@/pages/admin/dashboards"))),
   },
   {
+    path: "/dashboard/ai",
+    name: "dashboard.ai.index",
+    element: cw(lazy(() => import("@/pages/admin/ai"))),
+  },
+  {
     path: "/dashboard/products",
     name: "dashboard.products.index",
     element: cw(lazy(() => import("@/pages/admin/dashboards"))),
