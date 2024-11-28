@@ -11,6 +11,7 @@ const INIT_STATE: ILayoutState = {
   leftbar: {
     hide: false,
     drawerOpen: false,
+    dashboard: true,
   },
 };
 
@@ -46,6 +47,15 @@ const useHook = () => {
     });
   };
 
+  const toggleDashboard = () => {
+    updateState({
+      leftbar: {
+        ...state.leftbar,
+        dashboard: !state.leftbar.dashboard,
+      },
+    });
+  };
+
   const updateState = (newState: Partial<ILayoutState>) => {
     setState({ ...state, ...newState });
   };
@@ -63,6 +73,7 @@ const useHook = () => {
   return {
     state,
     toggleLeftbarDrawer,
+    toggleDashboard,
     changeTheme,
     reset,
   };
