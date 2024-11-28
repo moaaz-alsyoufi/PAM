@@ -22,44 +22,89 @@ const dashboardRoutes: RoutesProps[] = [
   {
     path: "/dashboard/products",
     name: "dashboard.products.index",
-    // element: cw(lazy(() => import("@/pages/admin/products"))),
+    element: cw(lazy(() => import("@/pages/admin/dashboards"))),
   },
   {
     path: "/dashboard/orders",
     name: "dashboard.orders.index",
-    // element: cw(lazy(() => import("@/pages/admin/orders"))),
+    element: cw(lazy(() => import("@/pages/admin/dashboards"))),
   },
 
   {
     path: "/dashboard/users",
     name: "dashboard.users.index",
-    element: cw(lazy(() => import("@/pages/admin/users"))),
+    element: cw(lazy(() => import("@/pages/admin/dashboards"))),
   },
   {
     path: "/dashboard/delivery-entities",
     name: "deliveryEntity.index",
-    // element: cw(lazy(() => import("@/pages/admin/deliveryEntities"))),
+    element: cw(lazy(() => import("@/pages/admin/dashboards"))),
   },
   {
     path: "/dashboard/chat",
     name: "chats.index",
-    // element: cw(lazy(() => import("@/pages/admin/chat"))),
+    element: cw(lazy(() => import("@/pages/admin/dashboards"))),
   },
 
   {
     path: "/dashboard/payments",
     name: "payments.index",
-    // element: cw(lazy(() => import("@/pages/admin/payments"))),
+    element: cw(lazy(() => import("@/pages/admin/dashboards"))),
   },
   {
     path: "/dashboard/delivery",
     name: "delivery.index",
-    // element: cw(lazy(() => import("@/pages/admin/delivery"))),
+    element: cw(lazy(() => import("@/pages/admin/dashboards"))),
   },
   {
     path: "/dashboard/map",
     name: "map.index",
-    // element: cw(lazy(() => import("@/pages/admin/map"))),
+    element: cw(lazy(() => import("@/pages/admin/dashboards"))),
+  },
+];
+
+const adminToolsRoutes: RoutesProps[] = [
+  {
+    path: "/dashboard/products",
+    name: "dashboard.products.index",
+    element: cw(lazy(() => import("@/pages/admin/dashboards"))),
+  },
+  {
+    path: "/dashboard/orders",
+    name: "dashboard.orders.index",
+    element: cw(lazy(() => import("@/pages/admin/dashboards"))),
+  },
+
+  {
+    path: "/dashboard/users",
+    name: "dashboard.users.index",
+    element: cw(lazy(() => import("@/pages/admin/dashboards"))),
+  },
+  {
+    path: "/dashboard/delivery-entities",
+    name: "deliveryEntity.index",
+    element: cw(lazy(() => import("@/pages/admin/dashboards"))),
+  },
+  {
+    path: "/dashboard/chat",
+    name: "chats.index",
+    element: cw(lazy(() => import("@/pages/admin/dashboards"))),
+  },
+
+  {
+    path: "/dashboard/payments",
+    name: "payments.index",
+    element: cw(lazy(() => import("@/pages/admin/dashboards"))),
+  },
+  {
+    path: "/dashboard/delivery",
+    name: "delivery.index",
+    element: cw(lazy(() => import("@/pages/admin/dashboards"))),
+  },
+  {
+    path: "/dashboard/map",
+    name: "map.index",
+    element: cw(lazy(() => import("@/pages/admin/dashboards"))),
   },
 ];
 
@@ -100,7 +145,7 @@ const otherRoutes: RoutesProps[] = [
 ];
 
 const allRoutes = {
-  admin: [...dashboardRoutes],
+  admin: [...dashboardRoutes, ...adminToolsRoutes],
   auth: authRoutes,
   other: otherRoutes,
 };
