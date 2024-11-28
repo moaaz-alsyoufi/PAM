@@ -71,6 +71,31 @@ const routes = {
       },
     },
   },
+  // Add missing routes
+  landing: "/",
+  dashboards: {
+    ecommerce: "/dashboard",
+  },
+  ui: {
+    components: {
+      accordion: "/ui/components/accordion",
+    },
+  },
+  apps: {
+    chat: {
+      home: "/apps/chat",
+    },
+    ecommerce: {
+      orders: {
+        show: (id: number | string) => `/apps/ecommerce/orders/${id}`,
+      },
+    },
+  },
+  externalLinks: {
+    discord: "https://discord.gg/example",
+    purchase: "https://example.com/purchase",
+    daisyui: "https://daisyui.com",
+  },
 };
 
 export default routes;
