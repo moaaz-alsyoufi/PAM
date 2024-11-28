@@ -25,7 +25,7 @@ const AdminLayout = ({ children }: { children: any }) => {
     setActiveMenuItems(
       leftbar.dashboard ? dashboardMenuItems : adminToolsMenuItems
     );
-  }, [pathname, leftbar]);
+  }, [pathname, leftbar.dashboard]);
 
   return (
     <>
