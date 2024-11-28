@@ -45,7 +45,7 @@ const AdminLayout = ({ children }: { children: any }) => {
             </div>
             <div className="main-wrapper overflow-auto">
               <div className="flex h-full flex-col ">
-                <Topbar />
+                <Topbar menuItems={activeMenuItems} />
                 <div className="content-wrapper">
                   <Suspense>{children}</Suspense>
                 </div>

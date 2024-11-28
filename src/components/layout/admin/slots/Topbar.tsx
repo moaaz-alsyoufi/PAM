@@ -25,21 +25,10 @@ import routes from "@/services/routes";
 import { useAuthContext } from "@/states/auth";
 import { useLayoutContext } from "@/states/layout";
 import { IMenuItem } from "@/types/layout/admin";
-import { dashboardMenuItems } from "@/data/layout/admin";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { cn } from "@/helpers/utils/cn";
 
-// Function to filter menu items based on user role and other criteria
-const filterMenuItems = (items: IMenuItem[]) => {
-  return items
-    .map((item) => ({
-      ...item,
-      children: item.children ? item.children : [],
-    }))
-    .filter((item) => item.children.length > 0);
-};
-
-const Topbar = () => {
+const Topbar = ({ menuItems }: { menuItems: IMenuItem[] }) => {
   const { toggleLeftbarDrawer, state, toggleDashboard } = useLayoutContext();
   const { logout, isLoggedIn } = useAuthContext();
   const navigate = useNavigate();
@@ -48,12 +37,6 @@ const Topbar = () => {
     useState<boolean>(false);
 
   const isActive = (url?: string) => location.pathname === url;
-
-  // Filter menu items based on user role
-  const filteredMenuItems = useMemo(
-    () => filterMenuItems(dashboardMenuItems),
-    [dashboardMenuItems]
-  );
 
   const doLogout = () => {
     logout();
@@ -154,14 +137,14 @@ const Topbar = () => {
   return (
     <>
       {/* sm screen */}
-      {isLoggedIn() && filteredMenuItems.length !== 0 && (
+      {isLoggedIn() && menuItems.length !== 0 && (
         <div
           className={cn(
             "md:hidden btm-nav z-50 flex w-full shadow-xl p-2 mx-auto space-x-1 fixed bottom-4 max-w-[90%] rounded-full  border border-base-300"
             // { "bottom-8": isIOS }
           )}
         >
-          {renderMenuItems(filteredMenuItems)}
+          {renderMenuItems(menuItems)}
 
           {/* Account Dropdown */}
           <Dropdown vertical="top" end>
@@ -208,7 +191,7 @@ const Topbar = () => {
       )}
 
       {/* md screen */}
-      {isLoggedIn() && filteredMenuItems.length !== 0 ? (
+      {isLoggedIn() && menuItems.length !== 0 ? (
         <Navbar className="z-10 border-b border-base-200 px-3 hidden md:block">
           <NavbarStart className="gap-3">
             <Button
