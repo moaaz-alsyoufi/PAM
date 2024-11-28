@@ -4,6 +4,8 @@ import logoutIcon from "@iconify/icons-lucide/log-out";
 import userIcon from "@iconify/icons-lucide/user-circle";
 import menuIcon from "@iconify/icons-lucide/menu";
 import deleteIcon from "@iconify/icons-lucide/trash-2";
+import adminToolsIcon from "@iconify/icons-lucide/user-cog";
+import dashboardIcon from "@iconify/icons-lucide/airplay";
 import {
   Button,
   Dropdown,
@@ -14,6 +16,7 @@ import {
   NavbarCenter,
   NavbarEnd,
   NavbarStart,
+  Tooltip,
 } from "@/components/daisyui";
 import Icon from "@/components/Icon";
 import ThemeToggleButton from "@/components/ThemeToggleButton";
@@ -37,7 +40,7 @@ const filterMenuItems = (items: IMenuItem[]) => {
 };
 
 const Topbar = () => {
-  const { toggleLeftbarDrawer, state } = useLayoutContext();
+  const { toggleLeftbarDrawer, state, toggleDashboard } = useLayoutContext();
   const { logout, isLoggedIn } = useAuthContext();
   const navigate = useNavigate();
   const [selectedDropdown, setSelectedDropdown] = useState<string | null>(null);
@@ -219,6 +222,22 @@ const Topbar = () => {
           </NavbarStart>
           <NavbarCenter></NavbarCenter>
           <NavbarEnd className="gap-1.5">
+            <Tooltip
+              message={state.leftbar.dashboard ? "Admin Tools" : "Dashboard"}
+              position="bottom"
+            >
+              <Button
+                className="btn btn-circle btn-ghost btn-sm"
+                onClick={toggleDashboard}
+              >
+                <Icon
+                  icon={
+                    state.leftbar.dashboard ? adminToolsIcon : dashboardIcon
+                  }
+                  fontSize={20}
+                />
+              </Button>
+            </Tooltip>
             <ThemeToggleButton shape="circle" color="ghost" size="sm" />
             <Dropdown vertical="bottom" end>
               <DropdownToggle
