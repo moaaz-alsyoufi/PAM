@@ -1,4 +1,4 @@
-import { Suspense, useEffect } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
 import { Drawer } from "@/components/daisyui";
@@ -6,7 +6,9 @@ import { Drawer } from "@/components/daisyui";
 import Leftbar from "@/components/layout/admin/slots/Leftbar";
 import Topbar from "@/components/layout/admin/slots/Topbar";
 import { dashboardMenuItems } from "@/data/layout/admin";
+import { adminToolsMenuItems } from "@/data/layout/admin";
 import { useLayoutContext } from "@/states/layout";
+import { IMenuItem } from "@/types/layout/admin";
 
 const AdminLayout = ({ children }: { children: any }) => {
   const {
@@ -14,11 +16,16 @@ const AdminLayout = ({ children }: { children: any }) => {
     toggleLeftbarDrawer,
   } = useLayoutContext();
 
+  const [activeMenuItems, setActiveMenuItems] = useState<IMenuItem[]>([]);
+
   const { pathname } = useLocation();
 
   useEffect(() => {
     toggleLeftbarDrawer(false);
-  }, [pathname]);
+    setActiveMenuItems(
+      leftbar.dashboard ? dashboardMenuItems : adminToolsMenuItems
+    );
+  }, [pathname, leftbar]);
 
   return (
     <>
@@ -30,11 +37,11 @@ const AdminLayout = ({ children }: { children: any }) => {
                 open={leftbar.drawerOpen}
                 onClickOverlay={() => toggleLeftbarDrawer(false)}
                 className={`z-20 `}
-                side={<Leftbar menuItems={dashboardMenuItems} />}
+                side={<Leftbar menuItems={activeMenuItems} />}
               ></Drawer>
             </div>
             <div className="hidden lg:block">
-              <Leftbar menuItems={dashboardMenuItems} hide={leftbar.hide} />
+              <Leftbar menuItems={activeMenuItems} hide={leftbar.hide} />
             </div>
             <div className="main-wrapper overflow-auto">
               <div className="flex h-full flex-col ">
