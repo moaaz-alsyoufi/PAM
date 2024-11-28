@@ -22,38 +22,24 @@ import routes from "@/services/routes";
 import { useAuthContext } from "@/states/auth";
 import { useLayoutContext } from "@/states/layout";
 import { IMenuItem } from "@/types/layout/admin";
-import { adminMenuItems } from "@/data/layout/admin";
+import { dashboardMenuItems } from "@/data/layout/admin";
 import { useMemo, useState } from "react";
 import { cn } from "@/helpers/utils/cn";
 
 // Function to filter menu items based on user role and other criteria
-const filterMenuItems = (
-  items: IMenuItem[],
-  userRoleId: number | undefined
-) => {
+const filterMenuItems = (items: IMenuItem[]) => {
   return items
     .map((item) => ({
       ...item,
-      children: item.children
-        ? item.children.filter(
-            (child) => !child.notAdmin || userRoleId === 1 || userRoleId === 9
-          )
-        : [],
+      children: item.children ? item.children : [],
     }))
-    .filter(
-      (item) =>
-        item.children.length > 0 ||
-        !item.notAdmin ||
-        userRoleId === 1 ||
-        userRoleId === 9
-    );
+    .filter((item) => item.children.length > 0);
 };
 
 const Topbar = () => {
   const { toggleLeftbarDrawer, state } = useLayoutContext();
-  const { logout, authState, isLoggedIn } = useAuthContext();
+  const { logout, isLoggedIn } = useAuthContext();
   const navigate = useNavigate();
-  const userRoleId = authState.user?.roleId;
   const [selectedDropdown, setSelectedDropdown] = useState<string | null>(null);
   const [selectedAccountDropdown, setSelectedAccountDropdown] =
     useState<boolean>(false);
@@ -62,8 +48,8 @@ const Topbar = () => {
 
   // Filter menu items based on user role
   const filteredMenuItems = useMemo(
-    () => filterMenuItems(adminMenuItems, userRoleId),
-    [adminMenuItems, userRoleId]
+    () => filterMenuItems(dashboardMenuItems),
+    [dashboardMenuItems]
   );
 
   const doLogout = () => {

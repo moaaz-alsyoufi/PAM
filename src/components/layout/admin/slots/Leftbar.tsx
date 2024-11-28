@@ -45,11 +45,6 @@ const LeftMenuItem = ({
     );
   }
 
-  // Filter children based on admin role
-  const filteredChildren = isAdmin
-    ? children
-    : children.filter((child) => !child.notAdmin);
-
   return (
     <MenuItem className="mb-0.5">
       <MenuDetails
@@ -61,7 +56,7 @@ const LeftMenuItem = ({
           </div>
         }
       >
-        {filteredChildren.map((item) => (
+        {children.map((item) => (
           <LeftMenuItem
             menuItem={item}
             key={item.key}
@@ -98,18 +93,16 @@ const Leftbar = ({
       <div className="flex h-16 items-center justify-center">
         <Logo />
       </div>
-      <SimpleBar className="h-[calc(100vh-64px)] lg:h-[calc(100vh-230px)] ">
+      <SimpleBar className="h-full">
         <Menu className="mb-6">
-          {menuItems
-            .filter((item) => isAdmin || !item.notAdmin)
-            .map((item) => (
-              <LeftMenuItem
-                menuItem={item}
-                key={item.key}
-                activated={activatedParents}
-                isAdmin={isAdmin}
-              />
-            ))}
+          {menuItems.map((item) => (
+            <LeftMenuItem
+              menuItem={item}
+              key={item.key}
+              activated={activatedParents}
+              isAdmin={isAdmin}
+            />
+          ))}
         </Menu>
       </SimpleBar>
     </div>

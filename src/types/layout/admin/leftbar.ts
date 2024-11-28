@@ -7,5 +7,4 @@ export type IMenuItem = {
   isTitle?: boolean;
   url?: string;
   children?: IMenuItem[];
-  notAdmin?: boolean;
 };
