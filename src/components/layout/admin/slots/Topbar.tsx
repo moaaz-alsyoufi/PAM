@@ -54,6 +54,15 @@ const Topbar = ({ menuItems }: { menuItems: IMenuItem[] }) => {
     }
   };
 
+  const handleToggleDashboard = () => {
+    toggleDashboard();
+    // if (state.leftbar.dashboard) {
+    //   navigate(routes.adminTools.companies.index);
+    // } else {
+    //   navigate(routes.dashboard.index);
+    // }
+  };
+
   const renderMenuItems = (items: IMenuItem[]) => {
     return items.map((item) => {
       // Render logic for menu items (omitted for brevity)
@@ -138,56 +147,67 @@ const Topbar = ({ menuItems }: { menuItems: IMenuItem[] }) => {
     <>
       {/* sm screen */}
       {isLoggedIn() && menuItems.length !== 0 && (
-        <div
-          className={cn(
-            "md:hidden btm-nav z-50 flex w-full shadow-xl p-2 mx-auto space-x-1 fixed bottom-4 max-w-[90%] rounded-full  border border-base-300"
-            // { "bottom-8": isIOS }
-          )}
-        >
-          {renderMenuItems(menuItems)}
+        <>
+          <Button
+            className="btn btn-circle btn-sm fixed top-6 right-10  btn-primary md:hidden"
+            onClick={handleToggleDashboard}
+          >
+            <Icon
+              icon={state.leftbar.dashboard ? adminToolsIcon : dashboardIcon}
+              fontSize={18}
+            />
+          </Button>
+          <div
+            className={cn(
+              "md:hidden btm-nav z-50 flex w-full shadow-xl p-2 mx-auto space-x-1 fixed bottom-4 max-w-[90%] rounded-full  border border-base-300"
+              // { "bottom-8": isIOS }
+            )}
+          >
+            {renderMenuItems(menuItems)}
 
-          {/* Account Dropdown */}
-          <Dropdown vertical="top" end>
-            <DropdownToggle
-              button={false}
-              className="relative rounded-full hover:cursor-pointer flex flex-col justify-center items-center h-full w-full text-base-content hover:text-base-content/80"
-              onFocus={() => setSelectedAccountDropdown(true)}
-              onBlur={() => setSelectedAccountDropdown(false)}
-            >
-              {selectedAccountDropdown && (
-                <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 w-4 h-4 rotate-45 bg-base-100 z-50" />
-              )}
-              <Icon icon={userIcon} fontSize={24} className="mb-0.5" />
-            </DropdownToggle>
-            <DropdownMenu className="mb-8 w-52">
-              <DropdownItem>
-                {/* <p className="text-sm/none">{authState.user?.name}</p> */}
-                <p className="text-sm/none">User Name</p>
-              </DropdownItem>
-              <hr className="-mx-2 my-1 border-base-content/10" />
-              <DropdownItem onClick={handleSpanClick}>
-                <ThemeToggleButton
-                  id="themeToggleButton"
-                  shape="circle"
-                  color="ghost"
-                  size="xs"
-                />
-                <span className="hidden dark:inline">Light mode</span>
-                <span className="dark:hidden">Dark mode</span>
-              </DropdownItem>
-              <hr className="-mx-2 my-1 border-base-content/10" />
-              <DropdownItem className="text-error" onClick={deleteAccount}>
-                <Icon icon={deleteIcon} fontSize={24} />
-                Delete Account
-              </DropdownItem>
-              <hr className="-mx-2 my-1 border-base-content/10" />
-              <DropdownItem className="text-error" onClick={doLogout}>
-                <Icon icon={logoutIcon} fontSize={24} />
-                Logout
-              </DropdownItem>
-            </DropdownMenu>
-          </Dropdown>
-        </div>
+            {/* Account Dropdown */}
+            <Dropdown vertical="top" end>
+              <DropdownToggle
+                button={false}
+                className="relative rounded-full hover:cursor-pointer flex flex-col justify-center items-center h-full w-full text-base-content hover:text-base-content/80"
+                onFocus={() => setSelectedAccountDropdown(true)}
+                onBlur={() => setSelectedAccountDropdown(false)}
+              >
+                {selectedAccountDropdown && (
+                  <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 w-4 h-4 rotate-45 bg-base-100 z-50" />
+                )}
+                <Icon icon={userIcon} fontSize={24} className="mb-0.5" />
+              </DropdownToggle>
+              <DropdownMenu className="mb-8 w-52">
+                <DropdownItem>
+                  {/* <p className="text-sm/none">{authState.user?.name}</p> */}
+                  <p className="text-sm/none">User Name</p>
+                </DropdownItem>
+                <hr className="-mx-2 my-1 border-base-content/10" />
+                <DropdownItem onClick={handleSpanClick}>
+                  <ThemeToggleButton
+                    id="themeToggleButton"
+                    shape="circle"
+                    color="ghost"
+                    size="xs"
+                  />
+                  <span className="hidden dark:inline">Light mode</span>
+                  <span className="dark:hidden">Dark mode</span>
+                </DropdownItem>
+                <hr className="-mx-2 my-1 border-base-content/10" />
+                <DropdownItem className="text-error" onClick={deleteAccount}>
+                  <Icon icon={deleteIcon} fontSize={24} />
+                  Delete Account
+                </DropdownItem>
+                <hr className="-mx-2 my-1 border-base-content/10" />
+                <DropdownItem className="text-error" onClick={doLogout}>
+                  <Icon icon={logoutIcon} fontSize={24} />
+                  Logout
+                </DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
+          </div>
+        </>
       )}
 
       {/* md screen */}
@@ -211,7 +231,7 @@ const Topbar = ({ menuItems }: { menuItems: IMenuItem[] }) => {
             >
               <Button
                 className="btn btn-circle btn-ghost btn-sm"
-                onClick={toggleDashboard}
+                onClick={handleToggleDashboard}
               >
                 <Icon
                   icon={
