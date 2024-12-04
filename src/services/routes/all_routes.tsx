@@ -38,7 +38,7 @@ const dashboardRoutes: RoutesProps[] = [
   {
     path: "/dashboard/users",
     name: "dashboard.users.index",
-    element: cw(lazy(() => import("@/pages/admin/dashboards"))),
+    element: cw(lazy(() => import("@/pages/admin/users"))),
   },
   {
     path: "/dashboard/delivery-entities",
@@ -83,7 +83,7 @@ const adminToolsRoutes: RoutesProps[] = [
   {
     path: "/dashboard/users",
     name: "dashboard.users.index",
-    element: cw(lazy(() => import("@/pages/admin/dashboards"))),
+    element: cw(lazy(() => import("@/pages/admin/users"))),
   },
   {
     path: "/dashboard/delivery-entities",
