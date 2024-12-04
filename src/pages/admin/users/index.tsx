@@ -1,20 +1,15 @@
 import PageMetaData from "@/components/PageMetaData";
 import PageTitle from "@/components/PageTitle";
-
-import UserTable from "./UserTable";
-import UserAccordions from "./UserAccordion";
+import MyTable from "@/components/Table";
 
 const Users = () => {
   return (
     <div>
       <PageMetaData title={"Users"} />
 
-      <PageTitle title={"Customers"} subMenu={"Dashboard"} />
-      <div className="mt-5 hidden md:inline">
-        <UserTable />
-      </div>
-      <div className="mt-5 md:hidden">
-        <UserAccordions />
+      <PageTitle title={"Users"} subMenu={"Dashboard"} />
+      <div>
+        <MyTable />
       </div>
     </div>
   );
