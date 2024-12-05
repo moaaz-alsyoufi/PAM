@@ -7,7 +7,7 @@ const Users = () => {
     <div>
       <PageMetaData title={"Users"} />
 
-      <PageTitle title={"Users"} subMenu={"Dashboard"} />
+      <PageTitle title={"Users"} subMenu={"Admin tools"} center="Branch Data" />
       <div>
         <PAMTable />
       </div>
