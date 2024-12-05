@@ -40,7 +40,11 @@ const PAMTable = () => {
 
       {/* Accordion for Mobile */}
       <div className="block md:hidden">
-        <AccordionComponent />
+        <AccordionComponent
+          columns={columns}
+          accordionData={tableData}
+          actions={true}
+        />
       </div>
     </div>
   );
