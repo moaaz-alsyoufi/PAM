@@ -149,13 +149,14 @@ const Topbar = ({ menuItems }: { menuItems: IMenuItem[] }) => {
       {isLoggedIn() && menuItems.length !== 0 && (
         <>
           <Button
-            className="btn btn-circle btn-sm fixed top-6 right-10  btn-primary md:hidden"
+            className="btn btn-sm fixed top-2 right-10  btn-primary md:hidden"
             onClick={handleToggleDashboard}
           >
             <Icon
               icon={state.leftbar.dashboard ? adminToolsIcon : dashboardIcon}
               fontSize={18}
             />
+            <span>{state.leftbar.dashboard ? "Admin Tools" : "Dashboard"}</span>
           </Button>
           <div
             className={cn(
