@@ -53,13 +53,22 @@ const TableComponent: React.FC<TableProps> = ({
     if (!sortColumn) return filteredData;
 
     return [...filteredData].sort((a, b) => {
-      const aValue = a[sortColumn as keyof IUser];
-      const bValue = b[sortColumn as keyof IUser];
+      const aValue = a[sortColumn];
+      const bValue = b[sortColumn];
 
-      if (!aValue || !bValue) return 0;
-      if (aValue < bValue) return sortOrder === "asc" ? -1 : 1;
-      if (aValue > bValue) return sortOrder === "asc" ? 1 : -1;
-      return 0;
+      if (aValue === undefined || bValue === undefined) return 0;
+
+      if (typeof aValue === "string" && typeof bValue === "string") {
+        return sortOrder === "asc"
+          ? aValue.localeCompare(bValue)
+          : bValue.localeCompare(aValue);
+      }
+
+      if (typeof aValue === "number" && typeof bValue === "number") {
+        return sortOrder === "asc" ? aValue - bValue : bValue - aValue;
+      }
+
+      return 0; // Fallback if values are not comparable
     });
   }, [filteredData, sortColumn, sortOrder]);
 
@@ -138,19 +147,33 @@ const TableComponent: React.FC<TableProps> = ({
                         }
                       )}
                     >
-                      {column}
+                      <div
+                        className="flex justify-start items-center cursor-pointer"
+                        onClick={() => handleSort(column)}
+                      >
+                        <span>{column}</span>
+                        {sortColumn === column && (
+                          <Icon
+                            icon={
+                              sortOrder === "asc" ? sortAscIcon : sortDescIcon
+                            }
+                            className="ml-1"
+                            fontSize={14}
+                          />
+                        )}
+                      </div>
                     </th>
                   ))}
                   {actions && (
-                    <th className="border-b border-base-content/5 pl-2 pr-6 py-3 text-sm text-right  font-normal">
+                    <th className="border-b border-base-content/5 pl-2 pr-6 py-3 text-sm text-right font-normal">
                       Actions
                     </th>
                   )}
                 </tr>
               </thead>
               <tbody>
-                {tableData.length > 0 ? (
-                  tableData.map((row, index) => (
+                {sortedData.length > 0 ? (
+                  sortedData.map((row, index) => (
                     <tr key={index} className="hover:bg-base-200/40">
                       {columns.map((column) => (
                         <td
