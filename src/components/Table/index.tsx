@@ -27,6 +27,15 @@ const PAMTable = () => {
     },
   ];
 
+  const inputFields = [
+    { name: "name", label: "Name", type: "text", required: true },
+    { name: "email", label: "Email", type: "email", required: true },
+    { name: "roleId", label: "Role", type: "select", required: true },
+    { name: "phone", label: "Phone", type: "text", required: false },
+
+    // Add more fields as needed
+  ];
+
   return (
     <div className="mt-5">
       {/* Table for Desktop */}
@@ -35,6 +44,7 @@ const PAMTable = () => {
           columns={columns}
           tableData={tableData}
           actions={true}
+          inputFields={inputFields}
         />
       </div>
 
@@ -44,6 +54,7 @@ const PAMTable = () => {
           columns={columns}
           accordionData={tableData}
           actions={true}
+          inputFields={inputFields}
         />
       </div>
     </div>
