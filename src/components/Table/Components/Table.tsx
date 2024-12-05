@@ -24,12 +24,19 @@ interface TableProps {
   tableData: any[];
   columns: string[];
   actions: boolean;
+  inputFields: Array<{
+    name: string;
+    label: string;
+    type: string;
+    required: boolean;
+  }>;
 }
 
 const TableComponent: React.FC<TableProps> = ({
   tableData,
   columns,
   actions,
+  inputFields,
 }) => {
   const [sortColumn, setSortColumn] = useState<string | null>(null);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
@@ -258,12 +265,20 @@ const TableComponent: React.FC<TableProps> = ({
           </div>
         </CardBody>
       </Card>
-      <DialogComponent
+      {/* <DialogComponent
         dialogRef={dialogRef}
         handleHide={handleHide}
         dialogType={dialogType}
         current={currentRow}
         onSuccess={handleSuccess}
+      /> */}
+      <DialogComponent
+        handleHide={handleHide}
+        dialogRef={dialogRef}
+        dialogType={dialogType}
+        current={currentRow}
+        onSuccess={handleSuccess}
+        inputFields={inputFields}
       />
     </>
   );

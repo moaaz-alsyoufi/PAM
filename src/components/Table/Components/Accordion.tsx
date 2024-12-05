@@ -20,6 +20,12 @@ interface AccordionsProps {
   accordionData: any[];
   columns: string[];
   actions: boolean;
+  inputFields: Array<{
+    name: string;
+    label: string;
+    type: string;
+    required: boolean;
+  }>;
 }
 
 const Accordion: React.FC<AccordionProps> = ({
@@ -84,6 +90,7 @@ const Accordion: React.FC<AccordionProps> = ({
 const AccordionComponent: React.FC<AccordionsProps> = ({
   actions,
   accordionData,
+  inputFields,
 }) => {
   const { dialogRef, handleShow, handleHide } = useDialog();
   const [dialogType, setDialogType] = useState<"Add" | "Edit">("Add");
@@ -137,6 +144,7 @@ const AccordionComponent: React.FC<AccordionsProps> = ({
         dialogType={dialogType}
         current={currentRow}
         onSuccess={handleSuccess}
+        inputFields={inputFields}
       />
     </>
   );
