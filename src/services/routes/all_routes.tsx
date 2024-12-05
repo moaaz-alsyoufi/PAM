@@ -81,8 +81,8 @@ const adminToolsRoutes: RoutesProps[] = [
   },
 
   {
-    path: "/dashboard/users",
-    name: "dashboard.users.index",
+    path: "/admin-tools/branch-data/users",
+    name: "admin-tools.branch-data.users.index",
     element: cw(lazy(() => import("@/pages/admin/users"))),
   },
   {
