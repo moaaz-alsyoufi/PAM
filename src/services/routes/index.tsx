@@ -23,7 +23,7 @@ const routes = {
       index: "/dashboard/operations/return-slips",
     },
     siteMovement: {
-      index: "/dashboard/reports/site_movement",
+      index: "/dashboard/reports/site-movement",
     },
     procurementStatistics: {
       index: "/dashboard/reports/procurement-statistics",

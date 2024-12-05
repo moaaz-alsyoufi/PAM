@@ -25,46 +25,78 @@ const dashboardRoutes: RoutesProps[] = [
     element: cw(lazy(() => import("@/pages/admin/dashboard/ai"))),
   },
   {
-    path: "/dashboard/products",
-    name: "dashboard.products.index",
-    element: cw(lazy(() => import("@/pages/admin/dashboard/dashboards"))),
+    path: "/dashboard/tutorials",
+    name: "dashboard.tutorials.index",
+    element: cw(lazy(() => import("@/pages/admin/dashboard/tutorials"))),
   },
   {
-    path: "/dashboard/orders",
-    name: "dashboard.orders.index",
-    element: cw(lazy(() => import("@/pages/admin/dashboard/dashboards"))),
-  },
-
-  {
-    path: "/dashboard/users",
-    name: "dashboard.users.index",
-    element: cw(lazy(() => import("@/pages/admin/users"))),
-  },
-  {
-    path: "/dashboard/delivery-entities",
-    name: "deliveryEntity.index",
-    element: cw(lazy(() => import("@/pages/admin/dashboard/dashboards"))),
-  },
-  {
-    path: "/dashboard/chat",
-    name: "chats.index",
-    element: cw(lazy(() => import("@/pages/admin/dashboard/dashboards"))),
+    path: "/dashboard/operations/requests",
+    name: "dashboard.operations.requests.index",
+    element: cw(
+      lazy(() => import("@/pages/admin/dashboard/operations/requests"))
+    ),
   },
 
   {
-    path: "/dashboard/payments",
-    name: "payments.index",
-    element: cw(lazy(() => import("@/pages/admin/dashboard/dashboards"))),
+    path: "/dashboard/operations/purchase-orders",
+    name: "dashboard.operations.purchase-orders.index",
+    element: cw(
+      lazy(() => import("@/pages/admin/dashboard/operations/purchaseOrders"))
+    ),
   },
   {
-    path: "/dashboard/delivery",
-    name: "delivery.index",
-    element: cw(lazy(() => import("@/pages/admin/dashboard/dashboards"))),
+    path: "/dashboard/operations/delivery-notes",
+    name: "dashboard.operations.delivery-notes.index",
+    element: cw(
+      lazy(() => import("@/pages/admin/dashboard/operations/deliveryNotes"))
+    ),
   },
   {
-    path: "/dashboard/map",
-    name: "map.index",
-    element: cw(lazy(() => import("@/pages/admin/dashboard/dashboards"))),
+    path: "/dashboard/operations/payment-orders",
+    name: "dashboard.operations.payment-orders.index",
+    element: cw(
+      lazy(() => import("@/pages/admin/dashboard/operations/paymentOrders"))
+    ),
+  },
+
+  {
+    path: "/dashboard/operations/return-slips",
+    name: "dashboard.operations.return-slips.index",
+    element: cw(
+      lazy(() => import("@/pages/admin/dashboard/operations/returnSlips"))
+    ),
+  },
+
+  {
+    path: "/dashboard/reports/site-movement",
+    name: "dashboard.reports.site-movement.index",
+    element: cw(
+      lazy(() => import("@/pages/admin/dashboard/reports/siteMovement"))
+    ),
+  },
+
+  {
+    path: "/dashboard/reports/procurement-statistics",
+    name: "dashboard.reports.procurement-statistics.index",
+    element: cw(
+      lazy(
+        () => import("@/pages/admin/dashboard/reports/procurementStatistics")
+      )
+    ),
+  },
+  {
+    path: "/dashboard/reports/payment-statistics",
+    name: "dashboard.reports.payment-statistics.index",
+    element: cw(
+      lazy(() => import("@/pages/admin/dashboard/reports/paymentStatistics"))
+    ),
+  },
+  {
+    path: "/dashboard/reports/site-stock",
+    name: "dashboard.reports.site-stock.index",
+    element: cw(
+      lazy(() => import("@/pages/admin/dashboard/reports/siteStock"))
+    ),
   },
 ];
 
