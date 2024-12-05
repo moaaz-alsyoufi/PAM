@@ -1,6 +1,6 @@
 import PageMetaData from "@/components/PageMetaData";
 import PageTitle from "@/components/PageTitle";
-import MyTable from "@/components/Table";
+import PAMTable from "@/components/Table";
 
 const Users = () => {
   return (
@@ -9,7 +9,7 @@ const Users = () => {
 
       <PageTitle title={"Users"} subMenu={"Dashboard"} />
       <div>
-        <MyTable />
+        <PAMTable />
       </div>
     </div>
   );
