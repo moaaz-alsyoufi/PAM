@@ -10,14 +10,23 @@ type PageTitleProps = {
 
 const PageTitle = ({ title, subMenu, center }: PageTitleProps) => {
   return (
-    <div className="flex items-center justify-between">
+    <div className="hidden lg:flex items-center justify-between">
       <h3 className="text-lg font-medium">{title}</h3>
-      {center != null && center}
+
       <Breadcrumbs className="hidden p-0 sm:inline">
-        <BreadcrumbsItem href="/" className="text-base-content/60">
+        <BreadcrumbsItem className="text-base-content/60">
           {subMenu}
         </BreadcrumbsItem>
-        <BreadcrumbsItem>{title}</BreadcrumbsItem>
+        {center ? (
+          <>
+            <BreadcrumbsItem className="text-base-content/60">
+              {center}
+            </BreadcrumbsItem>
+            <BreadcrumbsItem>{title}</BreadcrumbsItem>
+          </>
+        ) : (
+          <BreadcrumbsItem>{title}</BreadcrumbsItem>
+        )}
       </Breadcrumbs>
     </div>
   );
