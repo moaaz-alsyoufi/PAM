@@ -5,7 +5,11 @@ import { Drawer } from "@/components/daisyui";
 
 import Leftbar from "@/components/layout/admin/slots/Leftbar";
 import Topbar from "@/components/layout/admin/slots/Topbar";
-import { dashboardMenuItems } from "@/data/layout/admin";
+import {
+  dashboardMenuItems,
+  mobileAdminToolsMenuItems,
+  mobileDashboardMenuItems,
+} from "@/data/layout/admin";
 import { adminToolsMenuItems } from "@/data/layout/admin";
 import { useLayoutContext } from "@/states/layout";
 import { IMenuItem } from "@/types/layout/admin";
@@ -17,6 +21,9 @@ const AdminLayout = ({ children }: { children: any }) => {
   } = useLayoutContext();
 
   const [activeMenuItems, setActiveMenuItems] = useState<IMenuItem[]>([]);
+  const [mobileActiveMenuItems, setMobileActiveMenuItems] = useState<
+    IMenuItem[]
+  >([]);
 
   const { pathname } = useLocation();
 
@@ -24,6 +31,10 @@ const AdminLayout = ({ children }: { children: any }) => {
     toggleLeftbarDrawer(false);
     setActiveMenuItems(
       leftbar.dashboard ? dashboardMenuItems : adminToolsMenuItems
+    );
+
+    setMobileActiveMenuItems(
+      leftbar.dashboard ? mobileDashboardMenuItems : mobileAdminToolsMenuItems
     );
   }, [pathname, leftbar.dashboard]);
 
@@ -45,7 +56,7 @@ const AdminLayout = ({ children }: { children: any }) => {
             </div>
             <div className="main-wrapper overflow-auto">
               <div className="flex h-full flex-col ">
-                <Topbar menuItems={activeMenuItems} />
+                <Topbar menuItems={mobileActiveMenuItems} />
                 <div className="content-wrapper">
                   <Suspense>{children}</Suspense>
                 </div>
