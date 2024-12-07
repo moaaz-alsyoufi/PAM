@@ -1,4 +1,11 @@
-import { cloneElement, Fragment, isValidElement, ReactElement, ReactNode } from 'react';
+// utils.ts
+import {
+  cloneElement,
+  Fragment,
+  isValidElement,
+  ReactElement,
+  ReactNode,
+} from 'react';
 import { twMerge } from 'tailwind-merge';
 
 interface BaseProps {
@@ -11,46 +18,57 @@ interface WrapperProps extends BaseProps {
   onClick?: () => void;
 }
 
-interface ReactElementWithProps extends ReactElement {
-  props: BaseProps;
-}
-
 export const wrapElement = ({
   node,
   wrapper,
   props = {},
 }: {
   node: ReactNode;
-  wrapper: ReactElement;
+  wrapper: ReactElement<any>;
   props?: WrapperProps;
-}) => {
+}): ReactElement => {
   if (!node) {
-    return cloneElement<BaseProps>(wrapper, props);
+    return cloneElement(wrapper, props);
   }
 
   if (!isValidElement(node)) {
-    return cloneElement<BaseProps>(wrapper, props, node);
+    return cloneElement(wrapper, props, node);
   }
 
-  const nodeElement = node as ReactElementWithProps;
+  const nodeElement = node as ReactElement<BaseProps>;
 
   if (isReactFragment(nodeElement)) {
-    return cloneElement<BaseProps>(
+    return cloneElement(
       wrapper,
       {
         ...props,
-        className: twMerge(nodeElement.props?.className, props?.className),
+        className: twMerge(
+          nodeElement.props?.className,
+          props.className
+        ),
       },
-      nodeElement.props.children,
+      nodeElement.props.children
     );
   }
 
-  return cloneElement<BaseProps>(nodeElement, {
-    ...props,
-    className: twMerge(nodeElement.props?.className, props?.className),
-  });
+  return cloneElement(
+    nodeElement,
+    {
+      ...props,
+      className: twMerge(
+        nodeElement.props?.className,
+        props.className
+      ),
+    },
+    nodeElement.props.children
+  );
 };
 
-export const isReactFragment = (node: ReactElement): boolean => {
-  return node.type === Fragment || node.type?.toString() === 'Symbol(react.fragment)';
+function isReactFragment(node: ReactElement): boolean {
+  return node.type === Fragment;
+}
+
+// Utility function (if needed)
+export const isSingleStringChild = (children: ReactNode): boolean => {
+  return typeof children === 'string';
 };
