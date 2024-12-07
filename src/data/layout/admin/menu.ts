@@ -1,15 +1,24 @@
-import packageIcon from "@iconify/icons-lucide/package";
 import packageCheckIcon from "@iconify/icons-lucide/package-check";
+import listOrderedIcon from "@iconify/icons-lucide/list-ordered";
+import paperIcon from "@iconify/icons-lucide/newspaper";
+import rewindIcon from "@iconify/icons-lucide/skip-back";
 import airplayIcon from "@iconify/icons-lucide/airplay";
 import usersIcon from "@iconify/icons-lucide/users";
-import chatIcon from "@iconify/icons-lucide/message-square";
 import DeliveryEntityIcon from "@iconify/icons-lucide/user";
-import PaymentsIcon from "@iconify/icons-lucide/badge-cent";
+import PaymentsIcon from "@iconify/icons-lucide/dollar-sign";
 import adminIcon from "@iconify/icons-lucide/user-cog";
 import OperationsIcon from "@iconify/icons-lucide/settings";
-import MapIcon from "@iconify/icons-lucide/map-pinned";
-
+import warehouseIcon from "@iconify/icons-lucide/warehouse";
+import alignstart from "@iconify/icons-lucide/align-start-vertical";
+import alignhorizontaljustifystart from "@iconify/icons-lucide/align-horizontal-justify-start";
+import layers from "@iconify/icons-lucide/layers";
+import aarrow from "@iconify/icons-lucide/arrow-up-0-1";
+import compass from "@iconify/icons-lucide/compass";
+import squarelibrary from "@iconify/icons-lucide/library";
+import listcollapse from "@iconify/icons-lucide/list-checks";
 import routes from "@/services/routes";
+import compassIcon from "@iconify/icons-lucide/compass";
+import layoutlist from "@iconify/icons-lucide/layout-list";
 import { IMenuItem } from "@/types/layout/admin";
 
 export const dashboardMenuItems: IMenuItem[] = [
@@ -28,13 +37,13 @@ export const dashboardMenuItems: IMenuItem[] = [
 
   {
     key: "requests",
-    icon: packageCheckIcon,
+    icon: listOrderedIcon,
     label: "Requests",
     url: routes.dashboard.requests.index,
   },
   {
     key: "purchase-orders",
-    icon: packageCheckIcon,
+    icon: paperIcon,
     label: "Purchase Orders",
     url: routes.dashboard.purchaseOrders.index,
   },
@@ -52,7 +61,7 @@ export const dashboardMenuItems: IMenuItem[] = [
   },
   {
     key: "return-slips",
-    icon: packageCheckIcon,
+    icon: rewindIcon,
     label: "Return Slips",
     url: routes.dashboard.returnSlips.index,
   },
@@ -72,32 +81,37 @@ export const dashboardMenuItems: IMenuItem[] = [
   },
   {
     key: "procurement-statistics",
-    icon: packageCheckIcon,
+    icon: alignstart,
     label: "Procurement Statistics",
     url: routes.dashboard.procurementStatistics.index,
   },
   {
     key: "payment-statistics",
-    icon: packageCheckIcon,
+    icon: alignhorizontaljustifystart,
     label: "Payment Statistics",
     url: routes.dashboard.paymentStatistics.index,
   },
   {
     key: "site-stock",
-    icon: packageCheckIcon,
+    icon: warehouseIcon,
     label: "Site Stock",
     url: routes.dashboard.siteStock.index,
   },
-
+  {
+    key: "Plus",
+    label: "Plus",
+    icon: OperationsIcon,
+    isTitle: true,
+  },
   {
     key: "ai",
-    icon: MapIcon,
+    icon: aarrow,
     label: "AI",
     url: routes.dashboard.ai.index,
   },
   {
     key: "tutorials",
-    icon: chatIcon,
+    icon: layers,
     label: "tutorials",
     url: routes.dashboard.tutorials.index,
   },
@@ -112,7 +126,7 @@ export const adminToolsMenuItems: IMenuItem[] = [
   },
   {
     key: "companies",
-    icon: packageIcon,
+    icon: compass,
     label: "Companies",
     url: routes.adminTools.companies.index,
   },
@@ -124,13 +138,13 @@ export const adminToolsMenuItems: IMenuItem[] = [
   },
   {
     key: "cost-code-library",
-    icon: DeliveryEntityIcon,
+    icon: squarelibrary,
     label: "Cost Code Library",
     url: routes.adminTools.costCodeLibrary.index,
   },
   {
     key: "categories-and-items",
-    icon: DeliveryEntityIcon,
+    icon: listcollapse,
     label: "Categories and Items",
     url: routes.adminTools.categoriesAndItems.index,
   },
@@ -143,7 +157,7 @@ export const adminToolsMenuItems: IMenuItem[] = [
   },
   {
     key: "sites",
-    icon: packageCheckIcon,
+    icon: compassIcon,
     label: "Sites",
     url: routes.adminTools.branchData.sites.index,
   },
@@ -155,13 +169,13 @@ export const adminToolsMenuItems: IMenuItem[] = [
   },
   {
     key: "suppliers",
-    icon: packageCheckIcon,
+    icon: layoutlist,
     label: "Suppliers",
     url: routes.adminTools.branchData.suppliers.index,
   },
   {
     key: "subcontractors",
-    icon: packageCheckIcon,
+    icon: layoutlist,
     label: "Subcontractors",
     url: routes.adminTools.branchData.subcontractors.index,
   },
@@ -182,13 +196,13 @@ export const mobileDashboardMenuItems: IMenuItem[] = [
     children: [
       {
         key: "requests",
-        icon: packageCheckIcon,
+        icon: listOrderedIcon,
         label: "Requests",
         url: routes.dashboard.requests.index,
       },
       {
         key: "purchase-orders",
-        icon: packageCheckIcon,
+        icon: paperIcon,
         label: "Purchase Orders",
         url: routes.dashboard.purchaseOrders.index,
       },
@@ -206,7 +220,7 @@ export const mobileDashboardMenuItems: IMenuItem[] = [
       },
       {
         key: "return-slips",
-        icon: packageCheckIcon,
+        icon: rewindIcon,
         label: "Return Slips",
         url: routes.dashboard.returnSlips.index,
       },
@@ -226,19 +240,19 @@ export const mobileDashboardMenuItems: IMenuItem[] = [
       },
       {
         key: "procurement-statistics",
-        icon: packageCheckIcon,
+        icon: alignstart,
         label: "Procurement Statistics",
         url: routes.dashboard.procurementStatistics.index,
       },
       {
         key: "payment-statistics",
-        icon: packageCheckIcon,
+        icon: alignhorizontaljustifystart,
         label: "Payment Statistics",
         url: routes.dashboard.paymentStatistics.index,
       },
       {
         key: "site-stock",
-        icon: packageCheckIcon,
+        icon: warehouseIcon,
         label: "Site Stock",
         url: routes.dashboard.siteStock.index,
       },
@@ -246,13 +260,13 @@ export const mobileDashboardMenuItems: IMenuItem[] = [
   },
   {
     key: "ai",
-    icon: MapIcon,
+    icon: aarrow,
     label: "AI",
     url: routes.dashboard.ai.index,
   },
   {
     key: "tutorials",
-    icon: chatIcon,
+    icon: layers,
     label: "tutorials",
     url: routes.dashboard.tutorials.index,
   },
@@ -267,7 +281,7 @@ export const mobileAdminToolsMenuItems: IMenuItem[] = [
     children: [
       {
         key: "companies",
-        icon: packageIcon,
+        icon: compass,
         label: "Companies",
         url: routes.adminTools.companies.index,
       },
@@ -279,13 +293,13 @@ export const mobileAdminToolsMenuItems: IMenuItem[] = [
       },
       {
         key: "cost-code-library",
-        icon: DeliveryEntityIcon,
+        icon: squarelibrary,
         label: "Cost Code Library",
         url: routes.adminTools.costCodeLibrary.index,
       },
       {
         key: "categories-and-items",
-        icon: DeliveryEntityIcon,
+        icon: listcollapse,
         label: "Categories and Items",
         url: routes.adminTools.categoriesAndItems.index,
       },
@@ -293,7 +307,7 @@ export const mobileAdminToolsMenuItems: IMenuItem[] = [
   },
   {
     key: "branch-data",
-    icon: DeliveryEntityIcon,
+    icon: listcollapse,
     label: "Branch Data",
     isTitle: true,
     children: [
