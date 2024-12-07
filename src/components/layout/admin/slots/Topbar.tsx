@@ -56,11 +56,6 @@ const Topbar = ({ menuItems }: { menuItems: IMenuItem[] }) => {
 
   const handleToggleDashboard = () => {
     toggleDashboard();
-    // if (state.leftbar.dashboard) {
-    //   navigate(routes.adminTools.companies.index);
-    // } else {
-    //   navigate(routes.dashboard.index);
-    // }
   };
 
   const renderMenuItems = (items: IMenuItem[]) => {
