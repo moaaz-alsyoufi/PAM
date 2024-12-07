@@ -5,6 +5,8 @@ import { useTheme as daisyUseTheme } from "@/components/daisyui";
 import createHookedContext from "@/hooks/create-hooked-context";
 import useLocalStorage from "@/hooks/use-local-storage";
 import { ILayoutState } from "@/types/layout/admin";
+import routes from "@/services/routes";
+import { useNavigate } from "react-router-dom";
 
 const INIT_STATE: ILayoutState = {
   theme: "light",
@@ -21,6 +23,7 @@ const useHook = () => {
     INIT_STATE
   );
   const { setTheme } = daisyUseTheme();
+  const navigate = useNavigate();
 
   useEffect(() => {
     setTheme(state.theme);
@@ -54,6 +57,11 @@ const useHook = () => {
         dashboard: !state.leftbar.dashboard,
       },
     });
+    if (state.leftbar.dashboard) {
+      navigate(routes.adminTools.companies.index);
+    } else {
+      navigate(routes.dashboard.index);
+    }
   };
 
   const updateState = (newState: Partial<ILayoutState>) => {

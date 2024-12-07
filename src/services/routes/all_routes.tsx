@@ -102,46 +102,55 @@ const dashboardRoutes: RoutesProps[] = [
 
 const adminToolsRoutes: RoutesProps[] = [
   {
-    path: "/dashboard/products",
-    name: "dashboard.products.index",
-    element: cw(lazy(() => import("@/pages/admin/dashboard/dashboards"))),
+    path: "/admin-tools/companies",
+    name: "admin-tools.companies.index",
+    element: cw(lazy(() => import("@/pages/admin/adminTools/companies"))),
   },
   {
-    path: "/dashboard/orders",
-    name: "dashboard.orders.index",
-    element: cw(lazy(() => import("@/pages/admin/dashboard/dashboards"))),
+    path: "/admin-tools/administrators",
+    name: "admin-tools.administrators.index",
+    element: cw(lazy(() => import("@/pages/admin/adminTools/administrators"))),
+  },
+  {
+    path: "/admin-tools/cost-code-library",
+    name: "cost-code-library.index",
+    element: cw(lazy(() => import("@/pages/admin/adminTools/costCodeLibrary"))),
+  },
+  {
+    path: "/admin-tools/categories-and-items",
+    name: "categoriesAndItems.index",
+    element: cw(
+      lazy(() => import("@/pages/admin/adminTools/categoriesAndItems"))
+    ),
   },
 
+  {
+    path: "/admin-tools/branch-data/sites",
+    name: "admin-tools.branch-data.sites.index",
+    element: cw(
+      lazy(() => import("@/pages/admin/adminTools/branchData/sites"))
+    ),
+  },
   {
     path: "/admin-tools/branch-data/users",
     name: "admin-tools.branch-data.users.index",
-    element: cw(lazy(() => import("@/pages/admin/users"))),
+    element: cw(
+      lazy(() => import("@/pages/admin/adminTools/branchData/users"))
+    ),
   },
   {
-    path: "/dashboard/delivery-entities",
-    name: "deliveryEntity.index",
-    element: cw(lazy(() => import("@/pages/admin/dashboard/dashboards"))),
+    path: "/admin-tools/branch-data/suppliers",
+    name: "admin-tools.branch-data.suppliers.index",
+    element: cw(
+      lazy(() => import("@/pages/admin/adminTools/branchData/suppliers"))
+    ),
   },
   {
-    path: "/dashboard/chat",
-    name: "chats.index",
-    element: cw(lazy(() => import("@/pages/admin/dashboard/dashboards"))),
-  },
-
-  {
-    path: "/dashboard/payments",
-    name: "payments.index",
-    element: cw(lazy(() => import("@/pages/admin/dashboard/dashboards"))),
-  },
-  {
-    path: "/dashboard/delivery",
-    name: "delivery.index",
-    element: cw(lazy(() => import("@/pages/admin/dashboard/dashboards"))),
-  },
-  {
-    path: "/dashboard/map",
-    name: "map.index",
-    element: cw(lazy(() => import("@/pages/admin/dashboard/dashboards"))),
+    path: "/admin-tools/branch-data/subcontractors",
+    name: "admin-tools.branch-data.subcontractors.index",
+    element: cw(
+      lazy(() => import("@/pages/admin/adminTools/branchData/subcontractors"))
+    ),
   },
 ];
 
