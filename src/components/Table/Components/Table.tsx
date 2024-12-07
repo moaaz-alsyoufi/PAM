@@ -16,7 +16,6 @@ import {
   useDialog,
 } from "@/components/daisyui";
 import Icon from "@/components/Icon";
-import { IUser } from "@/types/apps/ecommerce";
 import DialogComponent from "./Dialog";
 import { cn } from "@/helpers/utils/cn";
 
@@ -42,7 +41,7 @@ const TableComponent: React.FC<TableProps> = ({
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [dialogType, setDialogType] = useState<"Add" | "Edit">("Add");
-  const [currentRow, setCurrentRow] = useState<IUser | null>(null);
+  const [currentRow, setCurrentRow] = useState<any | null>(null);
   const { dialogRef, handleShow, handleHide } = useDialog();
 
   const filteredData = useMemo(() => {
@@ -96,7 +95,7 @@ const TableComponent: React.FC<TableProps> = ({
     handleShow();
   };
 
-  const openEditDialog = (user: IUser) => {
+  const openEditDialog = (user: any) => {
     setDialogType("Edit");
     setCurrentRow(user);
     handleShow();

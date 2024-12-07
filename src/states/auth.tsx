@@ -2,7 +2,6 @@ import { useCallback } from "react";
 import createHookedContext from "@/hooks/create-hooked-context";
 import useSessionStorage from "@/hooks/use-session-storage";
 import { IAuthState } from "@/types/auth";
-import { IUser } from "@/types/apps/ecommerce";
 
 let accessToken: string | null = null;
 
@@ -14,7 +13,7 @@ const useHook = () => {
 
   accessToken = authState.token ?? null;
 
-  const setLoggedInUser = (user: IUser, token: string) => {
+  const setLoggedInUser = (user: any, token: string) => {
     accessToken = token;
     updateState({ user, token });
   };
