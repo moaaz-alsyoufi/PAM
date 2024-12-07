@@ -16,9 +16,11 @@ import aarrow from "@iconify/icons-lucide/arrow-up-0-1";
 import compass from "@iconify/icons-lucide/compass";
 import squarelibrary from "@iconify/icons-lucide/library";
 import listcollapse from "@iconify/icons-lucide/list-checks";
-import routes from "@/services/routes";
+import chartpie from "@iconify/icons-lucide/git-compare";
 import compassIcon from "@iconify/icons-lucide/compass";
 import layoutlist from "@iconify/icons-lucide/layout-list";
+import routes from "@/services/routes";
+
 import { IMenuItem } from "@/types/layout/admin";
 
 export const dashboardMenuItems: IMenuItem[] = [
@@ -132,7 +134,7 @@ export const adminToolsMenuItems: IMenuItem[] = [
   },
   {
     key: "administrators",
-    icon: usersIcon,
+    icon: adminIcon,
     label: "Administrators",
     url: routes.adminTools.administrators.index,
   },
@@ -229,7 +231,7 @@ export const mobileDashboardMenuItems: IMenuItem[] = [
   {
     key: "Reports",
     label: "Reports",
-    icon: OperationsIcon,
+    icon: chartpie,
     isTitle: true,
     children: [
       {
@@ -287,7 +289,7 @@ export const mobileAdminToolsMenuItems: IMenuItem[] = [
       },
       {
         key: "administrators",
-        icon: usersIcon,
+        icon: adminIcon,
         label: "Administrators",
         url: routes.adminTools.administrators.index,
       },
@@ -313,25 +315,25 @@ export const mobileAdminToolsMenuItems: IMenuItem[] = [
     children: [
       {
         key: "sites",
-        icon: packageCheckIcon,
+        icon: compassIcon,
         label: "Sites",
         url: routes.adminTools.branchData.sites.index,
       },
       {
         key: "users",
-        icon: packageCheckIcon,
+        icon: usersIcon,
         label: "Users",
         url: routes.adminTools.branchData.users.index,
       },
       {
         key: "suppliers",
-        icon: packageCheckIcon,
+        icon: layoutlist,
         label: "Suppliers",
         url: routes.adminTools.branchData.suppliers.index,
       },
       {
         key: "subcontractors",
-        icon: packageCheckIcon,
+        icon: layoutlist,
         label: "Subcontractors",
         url: routes.adminTools.branchData.subcontractors.index,
       },
