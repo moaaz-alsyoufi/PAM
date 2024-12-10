@@ -16,6 +16,8 @@ import {
   NavbarCenter,
   NavbarEnd,
   NavbarStart,
+  Select,
+  SelectOption,
   Tooltip,
 } from "@/components/daisyui";
 import Icon from "@/components/Icon";
@@ -143,22 +145,59 @@ const Topbar = ({ menuItems }: { menuItems: IMenuItem[] }) => {
       {/* sm screen */}
       {isLoggedIn() && menuItems.length !== 0 && (
         <>
-          <Button
-            className="btn btn-sm fixed top-2 right-10  btn-primary md:hidden"
-            onClick={handleToggleDashboard}
-          >
-            <Icon
-              icon={state.leftbar.dashboard ? adminToolsIcon : dashboardIcon}
-              fontSize={18}
-            />
-            <span>{state.leftbar.dashboard ? "Admin Tools" : "Dashboard"}</span>
-          </Button>
-          <div
-            className={cn(
-              "md:hidden btm-nav z-50 flex w-full shadow-xl p-2 mx-auto space-x-1 fixed bottom-4 max-w-[90%] rounded-full  border border-base-300"
-              // { "bottom-8": isIOS }
-            )}
-          >
+          <div className="md:hidden fixed top-1 w-full">
+            <div className="flex justify-between items-center pl-2 pr-6">
+              <div>
+                {/* Company Menu */}
+                <Select
+                  className="border-none focus:outline-none focus:ring-0 bg-transparent"
+                  // onChange={handleChange}
+                  // value={formData.deliveryEntityId}
+                  onTouchStart={(e) => {
+                    if (e.touches.length > 1) {
+                      e.preventDefault();
+                    }
+                  }}
+                >
+                  <SelectOption className="bg-base-100">SEG CM</SelectOption>
+                </Select>
+
+                {/* Site Menu */}
+                <Select
+                  className="border-none focus:outline-none focus:ring-0 bg-transparent"
+                  // onChange={handleChange}
+                  // value={formData.deliveryEntityId}
+                  onTouchStart={(e) => {
+                    if (e.touches.length > 1) {
+                      e.preventDefault();
+                    }
+                  }}
+                >
+                  <SelectOption className="bg-base-100">
+                    Select Site
+                  </SelectOption>
+                  <SelectOption className="bg-base-100">
+                    Clear Selection
+                  </SelectOption>
+                  <SelectOption className="bg-base-100">MAR-H</SelectOption>
+                  <SelectOption className="bg-base-100">CHUY</SelectOption>
+                </Select>
+              </div>
+
+              <Button
+                className="btn btn-xs btn-primary"
+                onClick={handleToggleDashboard}
+              >
+                <Icon
+                  icon={
+                    state.leftbar.dashboard ? adminToolsIcon : dashboardIcon
+                  }
+                  fontSize={18}
+                />
+              </Button>
+            </div>
+          </div>
+          <div className="md:hidden btm-nav z-50 flex w-full shadow-xl p-2 mx-auto space-x-1 fixed bottom-4 max-w-[90%] rounded-full  border border-base-300">
             {renderMenuItems(menuItems)}
 
             {/* Account Dropdown */}
@@ -221,6 +260,40 @@ const Topbar = ({ menuItems }: { menuItems: IMenuItem[] }) => {
           </NavbarStart>
           <NavbarCenter></NavbarCenter>
           <NavbarEnd className="gap-1.5">
+            {/* Company Menu */}
+            <Select
+              className="border-none focus:outline-none focus:ring-0 bg-transparent"
+              // onChange={handleChange}
+              // value={formData.deliveryEntityId}
+              onTouchStart={(e) => {
+                if (e.touches.length > 1) {
+                  e.preventDefault();
+                }
+              }}
+            >
+              <SelectOption className="bg-base-100">SEG CM</SelectOption>
+            </Select>
+
+            {/* Site Menu */}
+            <Select
+              className="border-none focus:outline-none focus:ring-0 bg-transparent"
+              // onChange={handleChange}
+              // value={formData.deliveryEntityId}
+              onTouchStart={(e) => {
+                if (e.touches.length > 1) {
+                  e.preventDefault();
+                }
+              }}
+            >
+              <SelectOption className="bg-base-100">Select Site</SelectOption>
+              <SelectOption className="bg-base-100">
+                Clear Selection
+              </SelectOption>
+              <SelectOption className="bg-base-100">MAR-H</SelectOption>
+              <SelectOption className="bg-base-100">CHUY</SelectOption>
+            </Select>
+
+            {/* Dashboard controller */}
             <Tooltip
               message={state.leftbar.dashboard ? "Admin Tools" : "Dashboard"}
               position="bottom"
@@ -237,7 +310,11 @@ const Topbar = ({ menuItems }: { menuItems: IMenuItem[] }) => {
                 />
               </Button>
             </Tooltip>
+
+            {/* Theme controller */}
             <ThemeToggleButton shape="circle" color="ghost" size="sm" />
+
+            {/* Account Menu */}
             <Dropdown vertical="bottom" end>
               <DropdownToggle
                 className="btn btn-ghost rounded-btn px-1.5 hover:bg-base-content/20"
@@ -245,7 +322,6 @@ const Topbar = ({ menuItems }: { menuItems: IMenuItem[] }) => {
               >
                 <div className="flex items-center gap-2">
                   <div className="flex items-center space-x-2">
-                    {/* <p className="text-sm/none">{authState.user?.name}</p> */}
                     <p className="text-sm/none">User Name</p>
                   </div>
                 </div>
