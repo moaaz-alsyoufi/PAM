@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button } from "@/components/daisyui";
+import { Button, Select, SelectOption } from "@/components/daisyui";
 import useToast from "@/hooks/use-toast";
 import { useAuthContext } from "@/states/auth";
 
@@ -8,6 +8,7 @@ interface InputField {
   type: string;
   value?: any;
   required?: boolean;
+  options?: any[];
 }
 
 interface CurrentData {
@@ -35,7 +36,11 @@ const DialogComponent: React.FC<DialogProps> = ({
   const [formData, setFormData] = useState<Record<string, any>>(() => {
     const initialData: Record<string, any> = {};
     inputFields.forEach((field) => {
-      if (dialogType === "Edit" && current && current[field.name] !== undefined) {
+      if (
+        dialogType === "Edit" &&
+        current &&
+        current[field.name] !== undefined
+      ) {
         initialData[field.name] = current[field.name];
       } else {
         initialData[field.name] = field.value || "";
@@ -108,25 +113,63 @@ const DialogComponent: React.FC<DialogProps> = ({
 
   // Dynamically render inputs based on inputFields
   const renderInput = (field: InputField) => {
-    const { name, type, required } = field;
-    return (
-      <label
-        className="flex flex-col sm:flex-row items-center gap-2 input input-sm input-bordered"
-        key={name}
-      >
-        <span className="font-normal text-sm md:text-base opacity-45 min-w-16 md:w-28">
-          {name.charAt(0).toUpperCase() + name.slice(1)}
-        </span>
-        <input
-          type={type}
-          name={name}
-          className="grow"
-          value={formData[name]}
-          required={required}
-          onChange={(e) => setFormData({ ...formData, [name]: e.target.value })}
-        />
-      </label>
-    );
+    const { name, type, required, options } = field;
+    {
+      if (type === "select") {
+        return (
+          <label className="input input-sm input-bordered flex items-center xs:gap-4 lg:gap-12 text-sm md:text-base">
+            <span className="font-normal opacity-45 w-20 capitalize">
+              {name}
+            </span>
+            <Select
+              className="w-full border-none focus:outline-none focus:ring-0 bg-transparent"
+              onChange={(e) =>
+                setFormData({ ...formData, [name]: e.target.value })
+              }
+              name={name}
+              value={formData[name]}
+              required={required}
+              onTouchStart={(e) => {
+                if (e.touches.length > 1) {
+                  e.preventDefault();
+                }
+              }}
+            >
+              {(options ?? []).map((option) => (
+                <SelectOption
+                  key={option}
+                  value={option}
+                  className="bg-base-100"
+                >
+                  {option.name}
+                </SelectOption>
+              ))}
+            </Select>
+          </label>
+        );
+      } else {
+        return (
+          <label
+            className="flex flex-col sm:flex-row items-center gap-2 input input-sm input-bordered"
+            key={name}
+          >
+            <span className="font-normal text-sm md:text-base opacity-45 min-w-16 md:w-28">
+              {name.charAt(0).toUpperCase() + name.slice(1)}
+            </span>
+            <input
+              type={type}
+              name={name}
+              className="grow"
+              value={formData[name]}
+              required={required}
+              onChange={(e) =>
+                setFormData({ ...formData, [name]: e.target.value })
+              }
+            />
+          </label>
+        );
+      }
+    }
   };
 
   return (
