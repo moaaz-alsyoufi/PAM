@@ -1,7 +1,7 @@
 import PageMetaData from "@/components/PageMetaData";
 import PageTitle from "@/components/PageTitle";
 import PAMTable from "@/components/Table";
-import useProcurementStatistics from "./use-requests";
+import useProcurementStatistics from "./use-procurement-statistics";
 
 const ProcurementStatistics = () => {
   const { columns, tableData, inputFields, hasActions } =
