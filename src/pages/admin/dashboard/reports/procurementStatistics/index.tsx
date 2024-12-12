@@ -1,8 +1,12 @@
 import PageMetaData from "@/components/PageMetaData";
 import PageTitle from "@/components/PageTitle";
 import PAMTable from "@/components/Table";
+import useProcurementStatistics from "./use-requests";
 
 const ProcurementStatistics = () => {
+  const { columns, tableData, inputFields, hasActions } =
+    useProcurementStatistics();
+
   return (
     <div>
       <PageMetaData title={"Procurement Statistics"} />
@@ -13,7 +17,12 @@ const ProcurementStatistics = () => {
         center="Reports"
       />
       <div>
-        <PAMTable />
+        <PAMTable
+          columns={columns}
+          tableData={tableData}
+          inputFields={inputFields}
+          actions={hasActions}
+        />
       </div>
     </div>
   );
