@@ -1,8 +1,10 @@
 import PageMetaData from "@/components/PageMetaData";
 import PageTitle from "@/components/PageTitle";
 import PAMTable from "@/components/Table";
+import usePaymentOrders from "../../operations/paymentOrders/use-purchase-orders";
 
 const PaymentStatistics = () => {
+  const { columns, tableData, inputFields, hasActions } = usePaymentOrders();
   return (
     <div>
       <PageMetaData title={"Payment Statistics"} />
@@ -13,7 +15,12 @@ const PaymentStatistics = () => {
         center="Reports"
       />
       <div>
-        <PAMTable />
+        <PAMTable
+          columns={columns}
+          tableData={tableData}
+          inputFields={inputFields}
+          actions={hasActions}
+        />
       </div>
     </div>
   );
