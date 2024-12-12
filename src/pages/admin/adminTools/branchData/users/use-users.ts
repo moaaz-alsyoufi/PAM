@@ -45,7 +45,41 @@ const useUsers = () => {
     },
   ];
 
-  const inputFields: any[] = [];
+  const inputFields = [
+    {
+      name: "type",
+      label: "Type",
+      type: "select",
+      required: true,
+      options: ["option 1", "option 2", "option 3", "option 4", "option 5"],
+    },
+    {
+      name: "name",
+      label: "Name",
+      type: "text",
+      required: true,
+    },
+    {
+      name: "username",
+      label: "Username",
+      type: "text",
+      required: true,
+    },
+    {
+      name: "password",
+      label: "Password",
+      type: "text",
+      required: true,
+    },
+
+    {
+      name: "site",
+      label: "Site",
+      type: "select",
+      required: true,
+      options: ["option 1", "option 2", "option 3", "option 4", "option 5"],
+    },
+  ];
 
   return {
     columns,
