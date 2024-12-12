@@ -3,7 +3,7 @@ export type ISiteMovement = {
   site: string;
   beneficiary: string;
   subcontract: string;
-  ref_nb: string;
+  ref_no: string;
   item: string;
   unit: string;
   qte: number;

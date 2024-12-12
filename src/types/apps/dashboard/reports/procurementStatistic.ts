@@ -8,7 +8,7 @@ export type IProcurementStatistic = {
   cost_code: string;
   unit: string;
   unit_price: number;
-  qte: number;
+  qty: number;
   amount: number;
   status: string;
   deliv_percent: number;
