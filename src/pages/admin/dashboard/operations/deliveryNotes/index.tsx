@@ -1,8 +1,11 @@
 import PageMetaData from "@/components/PageMetaData";
 import PageTitle from "@/components/PageTitle";
 import PAMTable from "@/components/Table";
+import useDeliveryNotes from "./use-delivery-notes";
 
 const DeliveryNotes = () => {
+  const { columns, tableData, inputFields, hasActions } = useDeliveryNotes();
+
   return (
     <div>
       <PageMetaData title={"Delivery Notes"} />
@@ -13,7 +16,12 @@ const DeliveryNotes = () => {
         center="Operations"
       />
       <div>
-        <PAMTable />
+        <PAMTable
+          columns={columns}
+          tableData={tableData}
+          inputFields={inputFields}
+          actions={hasActions}
+        />
       </div>
     </div>
   );
