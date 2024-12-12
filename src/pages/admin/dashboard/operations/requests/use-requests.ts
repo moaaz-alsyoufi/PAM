@@ -1,4 +1,8 @@
+import { useState } from "react";
+
 const useRequests = () => {
+  const [hasActions, _] = useState<boolean>(true);
+
   const columns = {
     id: "ID",
     request: "Request",
@@ -62,6 +66,7 @@ const useRequests = () => {
     columns,
     tableData,
     inputFields,
+    hasActions,
   };
 };
 
