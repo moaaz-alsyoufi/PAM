@@ -17,7 +17,7 @@ const useAdminstrators = () => {
       country: "SEG MA	",
       name: "Georges CHEMAYA",
       username: "gchemaya",
-      password: "",
+      password: "***",
       role: "Country Manager",
     },
     {
@@ -25,7 +25,7 @@ const useAdminstrators = () => {
       country: "SEG MA	",
       name: "Georges CHEMAYA",
       username: "gchemaya",
-      password: "",
+      password: "***",
       role: "Country Manager",
     },
     {
@@ -33,7 +33,7 @@ const useAdminstrators = () => {
       country: "SEG MA	",
       name: "Georges CHEMAYA",
       username: "gchemaya",
-      password: "",
+      password: "***",
       role: "Country Manager",
     },
   ];
