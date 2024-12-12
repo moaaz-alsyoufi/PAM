@@ -1,15 +1,22 @@
 import PageMetaData from "@/components/PageMetaData";
 import PageTitle from "@/components/PageTitle";
 import PAMTable from "@/components/Table";
+import useSite from "./use-site";
 
 const Sites = () => {
+  const { columns, tableData, inputFields,hasActions } = useSite();
+
   return (
     <div>
       <PageMetaData title={"Sites"} />
 
       <PageTitle title={"Sites"} subMenu={"Admin tools"} center="Branch Data" />
       <div>
-        <PAMTable />
+        <PAMTable
+         columns={columns}
+         tableData={tableData}
+         inputFields={inputFields}
+         actions={hasActions} />
       </div>
     </div>
   );
