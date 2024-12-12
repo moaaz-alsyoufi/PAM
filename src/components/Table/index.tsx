@@ -2,7 +2,13 @@ import AccordionComponent from "./Components/Accordion";
 import TableComponent from "./Components/Table";
 
 const PAMTable = () => {
-  const columns = ["col 1", "col 2", "col 3", "col 4", "col 5"];
+  const columns = {
+    "col 1": "col 2",
+    "col 2": "col 2",
+    "col 3": "col 3",
+    "col 4": "col 4",
+    "col 5": "col 5",
+  };
   const tableData = [
     {
       "col 1": "Alice",
@@ -32,8 +38,6 @@ const PAMTable = () => {
     { name: "email", label: "Email", type: "email", required: true },
     { name: "roleId", label: "Role", type: "select", required: true },
     { name: "phone", label: "Phone", type: "text", required: false },
-
-    // Add more fields as needed
   ];
 
   return (

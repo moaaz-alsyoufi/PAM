@@ -18,7 +18,7 @@ interface AccordionProps {
 
 interface AccordionsProps {
   accordionData: any[];
-  columns: string[];
+  columns: Record<string, string>;
   actions: boolean;
   inputFields: Array<{
     name: string;

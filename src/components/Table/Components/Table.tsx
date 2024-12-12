@@ -21,7 +21,7 @@ import { cn } from "@/helpers/utils/cn";
 
 interface TableProps {
   tableData: any[];
-  columns: string[];
+  columns: Record<string, string>;
   actions: boolean;
   inputFields: Array<{
     name: string;
@@ -143,33 +143,36 @@ const TableComponent: React.FC<TableProps> = ({
             <table className="w-full border-collapse">
               <thead>
                 <tr className="hover:bg-base-200/40">
-                  {columns.map((column, index) => (
-                    <th
-                      key={column}
-                      className={cn(
-                        "border-b border-base-content/5 px-2 pl-6 py-3 text-sm text-left font-normal",
-                        {
-                          "pl-6": index === 0,
-                        }
-                      )}
-                    >
-                      <div
-                        className="flex justify-start items-center cursor-pointer"
-                        onClick={() => handleSort(column)}
-                      >
-                        <span>{column}</span>
-                        {sortColumn === column && (
-                          <Icon
-                            icon={
-                              sortOrder === "asc" ? sortAscIcon : sortDescIcon
-                            }
-                            className="ml-1"
-                            fontSize={14}
-                          />
+                  {Object.entries(columns).map(
+                    ([columnKey, columnLabel], index) => (
+                      <th
+                        key={columnKey}
+                        className={cn(
+                          "border-b border-base-content/5 px-2 pl-6 py-3 text-sm text-left font-normal",
+                          {
+                            "pl-6": index === 0,
+                          }
                         )}
-                      </div>
-                    </th>
-                  ))}
+                      >
+                        <div
+                          className="flex justify-start items-center cursor-pointer"
+                          onClick={() => handleSort(columnKey)}
+                        >
+                          <span>{columnLabel}</span>
+                          {sortColumn === columnKey && (
+                            <Icon
+                              icon={
+                                sortOrder === "asc" ? sortAscIcon : sortDescIcon
+                              }
+                              className="ml-1"
+                              fontSize={14}
+                            />
+                          )}
+                        </div>
+                      </th>
+                    )
+                  )}
+
                   {actions && (
                     <th className="border-b border-base-content/5 pl-2 pr-6 py-3 text-sm text-right font-normal">
                       Actions
@@ -181,14 +184,15 @@ const TableComponent: React.FC<TableProps> = ({
                 {sortedData.length > 0 ? (
                   sortedData.map((row, index) => (
                     <tr key={index} className="hover:bg-base-200/40">
-                      {columns.map((column) => (
+                      {Object.keys(columns).map((columnKey) => (
                         <td
-                          key={column}
+                          key={columnKey}
                           className="border-y border-base-content/5 px-2 pl-6 py-3 font-medium text-sm"
                         >
-                          {row[column] ?? "-"}
+                          {row[columnKey] ?? "-"}
                         </td>
                       ))}
+
                       {actions && (
                         <td className="border-y border-base-content/5 px-2 py-3 font-medium text-sm text-right pr-6">
                           <div className="inline-flex w-fit">
@@ -224,7 +228,7 @@ const TableComponent: React.FC<TableProps> = ({
                 ) : (
                   <tr className="cursor-pointer hover:bg-base-200/40">
                     <td
-                      colSpan={columns.length + (actions ? 1 : 0)}
+                      colSpan={Object.keys(columns).length + (actions ? 1 : 0)}
                       className="p-2 text-center"
                     >
                       No data available
