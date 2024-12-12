@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const useadminstrators = () => {
+const useAdminstrators = () => {
   const [hasActions, _] = useState<boolean>(false);
 
   const columns = {
@@ -48,4 +48,4 @@ const useadminstrators = () => {
   };
 };
 
-export default useadminstrators;
+export default useAdminstrators;
