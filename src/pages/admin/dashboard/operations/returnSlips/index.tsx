@@ -1,8 +1,11 @@
 import PageMetaData from "@/components/PageMetaData";
 import PageTitle from "@/components/PageTitle";
 import PAMTable from "@/components/Table";
+import useReturnSlips from "./use-return-slips";
 
 const ReturnSlips = () => {
+  const { columns, tableData, inputFields, hasActions } = useReturnSlips();
+
   return (
     <div>
       <PageMetaData title={"Return Slips"} />
@@ -13,7 +16,12 @@ const ReturnSlips = () => {
         center="Operations"
       />
       <div>
-        <PAMTable />
+        <PAMTable
+          columns={columns}
+          tableData={tableData}
+          inputFields={inputFields}
+          actions={hasActions}
+        />
       </div>
     </div>
   );
