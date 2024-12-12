@@ -15,6 +15,8 @@ const INIT_STATE: ILayoutState = {
     drawerOpen: false,
     dashboard: true,
   },
+  company: undefined,
+  site: undefined,
 };
 
 const useHook = () => {

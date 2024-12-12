@@ -7,4 +7,7 @@ export type ILayoutState = {
     drawerOpen: boolean;
     dashboard: boolean;
   };
+
+  company?: string;
+  site?: string;
 };
