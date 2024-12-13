@@ -1,11 +1,11 @@
 import PageMetaData from "@/components/PageMetaData";
 import PageTitle from "@/components/PageTitle";
 import PAMTable from "@/components/Table";
-import useCostCodeLibrary from "./use-costCodeLibrary";
+import useCostCodeLibrary from "./use-cost-code-library";
 
 const CostCodeLibrary = () => {
-  const { columns, tableData, inputFields,hasActions } = useCostCodeLibrary();
-  
+  const { columns, tableData, inputFields, hasActions } = useCostCodeLibrary();
+
   return (
     <div>
       <PageMetaData title={"Cost Code Library"} />
@@ -13,10 +13,11 @@ const CostCodeLibrary = () => {
       <PageTitle title={"Cost Code Library"} subMenu={"Admin tools"} />
       <div>
         <PAMTable
-        columns={columns}
-        tableData={tableData}
-        inputFields={inputFields}
-        actions={hasActions} />
+          columns={columns}
+          tableData={tableData}
+          inputFields={inputFields}
+          actions={hasActions}
+        />
       </div>
     </div>
   );

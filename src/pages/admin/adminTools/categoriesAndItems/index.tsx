@@ -1,10 +1,11 @@
 import PageMetaData from "@/components/PageMetaData";
 import PageTitle from "@/components/PageTitle";
 import PAMTable from "@/components/Table";
-import useCategoriesAndItems from "./use-categoriesAndItems";
+import useCategoriesAndItems from "./use-categories-and-items";
 
 const CategoriesAndItems = () => {
-  const { columns, tableData, inputFields,hasActions } = useCategoriesAndItems();
+  const { columns, tableData, inputFields, hasActions } =
+    useCategoriesAndItems();
 
   return (
     <div>
@@ -13,10 +14,11 @@ const CategoriesAndItems = () => {
       <PageTitle title={"Categories And Items"} subMenu={"Admin tools"} />
       <div>
         <PAMTable
-        columns={columns}
-        tableData={tableData}
-        inputFields={inputFields}
-        actions={hasActions} />
+          columns={columns}
+          tableData={tableData}
+          inputFields={inputFields}
+          actions={hasActions}
+        />
       </div>
     </div>
   );
