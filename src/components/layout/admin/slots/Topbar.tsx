@@ -62,6 +62,8 @@ const Topbar = ({ menuItems }: { menuItems: IMenuItem[] }) => {
     toggleDashboard();
   };
 
+  const sites = authState.sites;
+
   const renderMenuItems = (items: IMenuItem[]) => {
     return items.map((item) => {
       // Render logic for menu items (omitted for brevity)
@@ -142,6 +144,29 @@ const Topbar = ({ menuItems }: { menuItems: IMenuItem[] }) => {
     });
   };
 
+  const SitesSelect = () => {
+    return (
+      <Select
+        className="border-none focus:outline-none focus:ring-0 bg-transparent"
+        onTouchStart={(e) => {
+          if (e.touches.length > 1) {
+            e.preventDefault();
+          }
+        }}
+      >
+        <SelectOption className="bg-base-100">Select Site</SelectOption>
+        <SelectOption className="bg-base-100" value={0}>
+          Clear Selection
+        </SelectOption>
+        {sites.map((site: any) => (
+          <SelectOption className="bg-base-100" value={site.siteId}>
+            {site.acronym}
+          </SelectOption>
+        ))}
+      </Select>
+    );
+  };
+
   return (
     <>
       {/* sm screen */}
@@ -165,25 +190,7 @@ const Topbar = ({ menuItems }: { menuItems: IMenuItem[] }) => {
                 </Select>
 
                 {/* Site Menu */}
-                <Select
-                  className="border-none focus:outline-none focus:ring-0 bg-transparent"
-                  // onChange={handleChange}
-                  // value={formData.deliveryEntityId}
-                  onTouchStart={(e) => {
-                    if (e.touches.length > 1) {
-                      e.preventDefault();
-                    }
-                  }}
-                >
-                  <SelectOption className="bg-base-100">
-                    Select Site
-                  </SelectOption>
-                  <SelectOption className="bg-base-100">
-                    Clear Selection
-                  </SelectOption>
-                  <SelectOption className="bg-base-100">MAR-H</SelectOption>
-                  <SelectOption className="bg-base-100">CHUY</SelectOption>
-                </Select>
+                <SitesSelect />
               </div>
 
               <Button
@@ -281,23 +288,7 @@ const Topbar = ({ menuItems }: { menuItems: IMenuItem[] }) => {
             </Select>
 
             {/* Site Menu */}
-            <Select
-              className="border-none focus:outline-none focus:ring-0 bg-transparent"
-              // onChange={handleChange}
-              // value={formData.deliveryEntityId}
-              onTouchStart={(e) => {
-                if (e.touches.length > 1) {
-                  e.preventDefault();
-                }
-              }}
-            >
-              <SelectOption className="bg-base-100">Select Site</SelectOption>
-              <SelectOption className="bg-base-100">
-                Clear Selection
-              </SelectOption>
-              <SelectOption className="bg-base-100">MAR-H</SelectOption>
-              <SelectOption className="bg-base-100">CHUY</SelectOption>
-            </Select>
+            <SitesSelect />
 
             {/* Dashboard controller */}
             <Tooltip
