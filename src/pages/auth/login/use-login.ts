@@ -48,9 +48,6 @@ const useLogin = () => {
         throw new Error(response.error);
       }
 
-      toaster.success("Login successful...");
-      setLoggedInUser(response.data, response.data.token);
-
       // Fetch user countries
       const countriesResponse = await apiRequest(
         "Login/usercountries",
@@ -72,6 +69,14 @@ const useLogin = () => {
         toaster.error(siteResponse.error);
         throw new Error(siteResponse.error);
       }
+
+      toaster.success("Login successful...");
+      setLoggedInUser(
+        response.data,
+        response.data.token,
+        countriesResponse.data,
+        siteResponse.data
+      );
 
       // Navigate to dashboard on success
       navigate(routes.dashboard.index);
