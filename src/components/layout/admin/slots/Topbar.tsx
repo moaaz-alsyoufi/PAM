@@ -34,7 +34,7 @@ import bellIcon from "@iconify/icons-lucide/bell";
 
 const Topbar = ({ menuItems }: { menuItems: IMenuItem[] }) => {
   const { toggleLeftbarDrawer, state, toggleDashboard } = useLayoutContext();
-  const { logout, isLoggedIn } = useAuthContext();
+  const { logout, isLoggedIn, authState } = useAuthContext();
   const navigate = useNavigate();
   const [selectedDropdown, setSelectedDropdown] = useState<string | null>(null);
   const [selectedAccountDropdown, setSelectedAccountDropdown] =
@@ -218,7 +218,7 @@ const Topbar = ({ menuItems }: { menuItems: IMenuItem[] }) => {
               <DropdownMenu className="mb-8 w-52">
                 <DropdownItem>
                   {/* <p className="text-sm/none">{authState.user?.name}</p> */}
-                  <p className="text-sm/none">User Name</p>
+                  <p className="text-sm/none">{authState.user?.username}</p>
                 </DropdownItem>
                 <hr className="-mx-2 my-1 border-base-content/10" />
                 <DropdownItem>
@@ -331,7 +331,7 @@ const Topbar = ({ menuItems }: { menuItems: IMenuItem[] }) => {
               >
                 <div className="flex items-center gap-2">
                   <div className="flex items-center space-x-2">
-                    <p className="text-sm/none">User Name</p>
+                    <p className="text-sm/none">{authState.user?.username}</p>
                   </div>
                 </div>
               </DropdownToggle>
