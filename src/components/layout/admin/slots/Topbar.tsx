@@ -30,6 +30,7 @@ import { IMenuItem } from "@/types/layout/admin";
 import { useState } from "react";
 import { cn } from "@/helpers/utils/cn";
 import NotificationButton from "../components/NotificationButton";
+import bellIcon from "@iconify/icons-lucide/bell";
 
 const Topbar = ({ menuItems }: { menuItems: IMenuItem[] }) => {
   const { toggleLeftbarDrawer, state, toggleDashboard } = useLayoutContext();
@@ -218,6 +219,10 @@ const Topbar = ({ menuItems }: { menuItems: IMenuItem[] }) => {
                 <DropdownItem>
                   {/* <p className="text-sm/none">{authState.user?.name}</p> */}
                   <p className="text-sm/none">User Name</p>
+                </DropdownItem>
+                <hr className="-mx-2 my-1 border-base-content/10" />
+                <DropdownItem>
+                  <Icon icon={bellIcon} fontSize={16} /> Notification
                 </DropdownItem>
                 <hr className="-mx-2 my-1 border-base-content/10" />
                 <DropdownItem onClick={handleSpanClick}>
