@@ -41,31 +41,46 @@ const useLogin = () => {
     };
 
     try {
-      const response = await apiRequest(
-        "Login/login", // Endpoint
-        "POST", // HTTP method
-        "", // No token needed for login
-        loginData // Data payload
-      );
-
+      // Login request
+      const response = await apiRequest("Login/login", "POST", "", loginData);
       if (response.error) {
-        // Handle error from API response
         toaster.error(response.error);
-        setIsLoading(false);
         throw new Error(response.error);
       }
 
-      // Successful login
       toaster.success("Login successful...");
-      setLoggedInUser(response.data.token, response.data.token); // Set the logged-in user
-      setIsLoading(false);
-      navigate(routes.dashboard.index); // Redirect to dashboard
+      setLoggedInUser(response.data.token, response.data.token);
+
+      // Fetch user countries
+      const countriesResponse = await apiRequest(
+        "Login/usercountries",
+        "GET",
+        response.data.token
+      );
+      if (countriesResponse.error) {
+        toaster.error(countriesResponse.error);
+        throw new Error(countriesResponse.error);
+      }
+
+      // Fetch user sites
+      const siteResponse = await apiRequest(
+        `Login/usersites?countryId=${countriesResponse.data[0].countryId}`,
+        "GET",
+        response.data.token
+      );
+      if (siteResponse.error) {
+        toaster.error(siteResponse.error);
+        throw new Error(siteResponse.error);
+      }
+
+      // Navigate to dashboard on success
+      navigate(routes.dashboard.index);
     } catch (error) {
-      // Handle unexpected errors
+      // General error handling
       toaster.error("An error occurred. Please try again.");
-      setIsLoading(false);
-      console.error("Unexpected error: ", error);
-      throw new Error("An unexpected error occurred while logging in.");
+      console.error("Error during login flow: ", error);
+    } finally {
+      setIsLoading(false); // Ensure loading state is reset
     }
   });
 
