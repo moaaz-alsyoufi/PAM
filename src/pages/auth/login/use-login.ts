@@ -49,7 +49,7 @@ const useLogin = () => {
       }
 
       toaster.success("Login successful...");
-      setLoggedInUser(response.data.token, response.data.token);
+      setLoggedInUser(response.data, response.data.token);
 
       // Fetch user countries
       const countriesResponse = await apiRequest(
