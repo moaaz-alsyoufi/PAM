@@ -6,8 +6,7 @@ import { z } from "zod";
 import useToast from "@/hooks/use-toast";
 import routes from "@/services/routes";
 import { useAuthContext } from "@/states/auth";
-import { ACTIVE_API_URL } from "@/services/api/api";
-import axios from "axios";
+import { apiRequest } from "@/services/api/request";
 
 const useLogin = () => {
   const navigate = useNavigate();
@@ -36,32 +35,37 @@ const useLogin = () => {
   const onSubmit = handleSubmit(async (data) => {
     setIsLoading(true);
 
-    const loginDate = {
+    const loginData = {
       email: data.username,
       password: data.password,
     };
 
     try {
-      const response = await axios.post(`${ACTIVE_API_URL}login`, loginDate);
+      const response = await apiRequest(
+        "Login/login", // Endpoint
+        "POST", // HTTP method
+        "", // No token needed for login
+        loginData // Data payload
+      );
 
-      toaster.success("Login successful...");
-      setLoggedInUser(response.data.token, response.data.token);
-
-      setIsLoading(false);
-      navigate(routes.dashboard.index);
-    } catch (error: any) {
-      console.log("error: ", error);
-
-      if (error.response) {
-        console.log("error.response: ", error.response);
-        toaster.error(`${error.response.data}`);
+      if (response.error) {
+        // Handle error from API response
+        toaster.error(response.error);
         setIsLoading(false);
-        throw new Error(error.response.data);
-      } else {
-        toaster.error("An error occurred. Please try again.");
-        setIsLoading(false);
-        throw new Error("An error occurred while logging in.");
+        throw new Error(response.error);
       }
+
+      // Successful login
+      toaster.success("Login successful...");
+      setLoggedInUser(response.data.token, response.data.token); // Set the logged-in user
+      setIsLoading(false);
+      navigate(routes.dashboard.index); // Redirect to dashboard
+    } catch (error) {
+      // Handle unexpected errors
+      toaster.error("An error occurred. Please try again.");
+      setIsLoading(false);
+      console.error("Unexpected error: ", error);
+      throw new Error("An unexpected error occurred while logging in.");
     }
   });
 
