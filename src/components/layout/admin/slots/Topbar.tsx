@@ -29,6 +29,7 @@ import { useLayoutContext } from "@/states/layout";
 import { IMenuItem } from "@/types/layout/admin";
 import { useState } from "react";
 import { cn } from "@/helpers/utils/cn";
+import NotificationButton from "../components/NotificationButton";
 
 const Topbar = ({ menuItems }: { menuItems: IMenuItem[] }) => {
   const { toggleLeftbarDrawer, state, toggleDashboard } = useLayoutContext();
@@ -313,6 +314,9 @@ const Topbar = ({ menuItems }: { menuItems: IMenuItem[] }) => {
 
             {/* Theme controller */}
             <ThemeToggleButton shape="circle" color="ghost" size="sm" />
+
+            {/* Notifications Btn */}
+            <NotificationButton />
 
             {/* Account Menu */}
             <Dropdown vertical="bottom" end>
