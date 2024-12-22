@@ -8,14 +8,24 @@ let accessToken: string | null = null;
 const useHook = () => {
   const [authState, setState] = useSessionStorage<IAuthState>(
     "__PAM_ADMIN_AUTH__",
-    { user: undefined, token: undefined }
+    {
+      user: undefined,
+      token: undefined,
+      countries: undefined,
+      sites: undefined,
+    }
   );
 
   accessToken = authState.token ?? null;
 
-  const setLoggedInUser = (user: any, token: string) => {
+  const setLoggedInUser = (
+    user: any,
+    token: string,
+    countries: any[],
+    sites: any[]
+  ) => {
     accessToken = token;
-    updateState({ user, token });
+    updateState({ user, token, countries, sites });
   };
 
   const updateState = (changes: Partial<IAuthState>) => {
@@ -34,6 +44,8 @@ const useHook = () => {
     updateState({
       user: undefined,
       token: undefined,
+      countries: undefined,
+      sites: undefined,
     });
   };
 
