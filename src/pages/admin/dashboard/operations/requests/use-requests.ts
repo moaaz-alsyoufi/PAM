@@ -4,11 +4,11 @@ import apiRequest from "@/services/api/api";
 const useRequests = (siteId: number, token: string) => {
   const hasActions = true;
   const [tableData, setTableData] = useState<any[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
-  // Define columns as before
   const columns = {
     request: "Request",
-    pm_approved: "PM Approved",  // Display name in your table
+    pm_approved: "PM Approved",
     status: "Status",
     date: "Date",
     ordered_percent: "Ordered %",
@@ -22,7 +22,9 @@ const useRequests = (siteId: number, token: string) => {
   const rowsPerPage = 20;
 
   useEffect(() => {
+    setLoading(true);
     console.log("Fetching requests with siteId:", siteId, "and token:", token);
+
     if (siteId > 0 && token) {
       apiRequest(`Requests/listrequests/${siteId}`, "GET", token)
         .then((res: any[]) => {
@@ -37,10 +39,15 @@ const useRequests = (siteId: number, token: string) => {
         })
         .catch((error) => {
           console.error("Error fetching requests:", error);
+        })
+        .finally(() => {
+          // Ensure loading is set to false once the API call is done
+          setLoading(false);
         });
     } else {
-      // If siteId is invalid or no token, empty the table
+      // If siteId is invalid or token is missing, empty the table
       setTableData([]);
+      setLoading(false);
     }
   }, [siteId, token]);
 
@@ -55,18 +62,15 @@ const useRequests = (siteId: number, token: string) => {
 
   return {
     columns,
-    /**
-     * `tableData`: The full list of requests
-     * `paginatedData`: The requests for the current page
-     */
-    tableData,       
-    paginatedData,   
+    tableData,
+    paginatedData,
     inputFields,
     hasActions,
     currentPage,
     setCurrentPage,
     rowsPerPage,
     totalPages,
+    loading,
   };
 };
 
