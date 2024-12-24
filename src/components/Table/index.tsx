@@ -12,6 +12,7 @@ interface PAMTableProps {
     required: boolean;
     options?: string[]; // changed type
   }>;
+  title?: string;
 }
 
 const PAMTable: React.FC<PAMTableProps> = ({
@@ -19,6 +20,7 @@ const PAMTable: React.FC<PAMTableProps> = ({
   tableData,
   actions,
   inputFields,
+  title,
 }) => {
   return (
     <div className="mt-5">
@@ -29,6 +31,7 @@ const PAMTable: React.FC<PAMTableProps> = ({
           tableData={tableData}
           actions={actions}
           inputFields={inputFields}
+          title={title}
         />
       </div>
 
@@ -39,6 +42,7 @@ const PAMTable: React.FC<PAMTableProps> = ({
           accordionData={tableData}
           actions={actions}
           inputFields={inputFields}
+          title={title}
         />
       </div>
     </div>

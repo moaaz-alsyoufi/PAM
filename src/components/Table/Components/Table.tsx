@@ -23,6 +23,7 @@ interface TableProps {
   tableData: any[];
   columns: Record<string, string>;
   actions: boolean;
+  title?: string;
   inputFields: Array<{
     name: string;
     label: string;
@@ -36,6 +37,7 @@ const TableComponent: React.FC<TableProps> = ({
   columns,
   actions,
   inputFields,
+  title,
 }) => {
   const [sortColumn, setSortColumn] = useState<string | null>(null);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
@@ -135,7 +137,7 @@ const TableComponent: React.FC<TableProps> = ({
               className="btn btn-ghost btn-xs h-8 border border-base-content/20"
             >
               <Icon icon={plusIcon} fontSize={16} />
-              Add
+              New {title}
             </Button>
             <div className="form-control flex flex-row items-center rounded-box border border-base-content/20 px-2">
               <Icon

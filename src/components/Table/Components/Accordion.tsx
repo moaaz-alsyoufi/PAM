@@ -26,6 +26,7 @@ interface AccordionsProps {
     type: string;
     required: boolean;
   }>;
+  title?: string;
 }
 
 const Accordion: React.FC<AccordionProps> = ({
@@ -91,6 +92,7 @@ const AccordionComponent: React.FC<AccordionsProps> = ({
   actions,
   accordionData,
   inputFields,
+  title,
 }) => {
   const { dialogRef, handleShow, handleHide } = useDialog();
   const [dialogType, setDialogType] = useState<"Add" | "Edit">("Add");
@@ -124,7 +126,7 @@ const AccordionComponent: React.FC<AccordionsProps> = ({
         className="btn btn-ghost btn-xs h-8 border border-base-content/20 mb-4"
       >
         <Icon icon={plusIcon} fontSize={16} />
-        New
+        New {title}
       </Button>
       <div className="w-full space-y-4">
         {accordionData.map((data, index) => (
