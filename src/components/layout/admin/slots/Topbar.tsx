@@ -52,9 +52,6 @@ const Topbar = ({ menuItems }: { menuItems: IMenuItem[] }) => {
 
   const token = authState.user?.token || "";
 
-  // Ensure siteId and token are correctly set
-  console.log("Topbar Component - selectedSite:", selectedSite, "token:", token);
-
   useEffect(() => {
     if (isLoggedIn()) {
       // Fetch countries
@@ -123,7 +120,9 @@ const Topbar = ({ menuItems }: { menuItems: IMenuItem[] }) => {
             key={child.key}
             to={child.url || "#"}
             className={`hover:bg-blue-100 hover:text-blue-900 flex flex-col justify-center items-center h-full w-full  rounded-full ${
-              isActive(child.url) ? "bg-blue-200 hover:bg-blue-200 text-blue-900" : ""
+              isActive(child.url)
+                ? "bg-blue-200 hover:bg-blue-200 text-blue-900"
+                : ""
             }`}
           >
             <Icon icon={child.icon || item.icon || ""} fontSize={24} />
@@ -131,7 +130,9 @@ const Topbar = ({ menuItems }: { menuItems: IMenuItem[] }) => {
         );
       } else if (item.children && item.children.length > 1) {
         // Check if any child is active
-        const isChildActive = item.children.some((child) => isActive(child.url));
+        const isChildActive = item.children.some((child) =>
+          isActive(child.url)
+        );
 
         // Render Dropdown for items with more than one child
         return (
@@ -216,7 +217,11 @@ const Topbar = ({ menuItems }: { menuItems: IMenuItem[] }) => {
           Clear Selection
         </SelectOption>
         {sites.map((site: any) => (
-          <SelectOption key={site.siteId} className="bg-base-100" value={site.siteId}>
+          <SelectOption
+            key={site.siteId}
+            className="bg-base-100"
+            value={site.siteId}
+          >
             {site.acronym}
           </SelectOption>
         ))}
@@ -243,7 +248,9 @@ const Topbar = ({ menuItems }: { menuItems: IMenuItem[] }) => {
                     }
                   }}
                 >
-                  <SelectOption className="bg-base-100">Select Country</SelectOption>
+                  <SelectOption className="bg-base-100">
+                    Select Country
+                  </SelectOption>
                   {countries.map((country) => (
                     <SelectOption
                       key={country.countryId}
@@ -259,9 +266,14 @@ const Topbar = ({ menuItems }: { menuItems: IMenuItem[] }) => {
                 <SitesSelect sites={sitesList} />
               </div>
 
-              <Button className="btn btn-xs btn-primary" onClick={handleToggleDashboard}>
+              <Button
+                className="btn btn-xs btn-primary"
+                onClick={handleToggleDashboard}
+              >
                 <Icon
-                  icon={state.leftbar.dashboard ? adminToolsIcon : dashboardIcon}
+                  icon={
+                    state.leftbar.dashboard ? adminToolsIcon : dashboardIcon
+                  }
                   fontSize={18}
                 />
               </Button>
@@ -306,7 +318,9 @@ const Topbar = ({ menuItems }: { menuItems: IMenuItem[] }) => {
                 <hr className="-mx-2 my-1 border-base-content/10" />
 
                 {/* FIXED: Wrap Icon + text in the same DropdownItem */}
-                <DropdownItem className="text-error" onClick={deleteAccount}> {/* <-- FIXED */}
+                <DropdownItem className="text-error" onClick={deleteAccount}>
+                  {" "}
+                  {/* <-- FIXED */}
                   <Icon icon={deleteIcon} fontSize={24} />
                   Delete Account
                 </DropdownItem>
@@ -347,7 +361,9 @@ const Topbar = ({ menuItems }: { menuItems: IMenuItem[] }) => {
                 }
               }}
             >
-              <SelectOption className="bg-base-100">Select Country</SelectOption>
+              <SelectOption className="bg-base-100">
+                Select Country
+              </SelectOption>
               {countries.map((country) => (
                 <SelectOption
                   key={country.countryId}
@@ -367,9 +383,14 @@ const Topbar = ({ menuItems }: { menuItems: IMenuItem[] }) => {
               message={state.leftbar.dashboard ? "Admin Tools" : "Dashboard"}
               position="bottom"
             >
-              <Button className="btn btn-circle btn-ghost btn-sm" onClick={handleToggleDashboard}>
+              <Button
+                className="btn btn-circle btn-ghost btn-sm"
+                onClick={handleToggleDashboard}
+              >
                 <Icon
-                  icon={state.leftbar.dashboard ? adminToolsIcon : dashboardIcon}
+                  icon={
+                    state.leftbar.dashboard ? adminToolsIcon : dashboardIcon
+                  }
                   fontSize={20}
                 />
               </Button>
@@ -397,7 +418,9 @@ const Topbar = ({ menuItems }: { menuItems: IMenuItem[] }) => {
                 <hr className="-mx-2 my-1 border-base-content/10" />
 
                 {/* FIXED: Wrap Icon + text in the same DropdownItem */}
-                <DropdownItem className="text-error" onClick={deleteAccount}> {/* <-- FIXED */}
+                <DropdownItem className="text-error" onClick={deleteAccount}>
+                  {" "}
+                  {/* <-- FIXED */}
                   <Icon icon={deleteIcon} fontSize={24} />
                   Delete Account
                 </DropdownItem>
@@ -428,13 +451,19 @@ const Topbar = ({ menuItems }: { menuItems: IMenuItem[] }) => {
               </DropdownToggle>
               <DropdownMenu className="mb-8 w-52">
                 <DropdownItem onClick={() => navigate(routes.auth.login)}>
-                  <p className="text-sm/none my-1 border-base-content/10">Login</p>
+                  <p className="text-sm/none my-1 border-base-content/10">
+                    Login
+                  </p>
                 </DropdownItem>
                 <hr className="-mx-2 my-1 border-base-content/10" />
 
                 {/* FIXED: Wrap text in the same DropdownItem */}
-                <DropdownItem onClick={() => navigate(routes.auth.register)}> {/* <-- FIXED */}
-                  <p className="text-sm/none my-1 border-base-content/10">Create Account</p>
+                <DropdownItem onClick={() => navigate(routes.auth.register)}>
+                  {" "}
+                  {/* <-- FIXED */}
+                  <p className="text-sm/none my-1 border-base-content/10">
+                    Create Account
+                  </p>
                 </DropdownItem>
               </DropdownMenu>
             </Dropdown>
