@@ -22,6 +22,7 @@ interface DialogProps {
   current: CurrentData | null;
   onSuccess: () => void;
   inputFields: InputField[];
+  title?: string;
 }
 
 const DialogComponent: React.FC<DialogProps> = ({
@@ -31,6 +32,7 @@ const DialogComponent: React.FC<DialogProps> = ({
   current,
   onSuccess,
   inputFields,
+  title,
 }) => {
   // Initialize form data based on inputFields and current data
   const [formData, setFormData] = useState<Record<string, any>>(() => {
@@ -184,7 +186,7 @@ const DialogComponent: React.FC<DialogProps> = ({
           ✕
         </button>
         <h3 className="font-bold text-lg">
-          {dialogType === "Add" ? "New" : "Edit"} User
+          {dialogType === "Add" ? "New" : "Edit"} {title}
         </h3>
 
         <form onSubmit={handleSubmit}>

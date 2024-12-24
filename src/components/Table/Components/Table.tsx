@@ -301,6 +301,7 @@ const TableComponent: React.FC<TableProps> = ({
         current={currentRow}
         onSuccess={handleSuccess}
         inputFields={inputFields}
+        title={title}
       />
     </>
   );

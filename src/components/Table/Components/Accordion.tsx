@@ -147,6 +147,7 @@ const AccordionComponent: React.FC<AccordionsProps> = ({
         current={currentRow}
         onSuccess={handleSuccess}
         inputFields={inputFields}
+        title={title}
       />
     </>
   );
