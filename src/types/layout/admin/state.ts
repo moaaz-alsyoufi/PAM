@@ -8,6 +8,6 @@ export type ILayoutState = {
     dashboard: boolean;
   };
 
-  company?: string;
-  site?: string;
+  companyId: number;
+  siteId: number;
 };
