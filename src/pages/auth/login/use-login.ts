@@ -7,12 +7,14 @@ import useToast from "@/hooks/use-toast";
 import routes from "@/services/routes";
 import { useAuthContext } from "@/states/auth";
 import { apiRequest } from "@/services/api/request";
+import { useLayoutContext } from "@/states/layout";
 
 const useLogin = () => {
   const navigate = useNavigate();
 
   const { toaster } = useToast();
   const { setLoggedInUser } = useAuthContext();
+  const { changeCompany, changeSite } = useLayoutContext();
 
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -61,7 +63,7 @@ const useLogin = () => {
 
       // Fetch user sites
       const siteResponse = await apiRequest(
-        `Login/usersites?countryId=${countriesResponse.data[0].countryId}`,
+        `Login/usersites?companyId=${countriesResponse.data[0].companyId}`,
         "GET",
         response.data.token
       );
@@ -77,6 +79,9 @@ const useLogin = () => {
         countriesResponse.data,
         siteResponse.data
       );
+
+      changeSite(response.data.siteId);
+      changeCompany(response.data.companyId);
 
       // Navigate to dashboard on success
       navigate(routes.dashboard.index);
