@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 
-import httpRequest from "@/services/api/request";
+import { apiRequest } from "@/services/api/request";
 import routes from "@/services/routes";
 
 const useResetPassword = () => {
@@ -40,7 +40,7 @@ const useResetPassword = () => {
     const onSubmit = handleSubmit(async (data) => {
         setIsLoading(true);
         try {
-            await httpRequest.post("/api/any/success/", data);
+            await apiRequest("/api/any/success/", "POST", "", data);
             navigate(routes.auth.login);
         } catch (e: any) {
             transformErrorToForm(e.response.data);

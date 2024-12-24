@@ -9,7 +9,12 @@ const Tutorials = () => {
       <PageTitle subMenu="Dashboard" title="Tutorials" />
 
       <div>
-        <PAMTable />
+        <PAMTable
+          columns={{}}
+          tableData={[]}
+          actions={true}
+          inputFields={[]}
+        />
       </div>
     </div>
   );

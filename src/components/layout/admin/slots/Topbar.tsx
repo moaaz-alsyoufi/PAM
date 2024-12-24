@@ -27,10 +27,11 @@ import routes from "@/services/routes";
 import { useAuthContext } from "@/states/auth";
 import { useLayoutContext } from "@/states/layout";
 import { IMenuItem } from "@/types/layout/admin";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { cn } from "@/helpers/utils/cn";
 import NotificationButton from "../components/NotificationButton";
 import bellIcon from "@iconify/icons-lucide/bell";
+import apiRequest from "@/services/api/api"; // Updated import to default export
 
 const Topbar = ({ menuItems }: { menuItems: IMenuItem[] }) => {
   const { toggleLeftbarDrawer, state, toggleDashboard } = useLayoutContext();
@@ -39,6 +40,44 @@ const Topbar = ({ menuItems }: { menuItems: IMenuItem[] }) => {
   const [selectedDropdown, setSelectedDropdown] = useState<string | null>(null);
   const [selectedAccountDropdown, setSelectedAccountDropdown] =
     useState<boolean>(false);
+  const [countries, setCountries] = useState<any[]>([]);
+  const [sitesList, setSitesList] = useState<any[]>([]);
+  const [selectedCountry, setSelectedCountry] = useState<number>(
+    authState.user?.countryid || 0
+  );
+  const [selectedSite, setSelectedSite] = useState<number>(
+    authState.user?.siteid || 0
+  );
+
+  const token = authState.user?.token || ""; 
+
+  useEffect(() => {
+    if (isLoggedIn()) {
+      // Fetch countries
+      apiRequest("login/usercountries", "GET", token)
+        .then((res: any[]) => setCountries(res))
+        .catch(console.error);
+    }
+  }, [isLoggedIn]);
+
+  useEffect(() => {
+    if (selectedCountry && isLoggedIn()) {
+      // Fetch sites
+      apiRequest(`login/usersites?countryId=${selectedCountry}`, "GET", token)
+        .then((res: any[]) => setSitesList(res))
+        .catch(console.error);
+    }
+  }, [selectedCountry, isLoggedIn]);
+
+  function handleChangeCountry(e: React.ChangeEvent<HTMLSelectElement>) {
+    const cId = +e.target.value;
+    setSelectedCountry(cId);
+    setSelectedSite(0); 
+  }
+
+  function handleChangeSite(e: React.ChangeEvent<HTMLSelectElement>) {
+    setSelectedSite(+e.target.value);
+  }
 
   const isActive = (url?: string) => location.pathname === url;
 
@@ -61,8 +100,6 @@ const Topbar = ({ menuItems }: { menuItems: IMenuItem[] }) => {
   const handleToggleDashboard = () => {
     toggleDashboard();
   };
-
-  const sites = authState.sites;
 
   const renderMenuItems = (items: IMenuItem[]) => {
     return items.map((item) => {
@@ -144,10 +181,16 @@ const Topbar = ({ menuItems }: { menuItems: IMenuItem[] }) => {
     });
   };
 
-  const SitesSelect = () => {
+  function SitesSelect({ sites }: { sites?: any[] }) {
+    if (!sites || !Array.isArray(sites)) {
+      return null; 
+    }
+  
     return (
       <Select
         className="border-none focus:outline-none focus:ring-0 bg-transparent"
+        value={selectedSite}
+        onChange={handleChangeSite}
         onTouchStart={(e) => {
           if (e.touches.length > 1) {
             e.preventDefault();
@@ -165,7 +208,7 @@ const Topbar = ({ menuItems }: { menuItems: IMenuItem[] }) => {
         ))}
       </Select>
     );
-  };
+  }
 
   return (
     <>
@@ -178,19 +221,24 @@ const Topbar = ({ menuItems }: { menuItems: IMenuItem[] }) => {
                 {/* Company Menu */}
                 <Select
                   className="border-none focus:outline-none focus:ring-0 bg-transparent"
-                  // onChange={handleChange}
-                  // value={formData.deliveryEntityId}
+                  value={selectedCountry}
+                  onChange={handleChangeCountry}
                   onTouchStart={(e) => {
                     if (e.touches.length > 1) {
                       e.preventDefault();
                     }
                   }}
                 >
-                  <SelectOption className="bg-base-100">SEG CM</SelectOption>
+                  <SelectOption className="bg-base-100">Select Country</SelectOption>
+                  {countries.map((country) => (
+                    <SelectOption key={country.countryId} value={country.countryId} className="bg-base-100">
+                      {country.countryName}
+                    </SelectOption>
+                  ))}
                 </Select>
 
                 {/* Site Menu */}
-                <SitesSelect />
+                <SitesSelect sites={sitesList} />
               </div>
 
               <Button
@@ -276,19 +324,24 @@ const Topbar = ({ menuItems }: { menuItems: IMenuItem[] }) => {
             {/* Company Menu */}
             <Select
               className="border-none focus:outline-none focus:ring-0 bg-transparent"
-              // onChange={handleChange}
-              // value={formData.deliveryEntityId}
+              value={selectedCountry}
+              onChange={handleChangeCountry}
               onTouchStart={(e) => {
                 if (e.touches.length > 1) {
                   e.preventDefault();
                 }
               }}
             >
-              <SelectOption className="bg-base-100">SEG CM</SelectOption>
+              <SelectOption className="bg-base-100">Select Country</SelectOption>
+              {countries.map((country) => (
+                <SelectOption key={country.countryId} value={country.countryId} className="bg-base-100">
+                  {country.countryName}
+                </SelectOption>
+              ))}
             </Select>
 
             {/* Site Menu */}
-            <SitesSelect />
+            <SitesSelect sites={sitesList} />
 
             {/* Dashboard controller */}
             <Tooltip

@@ -10,7 +10,7 @@ interface PAMTableProps {
     label: string;
     type: string;
     required: boolean;
-    options?: [];
+    options?: string[]; // changed type
   }>;
 }
 
