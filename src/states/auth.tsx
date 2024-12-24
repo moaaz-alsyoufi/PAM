@@ -1,9 +1,31 @@
-import { useCallback } from "react";
+import React, { useCallback } from "react";
 import createHookedContext from "@/hooks/create-hooked-context";
 import useSessionStorage from "@/hooks/use-session-storage";
-import { IAuthState } from "@/types/auth";
+import { IUser } from "@/types/apps/admintools/users";
+import { IAuthState } from "@/types/auth/state";
 
-let accessToken: string | null = null;
+interface AuthContextType {
+  authState: IAuthState;
+  setLoggedInUser: (user: IUser, token: string, countries: any[], sites: any[]) => void;
+  isLoggedIn: () => boolean;
+  logout: () => void;
+  getToken: () => string | null;
+  updateSiteId: (newSiteId: number) => void;
+}
+
+export const AuthContext = React.createContext<AuthContextType>({
+  authState: {
+    user: undefined,
+    token: undefined,
+    countries: undefined,
+    sites: undefined,
+  },
+  setLoggedInUser: () => {},
+  isLoggedIn: () => false,
+  logout: () => {},
+  getToken: () => null,
+  updateSiteId: () => {},
+});
 
 const useHook = () => {
   const [authState, setState] = useSessionStorage<IAuthState>(
@@ -16,10 +38,17 @@ const useHook = () => {
     }
   );
 
-  accessToken = authState.token ?? null;
+  let accessToken: string | null = authState.token ?? null;
+
+  const updateState = (changes: Partial<IAuthState>) => {
+    setState((prevState: IAuthState) => ({
+      ...prevState,
+      ...changes,
+    }));
+  };
 
   const setLoggedInUser = (
-    user: any,
+    user: IUser,
     token: string,
     countries: any[],
     sites: any[]
@@ -28,10 +57,13 @@ const useHook = () => {
     updateState({ user, token, countries, sites });
   };
 
-  const updateState = (changes: Partial<IAuthState>) => {
-    setState((prevState) => ({
+  const updateSiteId = (newSiteId: number) => {
+    setState((prevState: IAuthState) => ({
       ...prevState,
-      ...changes,
+      user: {
+        ...prevState.user,
+        siteid: newSiteId,
+      },
     }));
   };
 
@@ -57,6 +89,7 @@ const useHook = () => {
     isLoggedIn,
     logout,
     getToken,
+    updateSiteId,
   };
 };
 

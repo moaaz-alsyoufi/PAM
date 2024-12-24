@@ -6,11 +6,13 @@ export const ACTIVE_API_URL = `${ACTIVE_URL}api/`;
 const apiRequest = async (
   endpoint: string,
   method: string,
-  token: string,
+  token: string, // Ensure token is required
   body?: any
 ) => {
   // Remove leading slash if present
   const normalizedEndpoint = endpoint.startsWith('/') ? endpoint.slice(1) : endpoint;
+  
+  console.log("API Request - Endpoint:", normalizedEndpoint, "Method:", method); // Added log
   
   const requestOptions: RequestInit = {
     method,
@@ -24,14 +26,21 @@ const apiRequest = async (
     requestOptions.body = JSON.stringify(body);
   }
   
-  const response = await fetch(`${ACTIVE_API_URL}${normalizedEndpoint}`, requestOptions);
-  
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
+  try {
+    const response = await fetch(`${ACTIVE_API_URL}${normalizedEndpoint}`, requestOptions);
+    
+    if (!response.ok) {
+      console.error(`HTTP error! status: ${response.status}`); // Enhanced error logging
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    console.log("API Response Data:", data); // Added log
+    return data; // Ensure that the API returns an array directly
+  } catch (error) {
+    console.error("API Request Failed:", error); // Added error catch
+    throw error;
   }
-  
-  const data = await response.json();
-  return data; // Ensure that the API returns an array directly
 };
 
 export default apiRequest;
