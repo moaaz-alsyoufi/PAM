@@ -26,6 +26,7 @@ const Requests = () => {
             tableData={tableData}
             inputFields={inputFields}
             actions={hasActions}
+            title="Request"
           />
         ) : (
           <p>No data available</p> // Ensure this message is conditional
