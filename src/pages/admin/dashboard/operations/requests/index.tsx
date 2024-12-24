@@ -2,15 +2,16 @@ import PageMetaData from "@/components/PageMetaData";
 import PageTitle from "@/components/PageTitle";
 import PAMTable from "@/components/Table";
 import useRequests from "./use-requests";
-import { useAuthContext } from "@/states/auth"; // Import useAuthContext
+import { useAuthContext } from "@/states/auth";
 
 const Requests = () => {
-  const { authState } = useAuthContext(); // Access authState
-  const siteId = authState.user?.siteid || 0; // Get siteId
-  const token = authState.user?.token || ""; // Get token
-  console.log("Requests Component - siteId:", siteId, "token:", token); // Added log
-  const { columns, tableData, inputFields, hasActions } = useRequests(siteId, token); // Pass siteId and token
-
+  const { authState } = useAuthContext();
+  const siteId = authState.user?.siteid || 0;
+  const token = authState.user?.token || "";
+  const { columns, tableData, inputFields, hasActions } = useRequests(
+    siteId,
+    token
+  );
   return (
     <div>
       <PageMetaData title={"Requests"} />
