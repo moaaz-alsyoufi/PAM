@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 
 import useToast from "@/hooks/use-toast";
-import httpRequest from "@/services/api/request";
+import { apiRequest } from "@/services/api/request";
 import routes from "@/services/routes";
 
 const useForgotPassword = () => {
@@ -34,7 +34,7 @@ const useForgotPassword = () => {
     const onSubmit = handleSubmit(async (data) => {
         setIsLoading(true);
         try {
-            await httpRequest.post("/api/any/success/", data);
+            await apiRequest("/api/any/success/", "POST", "", data);
             toaster.success("The reset password link has been sent");
             navigate(routes.auth.resetPassword);
         } catch (e: any) {
