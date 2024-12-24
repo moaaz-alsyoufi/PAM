@@ -253,41 +253,43 @@ const TableComponent: React.FC<TableProps> = ({
               </tbody>
             </table>
           </div>
-          <div className="flex items-center justify-end px-5 pb-5 pt-3">
-            <Pagination>
-              <Button
-                size="sm"
-                aria-label="pagination-prev"
-                className="join-item"
-                disabled={currentPage === 1}
-                onClick={() => handlePageChange(currentPage - 1)}
-              >
-                <Icon icon={chevronLeftIcon} fontSize={16} />
-              </Button>
-              {Array.from({ length: totalPages }, (_, index) => (
+          {totalPages > 1 && (
+            <div className="flex items-center justify-end px-5 pb-5 pt-3">
+              <Pagination>
                 <Button
-                  key={index + 1}
                   size="sm"
-                  className={cn("join-item", {
-                    "bg-base-100": currentPage === index + 1,
-                  })}
-                  active={currentPage === index + 1}
-                  onClick={() => handlePageChange(index + 1)}
+                  aria-label="pagination-prev"
+                  className="join-item"
+                  disabled={currentPage === 1}
+                  onClick={() => handlePageChange(currentPage - 1)}
                 >
-                  {index + 1}
+                  <Icon icon={chevronLeftIcon} fontSize={16} />
                 </Button>
-              ))}
-              <Button
-                size="sm"
-                aria-label="pagination-next"
-                className="join-item"
-                disabled={currentPage === totalPages}
-                onClick={() => handlePageChange(currentPage + 1)}
-              >
-                <Icon icon={chevronRightIcon} fontSize={16} />
-              </Button>
-            </Pagination>
-          </div>
+                {Array.from({ length: totalPages }, (_, index) => (
+                  <Button
+                    key={index + 1}
+                    size="sm"
+                    className={cn("join-item", {
+                      "bg-base-100": currentPage === index + 1,
+                    })}
+                    active={currentPage === index + 1}
+                    onClick={() => handlePageChange(index + 1)}
+                  >
+                    {index + 1}
+                  </Button>
+                ))}
+                <Button
+                  size="sm"
+                  aria-label="pagination-next"
+                  className="join-item"
+                  disabled={currentPage === totalPages}
+                  onClick={() => handlePageChange(currentPage + 1)}
+                >
+                  <Icon icon={chevronRightIcon} fontSize={16} />
+                </Button>
+              </Pagination>
+            </div>
+          )}
         </CardBody>
       </Card>
       <DialogComponent
