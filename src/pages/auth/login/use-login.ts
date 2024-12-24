@@ -51,7 +51,6 @@ const useLogin = () => {
         loginData
       );
       toaster.success("Login successful...");
-      console.log("Login response:", response);
 
       // Fetch user countries
       const countriesResponse: any = await apiRequest(
@@ -59,7 +58,6 @@ const useLogin = () => {
         "GET",
         response.token
       );
-      console.log("Countries response:", countriesResponse);
 
       // Fetch user sites
       const siteResponse: any = await apiRequest(
@@ -67,7 +65,6 @@ const useLogin = () => {
         "GET",
         response.token
       );
-      console.log("Site response:", siteResponse);
 
       // Success logic
       setLoggedInUser(
