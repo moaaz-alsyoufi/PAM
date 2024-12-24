@@ -6,8 +6,8 @@ import { z } from "zod";
 import useToast from "@/hooks/use-toast";
 import routes from "@/services/routes";
 import { useAuthContext } from "@/states/auth";
-import { apiRequest } from "@/services/api/request";
 import { useLayoutContext } from "@/states/layout";
+import apiRequest from "@/services/api/api";
 
 const useLogin = () => {
   const navigate = useNavigate();
@@ -44,51 +44,47 @@ const useLogin = () => {
 
     try {
       // Login request
-      const response = await apiRequest("Login/login", "POST", "", loginData);
-      if (response.error) {
-        toaster.error(response.error);
-        throw new Error(response.error);
-      }
+      const response: any = await apiRequest(
+        "Login/login",
+        "POST",
+        "",
+        loginData
+      );
+      toaster.success("Login successful...");
+      console.log("Login response:", response);
 
       // Fetch user countries
-      const countriesResponse = await apiRequest(
+      const countriesResponse: any = await apiRequest(
         "Login/usercountries",
         "GET",
-        response.data.token
+        response.token
       );
-      if (countriesResponse.error) {
-        toaster.error(countriesResponse.error);
-        throw new Error(countriesResponse.error);
-      }
+      console.log("Countries response:", countriesResponse);
 
       // Fetch user sites
-      const siteResponse = await apiRequest(
-        `Login/usersites?companyId=${countriesResponse.data[0].companyId}`,
+      const siteResponse: any = await apiRequest(
+        `Login/usersites?companyId=${countriesResponse[0].companyId}`,
         "GET",
-        response.data.token
+        response.token
       );
-      if (siteResponse.error) {
-        toaster.error(siteResponse.error);
-        throw new Error(siteResponse.error);
-      }
+      console.log("Site response:", siteResponse);
 
-      toaster.success("Login successful...");
+      // Success logic
       setLoggedInUser(
-        response.data,
-        response.data.token,
-        countriesResponse.data,
-        siteResponse.data
+        response,
+        response.token,
+        countriesResponse,
+        siteResponse
       );
+      changeSite(response.siteId);
+      changeCompany(response.companyId);
 
-      changeSite(response.data.siteId);
-      changeCompany(response.data.companyId);
-
-      // Navigate to dashboard on success
+      // Navigate to dashboard
       navigate(routes.dashboard.index);
     } catch (error) {
       // General error handling
       toaster.error("An error occurred. Please try again.");
-      console.error("Error during login flow: ", error);
+      console.error("Error during login flow:", error);
     } finally {
       setIsLoading(false); // Ensure loading state is reset
     }
