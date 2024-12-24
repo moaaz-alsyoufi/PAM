@@ -42,6 +42,8 @@ const TableComponent: React.FC<TableProps> = ({
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [dialogType, setDialogType] = useState<"Add" | "Edit">("Add");
   const [currentRow, setCurrentRow] = useState<any | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage] = useState(10);
   const { dialogRef, handleShow, handleHide } = useDialog();
 
   const filteredData = useMemo(() => {
@@ -74,9 +76,17 @@ const TableComponent: React.FC<TableProps> = ({
         return sortOrder === "asc" ? aValue - bValue : bValue - aValue;
       }
 
-      return 0; // Fallback if values are not comparable
+      return 0;
     });
   }, [filteredData, sortColumn, sortOrder]);
+
+  const paginatedData = useMemo(() => {
+    const startIndex = (currentPage - 1) * rowsPerPage;
+    const endIndex = startIndex + rowsPerPage;
+    return sortedData.slice(startIndex, endIndex);
+  }, [sortedData, currentPage, rowsPerPage]);
+
+  const totalPages = Math.ceil(sortedData.length / rowsPerPage);
 
   const handleSort = (column: string) => {
     setSortOrder((prevOrder) =>
@@ -87,6 +97,11 @@ const TableComponent: React.FC<TableProps> = ({
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
+    setCurrentPage(1);
+  };
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
   };
 
   const openDialog = () => {
@@ -181,8 +196,8 @@ const TableComponent: React.FC<TableProps> = ({
                 </tr>
               </thead>
               <tbody>
-                {sortedData.length > 0 ? (
-                  sortedData.map((row, index) => (
+                {paginatedData.length > 0 ? (
+                  paginatedData.map((row, index) => (
                     <tr key={index} className="hover:bg-base-200/40">
                       {Object.keys(columns).map((columnKey) => (
                         <td
@@ -244,37 +259,37 @@ const TableComponent: React.FC<TableProps> = ({
                 size="sm"
                 aria-label="pagination-prev"
                 className="join-item"
-                startIcon={<Icon icon={chevronLeftIcon} fontSize={16} />}
-              />
-              <Button
-                size="sm"
-                className="join-item"
-                active
-                color="primary"
-                aria-label="pagination-1"
+                disabled={currentPage === 1}
+                onClick={() => handlePageChange(currentPage - 1)}
               >
-                1
+                <Icon icon={chevronLeftIcon} fontSize={16} />
               </Button>
-              <Button size="sm" className="join-item" aria-label="pagination-2">
-                2
-              </Button>
+              {Array.from({ length: totalPages }, (_, index) => (
+                <Button
+                  key={index + 1}
+                  size="sm"
+                  className={cn("join-item", {
+                    "bg-base-100": currentPage === index + 1,
+                  })}
+                  active={currentPage === index + 1}
+                  onClick={() => handlePageChange(index + 1)}
+                >
+                  {index + 1}
+                </Button>
+              ))}
               <Button
                 size="sm"
                 aria-label="pagination-next"
                 className="join-item"
-                startIcon={<Icon icon={chevronRightIcon} fontSize={16} />}
-              />
+                disabled={currentPage === totalPages}
+                onClick={() => handlePageChange(currentPage + 1)}
+              >
+                <Icon icon={chevronRightIcon} fontSize={16} />
+              </Button>
             </Pagination>
           </div>
         </CardBody>
       </Card>
-      {/* <DialogComponent
-        dialogRef={dialogRef}
-        handleHide={handleHide}
-        dialogType={dialogType}
-        current={currentRow}
-        onSuccess={handleSuccess}
-      /> */}
       <DialogComponent
         handleHide={handleHide}
         dialogRef={dialogRef}
