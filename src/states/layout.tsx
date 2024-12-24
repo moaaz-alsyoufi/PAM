@@ -15,8 +15,8 @@ const INIT_STATE: ILayoutState = {
     drawerOpen: false,
     dashboard: true,
   },
-  company: undefined,
-  site: undefined,
+  companyId: 0,
+  siteId: 0,
 };
 
 const useHook = () => {
@@ -76,6 +76,18 @@ const useHook = () => {
     });
   };
 
+  const changeSite = (siteId: ILayoutState["siteId"]) => {
+    updateState({
+      siteId,
+    });
+  };
+
+  const changeCompany = (companyId: ILayoutState["companyId"]) => {
+    updateState({
+      companyId,
+    });
+  };
+
   const reset = () => {
     setState(INIT_STATE);
   };
@@ -85,6 +97,8 @@ const useHook = () => {
     toggleLeftbarDrawer,
     toggleDashboard,
     changeTheme,
+    changeSite,
+    changeCompany,
     reset,
   };
 };
