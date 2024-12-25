@@ -18,7 +18,7 @@ interface CurrentData {
 interface DialogProps {
   handleHide: () => void;
   dialogRef: React.RefObject<HTMLDialogElement | null>;
-  dialogType: "Add" | "Edit";
+  dialogType: "Add" | "Edit" | "Preview";
   current: CurrentData | null;
   onSuccess: () => void;
   inputFields: InputField[];
@@ -186,7 +186,7 @@ const DialogComponent: React.FC<DialogProps> = ({
           ✕
         </button>
         <h3 className="font-bold text-lg">
-          {dialogType === "Add" ? "New" : "Edit"} {title}
+          {dialogType} {title}
         </h3>
 
         <form onSubmit={handleSubmit}>

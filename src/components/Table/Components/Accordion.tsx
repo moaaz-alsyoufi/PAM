@@ -1,6 +1,8 @@
 import pencilIcon from "@iconify/icons-lucide/pencil";
 import plusIcon from "@iconify/icons-lucide/plus";
 import trashIcon from "@iconify/icons-lucide/trash";
+import previewIcon from "@iconify/icons-lucide/eye";
+
 import { useState } from "react";
 
 import { Button, useDialog } from "@/components/daisyui";
@@ -10,9 +12,13 @@ import DialogComponent from "./Dialog";
 
 interface AccordionProps {
   rowData: object;
-  onEdit: (data: any) => void;
-  onDelete: (id: number) => void;
   actions: boolean;
+  showAction?: boolean;
+  deleteAction?: boolean;
+  editAction?: boolean;
+  onEdit?: (data: any) => void;
+  onDelete?: (id: number) => void;
+  onShow?: (id: number) => void;
   title: string;
 }
 
@@ -20,6 +26,9 @@ interface AccordionsProps {
   accordionData: any[];
   columns: Record<string, string>;
   actions: boolean;
+  showAction?: boolean;
+  deleteAction?: boolean;
+  editAction?: boolean;
   inputFields: Array<{
     name: string;
     label: string;
@@ -30,11 +39,15 @@ interface AccordionsProps {
 }
 
 const Accordion: React.FC<AccordionProps> = ({
-  actions,
   onDelete,
   onEdit,
+  onShow,
   title,
   rowData,
+  actions,
+  showAction,
+  deleteAction,
+  editAction,
 }) => {
   const handleDelete = () => {
     onDelete;
@@ -57,29 +70,48 @@ const Accordion: React.FC<AccordionProps> = ({
           ))}
           {actions && (
             <div className="w-full flex justify-end items-center">
-              <Button
-                color="ghost"
-                size="sm"
-                shape={"square"}
-                aria-label="Edit"
-                onClick={handleEdit}
-              >
-                <Icon
-                  icon={pencilIcon}
-                  className="text-base-content/70"
-                  fontSize={15}
-                />
-              </Button>
-              <Button
-                color="ghost"
-                className="text-error/70 hover:bg-error/20"
-                size="sm"
-                shape={"square"}
-                aria-label="Delete"
-                onClick={handleDelete}
-              >
-                <Icon icon={trashIcon} fontSize={16} />
-              </Button>
+              {showAction && (
+                <Button
+                  color="ghost"
+                  size="sm"
+                  shape={"square"}
+                  aria-label="Preview"
+                  onClick={() => onShow}
+                >
+                  <Icon
+                    icon={previewIcon}
+                    className="text-base-content/70"
+                    fontSize={15}
+                  />
+                </Button>
+              )}
+              {editAction && (
+                <Button
+                  color="ghost"
+                  size="sm"
+                  shape={"square"}
+                  aria-label="Edit"
+                  onClick={handleEdit}
+                >
+                  <Icon
+                    icon={pencilIcon}
+                    className="text-base-content/70"
+                    fontSize={15}
+                  />
+                </Button>
+              )}
+              {deleteAction && (
+                <Button
+                  color="ghost"
+                  className="text-error/70 hover:bg-error/20"
+                  size="sm"
+                  shape={"square"}
+                  aria-label="Delete"
+                  onClick={handleDelete}
+                >
+                  <Icon icon={trashIcon} fontSize={16} />
+                </Button>
+              )}
             </div>
           )}
         </div>
@@ -93,9 +125,14 @@ const AccordionComponent: React.FC<AccordionsProps> = ({
   accordionData,
   inputFields,
   title,
+  showAction,
+  deleteAction,
+  editAction,
 }) => {
   const { dialogRef, handleShow, handleHide } = useDialog();
-  const [dialogType, setDialogType] = useState<"Add" | "Edit">("Add");
+  const [dialogType, setDialogType] = useState<"Add" | "Edit" | "Preview">(
+    "Add"
+  );
   const [currentRow, setCurrentRow] = useState<any | null>(null);
 
   const openDialog = () => {
@@ -106,6 +143,12 @@ const AccordionComponent: React.FC<AccordionsProps> = ({
 
   const openEditDialog = (data: any) => {
     setDialogType("Edit");
+    setCurrentRow(data);
+    handleShow();
+  };
+
+  const openPreviewDialog = (data: any) => {
+    setDialogType("Preview");
     setCurrentRow(data);
     handleShow();
   };
@@ -135,8 +178,12 @@ const AccordionComponent: React.FC<AccordionsProps> = ({
             key={index}
             onEdit={openEditDialog}
             onDelete={handleDelete}
-            actions={actions}
             title={"title"}
+            actions={actions}
+            onShow={openPreviewDialog}
+            showAction={showAction}
+            editAction={editAction}
+            deleteAction={deleteAction}
           />
         ))}
       </div>

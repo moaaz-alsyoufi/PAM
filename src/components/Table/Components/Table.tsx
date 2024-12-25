@@ -1,6 +1,7 @@
 import chevronLeftIcon from "@iconify/icons-lucide/chevron-left";
 import chevronRightIcon from "@iconify/icons-lucide/chevron-right";
 import pencilIcon from "@iconify/icons-lucide/pencil";
+import previewIcon from "@iconify/icons-lucide/eye";
 import plusIcon from "@iconify/icons-lucide/plus";
 import searchIcon from "@iconify/icons-lucide/search";
 import sortAscIcon from "@iconify/icons-lucide/chevron-up";
@@ -23,6 +24,9 @@ interface TableProps {
   tableData: any[];
   columns: Record<string, string>;
   actions: boolean;
+  showAction?: boolean;
+  deleteAction?: boolean;
+  editAction?: boolean;
   title?: string;
   inputFields: Array<{
     name: string;
@@ -36,13 +40,18 @@ const TableComponent: React.FC<TableProps> = ({
   tableData,
   columns,
   actions,
+  showAction,
+  deleteAction,
+  editAction,
   inputFields,
   title,
 }) => {
   const [sortColumn, setSortColumn] = useState<string | null>(null);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [dialogType, setDialogType] = useState<"Add" | "Edit">("Add");
+  const [dialogType, setDialogType] = useState<"Add" | "Edit" | "Preview">(
+    "Add"
+  );
   const [currentRow, setCurrentRow] = useState<any | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage] = useState(10);
@@ -114,6 +123,12 @@ const TableComponent: React.FC<TableProps> = ({
 
   const openEditDialog = (user: any) => {
     setDialogType("Edit");
+    setCurrentRow(user);
+    handleShow();
+  };
+
+  const openPreviewDialog = (user: any) => {
+    setDialogType("Preview");
     setCurrentRow(user);
     handleShow();
   };
@@ -213,30 +228,48 @@ const TableComponent: React.FC<TableProps> = ({
                       {actions && (
                         <td className="border-y border-base-content/5 px-2 py-3 font-medium text-sm text-right pr-6">
                           <div className="inline-flex w-fit">
-                            <Button
-                              color="ghost"
-                              size="sm"
-                              shape="square"
-                              aria-label="Edit Row"
-                              onClick={() => openEditDialog(row)}
-                            >
-                              <Icon
-                                icon={pencilIcon}
-                                className="text-base-content/70"
-                                fontSize={15}
-                              />
-                            </Button>
-
-                            <Button
-                              color="ghost"
-                              className="text-error/70 hover:bg-error/20"
-                              size="sm"
-                              shape="square"
-                              aria-label="Delete Row"
-                              onClick={() => handleDelete(row.id)}
-                            >
-                              <Icon icon={trashIcon} fontSize={16} />
-                            </Button>
+                            {showAction && (
+                              <Button
+                                color="ghost"
+                                size="sm"
+                                shape="square"
+                                aria-label="preview Row"
+                                onClick={() => openPreviewDialog(row)}
+                              >
+                                <Icon
+                                  icon={previewIcon}
+                                  className="text-base-content/70"
+                                  fontSize={15}
+                                />
+                              </Button>
+                            )}
+                            {editAction && (
+                              <Button
+                                color="ghost"
+                                size="sm"
+                                shape="square"
+                                aria-label="Edit Row"
+                                onClick={() => openEditDialog(row)}
+                              >
+                                <Icon
+                                  icon={pencilIcon}
+                                  className="text-base-content/70"
+                                  fontSize={15}
+                                />
+                              </Button>
+                            )}
+                            {deleteAction && (
+                              <Button
+                                color="ghost"
+                                className="text-error/70 hover:bg-error/20"
+                                size="sm"
+                                shape="square"
+                                aria-label="Delete Row"
+                                onClick={() => handleDelete(row.id)}
+                              >
+                                <Icon icon={trashIcon} fontSize={16} />
+                              </Button>
+                            )}
                           </div>
                         </td>
                       )}
