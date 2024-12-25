@@ -15,6 +15,15 @@ const useRequests = (siteId: number, token: string) => {
     deliv_percent: "Deliv.%",
   };
 
+  const previewColumns = {
+    item: "Item",
+    unit: "Unit",
+    cost_code: "Cost Code",
+    requested_qty: "Requested Qty",
+    ordered_qty: "Ordered Qty",
+    delivered_qty: "Delivered Qty",
+  };
+
   const inputFields: any[] = [];
 
   useEffect(() => {
@@ -49,6 +58,7 @@ const useRequests = (siteId: number, token: string) => {
     inputFields,
     hasActions,
     loading,
+    previewColumns,
   };
 };
 
