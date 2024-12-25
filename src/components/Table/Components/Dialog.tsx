@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Button, Select, SelectOption } from "@/components/daisyui";
 import useToast from "@/hooks/use-toast";
 import { useAuthContext } from "@/states/auth";
+import PAMTable from "..";
+import { cn } from "@/helpers/utils/cn";
 
 interface InputField {
   name: string;
@@ -22,6 +24,7 @@ interface DialogProps {
   current: CurrentData | null;
   onSuccess: () => void;
   inputFields: InputField[];
+  previewColumns?: Record<string, string>;
   title?: string;
 }
 
@@ -33,6 +36,7 @@ const DialogComponent: React.FC<DialogProps> = ({
   onSuccess,
   inputFields,
   title,
+  previewColumns,
 }) => {
   // Initialize form data based on inputFields and current data
   const [formData, setFormData] = useState<Record<string, any>>(() => {
@@ -80,10 +84,10 @@ const DialogComponent: React.FC<DialogProps> = ({
 
       if (dialogType === "Edit" && current) {
         // Example: API call to update user
-        await updateUserApi(formData, token);
-      } else {
+        // await updateUserApi(formData, token);
+      } else if (dialogType === "Add") {
         // Example: API call to add user
-        await addUserApi(formData, token);
+        // await addUserApi(formData, token);
       }
 
       toaster.success(
@@ -176,7 +180,11 @@ const DialogComponent: React.FC<DialogProps> = ({
 
   return (
     <dialog ref={dialogRef} className="modal" aria-modal="true">
-      <div className="modal-box relative">
+      <div
+        className={cn("modal-box relative", {
+          "max-w-7xl": dialogType === "Preview",
+        })}
+      >
         <button
           type="button"
           className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
@@ -190,63 +198,37 @@ const DialogComponent: React.FC<DialogProps> = ({
         </h3>
 
         <form onSubmit={handleSubmit}>
-          <div className="space-y-3 my-4">
-            {inputFields.map((field) => renderInput(field))}
-          </div>
+          {dialogType === "Preview" ? (
+            <PAMTable
+              columns={previewColumns ?? {}}
+              tableData={[]}
+              inputFields={[]}
+              actions={false}
+            />
+          ) : (
+            <div className="space-y-3 my-4">
+              {inputFields.map((field) => renderInput(field))}
+            </div>
+          )}
 
-          <div className="text-right">
+          <div className="text-right mt-5">
             <Button
               className="w-full btn btn-sm"
               type="submit"
               disabled={isLoading}
               loading={isLoading}
             >
-              {dialogType === "Add" ? "Add" : "Save"}
+              {dialogType === "Add"
+                ? "Add"
+                : dialogType === "Edit"
+                  ? "Save"
+                  : "Export"}
             </Button>
           </div>
         </form>
       </div>
     </dialog>
   );
-};
-
-// Example API functions (replace with actual implementations)
-const addUserApi = async (data: Record<string, any>, token: string) => {
-  // Implement your API call to add a user
-  // Example using fetch:
-  const response = await fetch("/api/users", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify(data),
-  });
-
-  if (!response.ok) {
-    throw new Error("Failed to add user.");
-  }
-
-  return response.json();
-};
-
-const updateUserApi = async (data: Record<string, any>, token: string) => {
-  // Implement your API call to update a user
-  // Example using fetch:
-  const response = await fetch(`/api/users/${data.id}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify(data),
-  });
-
-  if (!response.ok) {
-    throw new Error("Failed to update user.");
-  }
-
-  return response.json();
 };
 
 export default DialogComponent;
