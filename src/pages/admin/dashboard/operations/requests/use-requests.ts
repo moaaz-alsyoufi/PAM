@@ -7,8 +7,8 @@ const useRequests = (siteId: number, token: string) => {
   const [loading, setLoading] = useState<boolean>(false);
 
   const columns = {
-    request: "Request",
-    pm_approved: "PM Approved",
+    refNo: "Request",
+    isApprovedByPm: "PM Approved",
     status: "Status",
     date: "Date",
     ordered_percent: "Ordered %",
@@ -25,10 +25,11 @@ const useRequests = (siteId: number, token: string) => {
         .then((res: any[]) => {
           const formattedRes = res.map((item) => ({
             ...item,
-            request: item.refNo,
-            pm_approved: item.isApprovedByPm,
+            isApprovedByPm: item.isApprovedByPm ? "Approved" : "-",
             date: new Date(item.date).toLocaleDateString("en-GB"),
           }));
+          console.log(formattedRes);
+
           setTableData(formattedRes);
         })
         .catch((error) => {
