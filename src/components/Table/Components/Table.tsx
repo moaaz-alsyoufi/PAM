@@ -267,19 +267,62 @@ const TableComponent: React.FC<TableProps> = ({
                 >
                   <Icon icon={chevronLeftIcon} fontSize={16} />
                 </Button>
-                {Array.from({ length: totalPages }, (_, index) => (
+
+                {/* Always show the first page */}
+                <Button
+                  size="sm"
+                  className={cn("join-item", {
+                    "bg-base-100": currentPage === 1,
+                  })}
+                  active={currentPage === 1}
+                  onClick={() => handlePageChange(1)}
+                >
+                  1
+                </Button>
+
+                {/* Add ellipses if currentPage > 3 */}
+                {currentPage > 3 && <span className="join-item"> </span>}
+
+                {/* Show pages around the current page */}
+                {Array.from({ length: 3 }, (_, index) => {
+                  const page = currentPage - 1 + index;
+                  if (page > 1 && page < totalPages) {
+                    return (
+                      <Button
+                        key={page}
+                        size="sm"
+                        className={cn("join-item", {
+                          "bg-base-100": currentPage === page,
+                        })}
+                        active={currentPage === page}
+                        onClick={() => handlePageChange(page)}
+                      >
+                        {page}
+                      </Button>
+                    );
+                  }
+                  return null;
+                })}
+
+                {/* Add ellipses if necessary */}
+                {currentPage < totalPages - 2 && (
+                  <span className="join-item"> </span>
+                )}
+
+                {/* Always show the last page */}
+                {totalPages > 1 && (
                   <Button
-                    key={index + 1}
                     size="sm"
                     className={cn("join-item", {
-                      "bg-base-100": currentPage === index + 1,
+                      "bg-base-100": currentPage === totalPages,
                     })}
-                    active={currentPage === index + 1}
-                    onClick={() => handlePageChange(index + 1)}
+                    active={currentPage === totalPages}
+                    onClick={() => handlePageChange(totalPages)}
                   >
-                    {index + 1}
+                    {totalPages}
                   </Button>
-                ))}
+                )}
+
                 <Button
                   size="sm"
                   aria-label="pagination-next"
