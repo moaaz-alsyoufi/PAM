@@ -9,10 +9,14 @@ const Requests = () => {
   const { authState } = useAuthContext();
   const siteId = authState.user?.siteid || 0;
   const token = authState.user?.token || "";
-  const { columns, tableData, inputFields, hasActions, loading } = useRequests(
-    siteId,
-    token
-  );
+  const {
+    columns,
+    tableData,
+    inputFields,
+    hasActions,
+    loading,
+    previewColumns,
+  } = useRequests(siteId, token);
   return (
     <div>
       <PageMetaData title={"Requests"} />
@@ -33,6 +37,7 @@ const Requests = () => {
               loading={loading}
               actions={hasActions}
               showAction={true}
+              previewColumns={previewColumns}
             />
           ) : (
             <p>No data available</p> // Ensure this message is conditional

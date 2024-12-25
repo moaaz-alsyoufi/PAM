@@ -4,6 +4,7 @@ import TableComponent from "./Components/Table";
 
 interface PAMTableProps {
   columns: Record<string, string>;
+  previewColumns?: Record<string, string>;
   tableData: any[];
   inputFields: Array<{
     name: string;
@@ -22,6 +23,7 @@ interface PAMTableProps {
 
 const PAMTable: React.FC<PAMTableProps> = ({
   columns,
+  previewColumns,
   tableData,
   inputFields,
   actions,
@@ -47,6 +49,7 @@ const PAMTable: React.FC<PAMTableProps> = ({
               showAction={showAction}
               deleteAction={deleteAction}
               editAction={editAction}
+              previewColumns={previewColumns}
             />
           </div>
 
@@ -61,6 +64,7 @@ const PAMTable: React.FC<PAMTableProps> = ({
               showAction={showAction}
               deleteAction={deleteAction}
               editAction={editAction}
+              previewColumns={previewColumns}
             />
           </div>
         </>

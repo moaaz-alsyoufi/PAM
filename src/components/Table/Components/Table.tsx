@@ -23,6 +23,7 @@ import { cn } from "@/helpers/utils/cn";
 interface TableProps {
   tableData: any[];
   columns: Record<string, string>;
+  previewColumns?: Record<string, string>;
   actions: boolean;
   showAction?: boolean;
   deleteAction?: boolean;
@@ -39,6 +40,7 @@ interface TableProps {
 const TableComponent: React.FC<TableProps> = ({
   tableData,
   columns,
+  previewColumns,
   actions,
   showAction,
   deleteAction,
@@ -378,6 +380,7 @@ const TableComponent: React.FC<TableProps> = ({
         onSuccess={handleSuccess}
         inputFields={inputFields}
         title={title}
+        previewColumns={previewColumns}
       />
     </>
   );

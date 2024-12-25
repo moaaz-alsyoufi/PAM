@@ -25,6 +25,7 @@ interface AccordionProps {
 interface AccordionsProps {
   accordionData: any[];
   columns: Record<string, string>;
+  previewColumns?: Record<string, string>;
   actions: boolean;
   showAction?: boolean;
   deleteAction?: boolean;
