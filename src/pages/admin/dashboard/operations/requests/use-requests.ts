@@ -28,7 +28,6 @@ const useRequests = (siteId: number, token: string) => {
             isApprovedByPm: item.isApprovedByPm ? "Approved" : "-",
             date: new Date(item.date).toLocaleDateString("en-GB"),
           }));
-          console.log(formattedRes);
 
           setTableData(formattedRes);
         })
