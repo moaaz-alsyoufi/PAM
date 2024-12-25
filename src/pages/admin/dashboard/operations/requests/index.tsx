@@ -29,9 +29,10 @@ const Requests = () => {
               columns={columns}
               tableData={tableData}
               inputFields={inputFields}
-              actions={hasActions}
               title="Request"
               loading={loading}
+              actions={hasActions}
+              showAction={true}
             />
           ) : (
             <p>No data available</p> // Ensure this message is conditional
