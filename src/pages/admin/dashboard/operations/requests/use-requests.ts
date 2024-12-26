@@ -4,6 +4,8 @@ import apiRequest from "@/services/api/api";
 const useRequests = (siteId: number, token: string) => {
   const hasActions = true;
   const [tableData, setTableData] = useState<any[]>([]);
+  const [requestDetails, setRequestDetails] = useState<any[]>([]);
+
   const [loading, setLoading] = useState<boolean>(false);
 
   const columns = {
@@ -25,6 +27,20 @@ const useRequests = (siteId: number, token: string) => {
   };
 
   const inputFields: any[] = [];
+
+  const getRequestDetails = async (materialId: number) => {
+    setLoading(true);
+    await apiRequest(`Requests/requestdetails/${materialId}`, "GET", token)
+      .then((res: any[]) => {
+        setRequestDetails(res);
+      })
+      .catch((error) => {
+        console.error("Error fetching request details:", error);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
 
   useEffect(() => {
     setLoading(true);
@@ -59,6 +75,8 @@ const useRequests = (siteId: number, token: string) => {
     hasActions,
     loading,
     previewColumns,
+    requestDetails,
+    getRequestDetails,
   };
 };
 
