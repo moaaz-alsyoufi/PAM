@@ -1,12 +1,16 @@
 import { useState, useEffect } from "react";
 import apiRequest from "@/services/api/api";
+import { useAuthContext } from "@/states/auth";
 
-const useRequests = (siteId: number, token: string) => {
+const useRequests = () => {
   const hasActions = true;
   const [tableData, setTableData] = useState<any[]>([]);
   const [requestDetails, setRequestDetails] = useState<any[]>([]);
 
   const [loading, setLoading] = useState<boolean>(false);
+  const { authState } = useAuthContext();
+  const siteId = authState.user?.siteid || 0;
+  const token = authState.user?.token || "";
 
   const columns = {
     refNo: "Request",
@@ -30,7 +34,11 @@ const useRequests = (siteId: number, token: string) => {
 
   const getRequestDetails = async (materialId: number) => {
     setLoading(true);
-    await apiRequest(`Requests/requestdetails/${materialId}`, "GET", token)
+    await apiRequest(
+      `Requests/requestdetails/${materialId}`,
+      "GET",
+      token ?? ""
+    )
       .then((res: any[]) => {
         setRequestDetails(res);
       })
@@ -40,12 +48,13 @@ const useRequests = (siteId: number, token: string) => {
       .finally(() => {
         setLoading(false);
       });
+    return requestDetails;
   };
 
   useEffect(() => {
     setLoading(true);
 
-    if (siteId > 0 && token) {
+    if (siteId && siteId > 0 && token) {
       apiRequest(`Requests/listrequests/${siteId}`, "GET", token)
         .then((res: any[]) => {
           const formattedRes = res.map((item) => ({
