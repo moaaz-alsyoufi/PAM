@@ -37,6 +37,7 @@ interface AccordionsProps {
     required: boolean;
   }>;
   title?: string;
+  addBtn?: boolean;
 }
 
 const Accordion: React.FC<AccordionProps> = ({
@@ -129,6 +130,7 @@ const AccordionComponent: React.FC<AccordionsProps> = ({
   showAction,
   deleteAction,
   editAction,
+  addBtn,
 }) => {
   const { dialogRef, handleShow, handleHide } = useDialog();
   const [dialogType, setDialogType] = useState<"Add" | "Edit" | "Preview">(
@@ -165,13 +167,15 @@ const AccordionComponent: React.FC<AccordionsProps> = ({
 
   return (
     <>
-      <Button
-        onClick={openDialog}
-        className="btn btn-ghost btn-xs h-8 border border-base-content/20 mb-4"
-      >
-        <Icon icon={plusIcon} fontSize={16} />
-        New {title}
-      </Button>
+      {addBtn && (
+        <Button
+          onClick={openDialog}
+          className="btn btn-ghost btn-xs h-8 border border-base-content/20 mb-4"
+        >
+          <Icon icon={plusIcon} fontSize={16} />
+          New {title}
+        </Button>
+      )}
       <div className="w-full space-y-4">
         {accordionData.map((data, index) => (
           <Accordion

@@ -19,6 +19,7 @@ interface PAMTableProps {
   editAction?: boolean;
   title?: string;
   loading?: boolean;
+  addBtn?: boolean;
 }
 
 const PAMTable: React.FC<PAMTableProps> = ({
@@ -32,6 +33,7 @@ const PAMTable: React.FC<PAMTableProps> = ({
   editAction,
   title,
   loading,
+  addBtn,
 }) => {
   return (
     <div className="mt-5">
@@ -50,6 +52,7 @@ const PAMTable: React.FC<PAMTableProps> = ({
               deleteAction={deleteAction}
               editAction={editAction}
               previewColumns={previewColumns}
+              addBtn={addBtn}
             />
           </div>
 
@@ -65,6 +68,7 @@ const PAMTable: React.FC<PAMTableProps> = ({
               deleteAction={deleteAction}
               editAction={editAction}
               previewColumns={previewColumns}
+              addBtn={addBtn}
             />
           </div>
         </>
