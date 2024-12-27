@@ -37,6 +37,7 @@ interface TableProps {
     type: string;
     required: boolean;
   }>;
+  addBtn?: boolean;
 }
 
 const TableComponent: React.FC<TableProps> = ({
@@ -49,6 +50,7 @@ const TableComponent: React.FC<TableProps> = ({
   editAction,
   inputFields,
   title,
+  addBtn,
 }) => {
   const [sortColumn, setSortColumn] = useState<string | null>(null);
   const [data, setData] = useState<any[]>([]);
@@ -164,13 +166,17 @@ const TableComponent: React.FC<TableProps> = ({
       <Card className="bg-base-100">
         <CardBody className="p-0">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-start sm:justify-between px-5 pt-5 space-y-4 sm:space-y-0">
-            <Button
-              onClick={openDialog}
-              className="btn btn-ghost btn-xs h-8 border border-base-content/20"
-            >
-              <Icon icon={plusIcon} fontSize={16} />
-              New {title}
-            </Button>
+            {addBtn ? (
+              <Button
+                onClick={openDialog}
+                className="btn btn-ghost btn-xs h-8 border border-base-content/20"
+              >
+                <Icon icon={plusIcon} fontSize={16} />
+                New {title}
+              </Button>
+            ) : (
+              <span className="hidden lg:block"></span>
+            )}
             <div className="form-control flex flex-row items-center rounded-box border border-base-content/20 px-2">
               <Icon
                 icon={searchIcon}
