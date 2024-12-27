@@ -156,8 +156,8 @@ const TableComponent: React.FC<TableProps> = ({
     console.log(`Delete row with ID: ${id}`);
   };
 
-  const handleSuccess = () => {
-    console.log("Dialog action completed!");
+  const handleSuccess = (data: any) => {
+    console.log(data);
     handleHide();
   };
 
@@ -398,7 +398,7 @@ const TableComponent: React.FC<TableProps> = ({
         dialogRef={dialogRef}
         dialogType={dialogType}
         current={currentRow}
-        onSuccess={handleSuccess}
+        onSuccess={handleSuccess} // Pass success handler
         inputFields={inputFields}
         title={title}
         previewColumns={previewColumns}

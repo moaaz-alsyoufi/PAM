@@ -23,7 +23,7 @@ interface DialogProps {
   dialogRef: React.RefObject<HTMLDialogElement | null>;
   dialogType: "Add" | "Edit" | "Preview";
   current: CurrentData | null;
-  onSuccess: () => void;
+  onSuccess: (formData: any) => void;
   inputFields: InputField[];
   previewColumns?: Record<string, string>;
   title?: string;
@@ -107,7 +107,7 @@ const DialogComponent: React.FC<DialogProps> = ({
       toaster.success(
         `${dialogType === "Edit" ? "updated" : "created"} successfully.`
       );
-      onSuccess();
+      onSuccess(formData);
     } catch (error: any) {
       console.error("Error saving user:", error);
       if (error.response) {
