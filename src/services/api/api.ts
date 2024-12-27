@@ -6,20 +6,26 @@ export const ACTIVE_API_URL = `${ACTIVE_URL}api/`;
 const apiRequest = async (
   endpoint: string,
   method: string,
-  token: string, // Ensure token is required
-  body?: any
+  token: string,
+  body?: any,
+  responseType?: "json" | "blob"
 ) => {
   // Remove leading slash if present
   const normalizedEndpoint = endpoint.startsWith("/")
     ? endpoint.slice(1)
     : endpoint;
 
+  const headers: Record<string, string> = {
+    Authorization: `Bearer ${token}`,
+  };
+
+  if (responseType !== "blob") {
+    headers["Content-Type"] = "application/json";
+  }
+
   const requestOptions: RequestInit = {
     method,
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
+    headers, // Pass the headers object here
   };
 
   if (body) {
@@ -33,14 +39,17 @@ const apiRequest = async (
     );
 
     if (!response.ok) {
-      console.error(`HTTP error! status: ${response.status}`); // Enhanced error logging
+      console.error(`HTTP error! status: ${response.status}`);
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const data = await response.json();
-    return data; // Ensure that the API returns an array directly
+    if (responseType === "blob") {
+      return await response.blob();
+    }
+
+    return await response.json();
   } catch (error) {
-    console.error("API Request Failed:", error); // Added error catch
+    console.error("API Request Failed:", error);
     throw error;
   }
 };
