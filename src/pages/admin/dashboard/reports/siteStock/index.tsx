@@ -1,10 +1,12 @@
+import React from "react";
 import PageMetaData from "@/components/PageMetaData";
 import PageTitle from "@/components/PageTitle";
 import PAMTable from "@/components/Table";
 import useSiteStock from "./use-site-stock";
+import { Loader } from "@/components/Loader";
 
 const SiteStock = () => {
-  const { columns, tableData, inputFields, hasActions } = useSiteStock();
+  const { columns, tableData, inputFields, hasActions, loading } = useSiteStock();
 
   return (
     <div>
@@ -12,12 +14,16 @@ const SiteStock = () => {
 
       <PageTitle title={"Site Stock"} subMenu={"Dashboard"} center="Reports" />
       <div>
-        <PAMTable
-          columns={columns}
-          tableData={tableData}
-          inputFields={inputFields}
-          actions={hasActions}
-        />
+        {loading ? (
+          <Loader />
+        ) : (
+          <PAMTable
+            columns={columns}
+            tableData={tableData}
+            inputFields={inputFields}
+            actions={hasActions}
+          />
+        )}
       </div>
     </div>
   );
