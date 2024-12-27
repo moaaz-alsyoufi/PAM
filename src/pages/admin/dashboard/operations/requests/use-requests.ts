@@ -22,10 +22,10 @@ const useRequests = () => {
   };
 
   const previewColumns = {
-    item: "Item",
-    unit: "Unit",
-    cost_code: "Cost Code",
-    requested_qty: "Requested Qty",
+    itemName: "Item",
+    itemUnit: "Unit",
+    code: "Cost Code",
+    quantity: "Requested Qty",
     ordered_qty: "Ordered Qty",
     delivered_qty: "Delivered Qty",
   };
@@ -34,21 +34,20 @@ const useRequests = () => {
 
   const getRequestDetails = async (materialId: number) => {
     setLoading(true);
-    await apiRequest(
-      `Requests/requestdetails/${materialId}`,
-      "GET",
-      token ?? ""
-    )
-      .then((res: any[]) => {
-        setRequestDetails(res);
-      })
-      .catch((error) => {
-        console.error("Error fetching request details:", error);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-    return requestDetails;
+    try {
+      const response = await apiRequest(
+        `Requests/requestdetails/${materialId}`,
+        "GET",
+        token ?? ""
+      );
+      setRequestDetails(response);
+      return response;
+    } catch (error) {
+      console.error("Error fetching request details:", error);
+      throw error; // Re-throw the error so calling code can handle it if needed
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
