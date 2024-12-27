@@ -26,6 +26,7 @@ interface DialogProps {
   inputFields: InputField[];
   previewColumns?: Record<string, string>;
   title?: string;
+  data?: any[];
 }
 
 const DialogComponent: React.FC<DialogProps> = ({
@@ -37,6 +38,7 @@ const DialogComponent: React.FC<DialogProps> = ({
   inputFields,
   title,
   previewColumns,
+  data,
 }) => {
   // Initialize form data based on inputFields and current data
   const [formData, setFormData] = useState<Record<string, any>>(() => {
@@ -201,7 +203,7 @@ const DialogComponent: React.FC<DialogProps> = ({
           {dialogType === "Preview" ? (
             <PAMTable
               columns={previewColumns ?? {}}
-              tableData={[]}
+              tableData={data ?? []}
               inputFields={[]}
               actions={false}
             />
