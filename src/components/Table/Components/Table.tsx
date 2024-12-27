@@ -19,6 +19,8 @@ import {
 import Icon from "@/components/Icon";
 import DialogComponent from "./Dialog";
 import { cn } from "@/helpers/utils/cn";
+import { useLocation } from "react-router-dom";
+import useRequests from "@/pages/admin/dashboard/operations/requests/use-requests";
 
 interface TableProps {
   tableData: any[];
@@ -49,6 +51,7 @@ const TableComponent: React.FC<TableProps> = ({
   title,
 }) => {
   const [sortColumn, setSortColumn] = useState<string | null>(null);
+  const [data, setData] = useState<any[]>([]);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [dialogType, setDialogType] = useState<"Add" | "Edit" | "Preview">(
@@ -58,6 +61,8 @@ const TableComponent: React.FC<TableProps> = ({
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage] = useState(10);
   const { dialogRef, handleShow, handleHide } = useDialog();
+  const location = useLocation();
+  const { getRequestDetails } = useRequests();
 
   const filteredData = useMemo(() => {
     const lowercasedQuery = searchQuery.toLowerCase();
@@ -123,15 +128,25 @@ const TableComponent: React.FC<TableProps> = ({
     handleShow();
   };
 
-  const openEditDialog = (user: any) => {
+  const openEditDialog = (row: any) => {
     setDialogType("Edit");
-    setCurrentRow(user);
+    setCurrentRow(row);
     handleShow();
   };
 
-  const openPreviewDialog = (user: any) => {
+  const openPreviewDialog = async (row: any) => {
+    const currentPageUrl = location.pathname.split("/").pop();
+
+    if (currentPageUrl === "requests") {
+      try {
+        const details = await getRequestDetails(row.materialId);
+        setData(details.details);
+      } catch (error) {
+        console.error(error);
+      }
+    }
     setDialogType("Preview");
-    setCurrentRow(user);
+    setCurrentRow(row);
     handleShow();
   };
 
@@ -381,6 +396,7 @@ const TableComponent: React.FC<TableProps> = ({
         inputFields={inputFields}
         title={title}
         previewColumns={previewColumns}
+        data={data}
       />
     </>
   );
