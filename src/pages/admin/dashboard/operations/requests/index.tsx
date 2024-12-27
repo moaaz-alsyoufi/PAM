@@ -8,7 +8,6 @@ import { Loader } from "@/components/Loader";
 const Requests = () => {
   const { authState } = useAuthContext();
   const siteId = authState.user?.siteid || 0;
-  const token = authState.user?.token || "";
   const {
     columns,
     tableData,
@@ -16,7 +15,7 @@ const Requests = () => {
     hasActions,
     loading,
     previewColumns,
-  } = useRequests(siteId, token);
+  } = useRequests();
   return (
     <div>
       <PageMetaData title={"Requests"} />
