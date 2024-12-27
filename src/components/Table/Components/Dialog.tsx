@@ -4,6 +4,7 @@ import useToast from "@/hooks/use-toast";
 import { useAuthContext } from "@/states/auth";
 import PAMTable from "..";
 import { cn } from "@/helpers/utils/cn";
+import useRequests from "@/pages/admin/dashboard/operations/requests/use-requests";
 
 interface InputField {
   name: string;
@@ -60,6 +61,7 @@ const DialogComponent: React.FC<DialogProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const { toaster } = useToast();
   const { getToken } = useAuthContext();
+  const { exportRequest } = useRequests();
 
   // Optional: Update formData when current changes (e.g., when editing a different user)
   useEffect(() => {
@@ -90,6 +92,16 @@ const DialogComponent: React.FC<DialogProps> = ({
       } else if (dialogType === "Add") {
         // Example: API call to add user
         // await addUserApi(formData, token);
+      } else if (dialogType === "Preview") {
+        const currentPageUrl = location.pathname.split("/").pop();
+        if (currentPageUrl === "requests") {
+          try {
+            await exportRequest(current?.materialId);
+            console.log("PDF exported successfully");
+          } catch (error) {
+            console.error("Error exporting PDF:", error);
+          }
+        }
       }
 
       toaster.success(

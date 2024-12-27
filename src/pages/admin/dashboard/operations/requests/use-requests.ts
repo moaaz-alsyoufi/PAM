@@ -50,6 +50,39 @@ const useRequests = () => {
     }
   };
 
+  const exportRequest = async (materialId: number) => {
+    setLoading(true);
+    try {
+      const response = await apiRequest(
+        `Requests/materialrequest/pdf/${materialId}`,
+        "GET",
+        token ?? "",
+        undefined, // No request body for GET
+        "blob" // Specify blob response type
+      );
+
+      // Create a blob from the response
+      const blob = new Blob([response], { type: "application/pdf" });
+
+      // Generate a download link and click it programmatically
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `MaterialRequest-${materialId}.pdf`; // Provide a filename
+      link.click();
+
+      // Cleanup the URL object
+      window.URL.revokeObjectURL(url);
+
+      return response;
+    } catch (error) {
+      console.error("Error fetching request details pdf:", error);
+      throw error; // Re-throw the error so calling code can handle it if needed
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     setLoading(true);
 
@@ -85,6 +118,7 @@ const useRequests = () => {
     previewColumns,
     requestDetails,
     getRequestDetails,
+    exportRequest,
   };
 };
 
