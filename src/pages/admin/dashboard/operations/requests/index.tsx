@@ -37,6 +37,7 @@ const Requests = () => {
               actions={hasActions}
               showAction={true}
               previewColumns={previewColumns}
+              addBtn={true}
             />
           ) : (
             <p>No data available</p> // Ensure this message is conditional
