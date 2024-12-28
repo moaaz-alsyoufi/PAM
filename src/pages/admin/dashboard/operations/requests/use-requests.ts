@@ -30,7 +30,28 @@ const useRequests = () => {
     delivered_qty: "Delivered Qty",
   };
 
-  const inputFields: any[] = [];
+  const inputFields = [
+    { name: "request", label: "Request", type: "text", required: true },
+    {
+      name: "sub",
+      label: "Select Sub",
+      type: "select",
+      required: true,
+      options: ["sub1", "sub2"],
+    },
+    { name: "remarks", label: "Remarks", type: "text", required: false },
+
+    {
+      name: "item",
+      label: "Select Item",
+      type: "select",
+      required: true,
+      options: ["item1", "item2"],
+    },
+    { name: "unit", label: "Unit", type: "text", required: true },
+    { name: "costCode", label: "Cost Code", type: "text", required: true },
+    { name: "qty", label: "Qty", type: "number", required: true },
+  ];
 
   const getRequestDetails = async (materialId: number) => {
     setLoading(true);
