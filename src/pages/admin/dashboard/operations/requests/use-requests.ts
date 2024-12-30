@@ -42,7 +42,7 @@ const useRequests = () => {
     { name: "remarks", label: "Remarks", type: "text", required: false },
 
     {
-      name: "item",
+      name: "items",
       label: "Select Item",
       type: "select",
       required: true,
