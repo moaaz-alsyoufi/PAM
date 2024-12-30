@@ -71,6 +71,23 @@ const useRequests = () => {
     }
   };
 
+  const getNewRequest = async (siteId: number) => {
+    setLoading(true);
+    try {
+      const response = await apiRequest(
+        `Requests/newrequest/${siteId}`,
+        "GET",
+        token ?? ""
+      );
+      return response;
+    } catch (error) {
+      console.error("Error fetching new request:", error);
+      throw error; // Re-throw the error so calling code can handle it if needed
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const exportRequest = async (materialId: number) => {
     setLoading(true);
     try {
@@ -139,6 +156,7 @@ const useRequests = () => {
     previewColumns,
     requestDetails,
     getRequestDetails,
+    getNewRequest,
     exportRequest,
   };
 };
