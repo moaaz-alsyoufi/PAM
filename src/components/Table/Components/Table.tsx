@@ -21,6 +21,7 @@ import DialogComponent from "./Dialog";
 import { cn } from "@/helpers/utils/cn";
 import { useLocation } from "react-router-dom";
 import useRequests from "@/pages/admin/dashboard/operations/requests/use-requests";
+import { useAuthContext } from "@/states/auth";
 
 interface TableProps {
   tableData: any[];
@@ -64,7 +65,8 @@ const TableComponent: React.FC<TableProps> = ({
   const [rowsPerPage] = useState(10);
   const { dialogRef, handleShow, handleHide } = useDialog();
   const location = useLocation();
-  const { getRequestDetails } = useRequests();
+  const { getRequestDetails, getNewRequest } = useRequests();
+  const { authState } = useAuthContext();
 
   const filteredData = useMemo(() => {
     const lowercasedQuery = searchQuery.toLowerCase();
@@ -124,7 +126,20 @@ const TableComponent: React.FC<TableProps> = ({
     setCurrentPage(page);
   };
 
-  const openDialog = () => {
+  const openDialog = async () => {
+    const currentPageUrl = location.pathname.split("/").pop();
+
+    if (currentPageUrl === "requests") {
+      const siteId = authState.user?.siteid;
+      try {
+        const details = await getNewRequest(siteId);
+        setData(details.details);
+        console.log(details);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
     setDialogType("Add");
     setCurrentRow(null);
     handleShow();
