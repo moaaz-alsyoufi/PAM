@@ -6,7 +6,12 @@ import { IAuthState } from "@/types/auth/state";
 
 interface AuthContextType {
   authState: IAuthState;
-  setLoggedInUser: (user: IUser, token: string, countries: any[], sites: any[]) => void;
+  setLoggedInUser: (
+    user: IUser,
+    token: string,
+    countries: any[],
+    sites: any[]
+  ) => void;
   isLoggedIn: () => boolean;
   logout: () => void;
   getToken: () => string | null;
@@ -81,7 +86,7 @@ const useHook = () => {
     });
   };
 
-  const getToken = () => accessToken;
+  const getToken: any = () => accessToken;
 
   return {
     authState,
