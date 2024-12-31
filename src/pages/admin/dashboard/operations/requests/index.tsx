@@ -16,6 +16,13 @@ const Requests = () => {
     loading,
     previewColumns,
   } = useRequests();
+
+  const canMakeNewRequest =
+    authState.user.roleid === 4 ||
+    authState.user.roleid === 5 ||
+    authState.user.roleid === 7 ||
+    authState.user.roleid === 10;
+
   return (
     <div>
       <PageMetaData title={"Requests"} />
@@ -37,7 +44,7 @@ const Requests = () => {
               actions={hasActions}
               showAction={true}
               previewColumns={previewColumns}
-              addBtn={true}
+              addBtn={canMakeNewRequest}
             />
           ) : (
             <p>No data available</p> // Ensure this message is conditional
