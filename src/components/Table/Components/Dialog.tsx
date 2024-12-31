@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Select, SelectOption } from "@/components/daisyui";
 import useToast from "@/hooks/use-toast";
 import { useAuthContext } from "@/states/auth";
@@ -32,6 +32,7 @@ interface DialogProps {
 
 const DialogComponent: React.FC<DialogProps> = ({
   handleHide,
+  dialogRef,
   dialogType,
   current,
   onSuccess,
@@ -190,8 +191,6 @@ const DialogComponent: React.FC<DialogProps> = ({
       }
     }
   };
-
-  const dialogRef = useRef<HTMLDialogElement>(null!);
 
   return (
     <dialog ref={dialogRef} className="modal" aria-modal="true">
