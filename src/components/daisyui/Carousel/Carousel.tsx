@@ -4,12 +4,12 @@ import {
   HTMLAttributes,
   ReactElement,
   cloneElement,
-  createRef,
   forwardRef,
   useEffect,
   useState,
   RefObject,
   RefAttributes,
+  createRef,
 } from "react";
 import { twMerge } from "tailwind-merge";
 
@@ -53,12 +53,11 @@ const Carousel = forwardRef<HTMLDivElement, CarouselProps>(
       })
     );
 
-    // Updated state type to include | null
-    const [itemRefs, setItemRefs] = useState<RefObject<HTMLDivElement | null>[]>([]);
+    const [itemRefs, setItemRefs] = useState<RefObject<HTMLDivElement>[]>([]);
     const [activeIndex, setActiveIndex] = useState(0);
 
     useEffect(() => {
-      const newRefs: RefObject<HTMLDivElement | null>[] = children.map(() =>
+      const newRefs: RefObject<HTMLDivElement>[] = children.map(() =>
         createRef<HTMLDivElement>()
       );
       setItemRefs(newRefs);
@@ -86,7 +85,7 @@ const Carousel = forwardRef<HTMLDivElement, CarouselProps>(
           className={classes}
         >
           {children.map((child, i) => {
-            const childRef = itemRefs[i] as RefObject<HTMLDivElement | null>;
+            const childRef = itemRefs[i] as RefObject<HTMLDivElement>;
 
             return cloneElement(child, {
               key: i,
