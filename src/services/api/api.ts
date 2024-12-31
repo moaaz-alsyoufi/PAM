@@ -8,7 +8,7 @@ const apiRequest = async (
   method: string,
   token: string,
   body?: any,
-  responseType?: "json" | "blob"
+  responseType: "json" | "blob" = "json"
 ) => {
   // Remove leading slash if present
   const normalizedEndpoint = endpoint.startsWith("/")

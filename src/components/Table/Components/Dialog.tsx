@@ -96,10 +96,12 @@ const DialogComponent: React.FC<DialogProps> = ({
         const currentPageUrl = location.pathname.split("/").pop();
         if (currentPageUrl === "requests") {
           try {
-            await exportRequest(current?.materialId);
-            console.log("PDF exported successfully");
+            const pdfBlob = await exportRequest(current?.materialId);
+            const pdfUrl = URL.createObjectURL(pdfBlob);
+            window.open(pdfUrl, "_blank");
+            console.log("PDF opened successfully");
           } catch (error) {
-            console.error("Error exporting PDF:", error);
+            console.error("Error opening PDF:", error);
           }
         }
       }
