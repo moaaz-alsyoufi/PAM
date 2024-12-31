@@ -17,11 +17,10 @@ const Requests = () => {
     previewColumns,
   } = useRequests();
 
+  const roleId = authState.user.roleid;
+
   const canMakeNewRequest =
-    authState.user.roleid === 4 ||
-    authState.user.roleid === 5 ||
-    authState.user.roleid === 7 ||
-    authState.user.roleid === 10;
+    roleId === 4 || roleId === 5 || roleId === 7 || roleId === 10;
 
   return (
     <div>
