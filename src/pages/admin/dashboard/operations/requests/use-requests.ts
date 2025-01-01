@@ -6,8 +6,13 @@ const useRequests = () => {
   const hasActions = true;
   const [tableData, setTableData] = useState<any[]>([]);
   const [requestDetails, setRequestDetails] = useState<any[]>([]);
-
   const [loading, setLoading] = useState<boolean>(false);
+
+  const [newRequestRefNumber, setNewRequestRefNumber] = useState<string>("");
+  const [subContractors, setSubContractors] = useState<any[]>([]);
+  const [costCodes, setCostCodes] = useState<any[]>([]);
+  const [searchedItems, setSearchedItems] = useState<any[]>([]);
+
   const { authState } = useAuthContext();
   const siteId = authState.user?.siteid || 0;
   const token = authState.user?.token || "";
@@ -40,7 +45,6 @@ const useRequests = () => {
       options: ["sub1", "sub2"],
     },
     { name: "remarks", label: "Remarks", type: "text", required: false },
-
     {
       name: "items",
       label: "Select Item",
@@ -56,16 +60,12 @@ const useRequests = () => {
   const getRequestDetails = async (materialId: number) => {
     setLoading(true);
     try {
-      const response = await apiRequest(
-        `Requests/requestdetails/${materialId}`,
-        "GET",
-        token ?? ""
-      );
+      const response = await apiRequest(`Requests/requestdetails/${materialId}`, "GET", token);
       setRequestDetails(response);
       return response;
     } catch (error) {
-      console.error("Error fetching request details:", error);
-      throw error; // Re-throw the error so calling code can handle it if needed
+      console.error(error);
+      throw error;
     } finally {
       setLoading(false);
     }
@@ -74,15 +74,11 @@ const useRequests = () => {
   const getNewRequest = async (siteId: number) => {
     setLoading(true);
     try {
-      const response = await apiRequest(
-        `Requests/newrequest/${siteId}`,
-        "GET",
-        token ?? ""
-      );
+      const response = await apiRequest(`Requests/newrequest/${siteId}`, "GET", token);
       return response;
     } catch (error) {
-      console.error("Error fetching new request:", error);
-      throw error; // Re-throw the error so calling code can handle it if needed
+      console.error(error);
+      throw error;
     } finally {
       setLoading(false);
     }
@@ -92,13 +88,72 @@ const useRequests = () => {
     if (!materialId) {
       throw new Error("Material ID is undefined");
     }
-    return await apiRequest(`Requests/materialrequest/pdf/${materialId}`, "GET", token, undefined, "blob");
+    return await apiRequest(
+      `Requests/materialrequest/pdf/${materialId}`,
+      "GET",
+      token,
+      undefined,
+      "blob"
+    );
+  };
+
+  const fetchNewRequestData = async () => {
+    setLoading(true);
+    try {
+      const newReqData = await apiRequest(`Requests/newrequest/${siteId}`, "GET", token);
+      setNewRequestRefNumber(newReqData.refNumber);
+      const subs = await apiRequest("Requests/subcontractors", "GET", token);
+      setSubContractors(subs);
+      const cc = await apiRequest("Requests/costcodes", "GET", token);
+      setCostCodes(cc);
+    } catch (error) {
+      console.error(error);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const searchItems = async (searchTerm: string) => {
+    setLoading(true);
+    try {
+      const response = await apiRequest(
+        `Requests/searchitems?searchTerm=${encodeURIComponent(searchTerm)}`,
+        "GET",
+        token
+      );
+      setSearchedItems(response);
+      return response;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const createNewRequest = async (remarks: string, items: any[]) => {
+    setLoading(true);
+    try {
+      const payload = { remarks, items };
+      const response = await apiRequest(
+        `Requests/createnewrequest/${siteId}`,
+        "POST",
+        token,
+        payload
+      );
+      return response;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
     setLoading(true);
-
-    if (siteId && siteId > 0 && token) {
+    if (siteId > 0 && token) {
       apiRequest(`Requests/listrequests/${siteId}`, "GET", token)
         .then((res: any[]) => {
           const formattedRes = res.map((item) => ({
@@ -106,11 +161,10 @@ const useRequests = () => {
             isApprovedByPm: item.isApprovedByPm ? "Approved" : "-",
             date: new Date(item.date).toLocaleDateString("en-GB"),
           }));
-
           setTableData(formattedRes);
         })
         .catch((error) => {
-          console.error("Error fetching requests:", error);
+          console.error(error);
         })
         .finally(() => {
           setLoading(false);
@@ -123,15 +177,22 @@ const useRequests = () => {
 
   return {
     columns,
+    previewColumns,
     tableData,
+    requestDetails,
     inputFields,
     hasActions,
     loading,
-    previewColumns,
-    requestDetails,
+    newRequestRefNumber,
+    subContractors,
+    costCodes,
+    searchedItems,
     getRequestDetails,
     getNewRequest,
     exportRequest,
+    fetchNewRequestData,
+    searchItems,
+    createNewRequest,
   };
 };
 
