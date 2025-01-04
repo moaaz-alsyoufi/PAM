@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import { Button, Select, SelectOption } from "@/components/daisyui";
 import useToast from "@/hooks/use-toast";
 import { useAuthContext } from "@/states/auth";
-import PAMTable from "..";
 import { cn } from "@/helpers/utils/cn";
 import useRequests from "../use-requests";
+import PAMTable from "@/components/Table";
 
 interface InputField {
   name: string;
