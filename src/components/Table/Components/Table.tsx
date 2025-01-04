@@ -31,7 +31,7 @@ interface TableProps {
   showAction?: boolean;
   deleteAction?: boolean;
   editAction?: boolean;
-  title?: string;
+  title: string;
   inputFields: Array<{
     name: string;
     label: string;
@@ -39,6 +39,8 @@ interface TableProps {
     required: boolean;
   }>;
   addBtn?: boolean;
+  dynamicDialog?: boolean;
+  openStaticDialog?: (type: "Add" | "Edit" | "Preview", Data?: any) => void;
 }
 
 const TableComponent: React.FC<TableProps> = ({
@@ -52,6 +54,8 @@ const TableComponent: React.FC<TableProps> = ({
   inputFields,
   title,
   addBtn,
+  dynamicDialog = true,
+  openStaticDialog,
 }) => {
   const [sortColumn, setSortColumn] = useState<string | null>(null);
   const [data, setData] = useState<any[]>([]);
@@ -127,44 +131,56 @@ const TableComponent: React.FC<TableProps> = ({
   };
 
   const openDialog = async () => {
-    const currentPageUrl = location.pathname.split("/").pop();
-
-    if (currentPageUrl === "requests") {
-      const siteId = authState.user?.siteid;
-      try {
-        const details = await getNewRequest(siteId);
-        setData(details.details);
-        console.log(details);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-
     setDialogType("Add");
     setCurrentRow(null);
-    handleShow();
+    if (dynamicDialog) {
+      const currentPageUrl = location.pathname.split("/").pop();
+
+      if (currentPageUrl === "requests") {
+        const siteId = authState.user?.siteid;
+        try {
+          const details = await getNewRequest(siteId);
+          setData(details);
+          console.log(details);
+        } catch (error) {
+          console.error(error);
+        }
+      }
+
+      handleShow();
+    } else {
+      openStaticDialog && openStaticDialog("Add");
+    }
   };
 
   const openEditDialog = (row: any) => {
     setDialogType("Edit");
     setCurrentRow(row);
-    handleShow();
+    if (dynamicDialog) {
+      handleShow();
+    } else {
+      openStaticDialog && openStaticDialog("Edit", row);
+    }
   };
 
   const openPreviewDialog = async (row: any) => {
-    const currentPageUrl = location.pathname.split("/").pop();
-
-    if (currentPageUrl === "requests") {
-      try {
-        const details = await getRequestDetails(row.materialId);
-        setData(details.details);
-      } catch (error) {
-        console.error(error);
-      }
-    }
     setDialogType("Preview");
     setCurrentRow(row);
-    handleShow();
+    if (dynamicDialog) {
+      const currentPageUrl = location.pathname.split("/").pop();
+
+      if (currentPageUrl === "requests") {
+        try {
+          const details = await getRequestDetails(row.materialId);
+          setData(details.details);
+        } catch (error) {
+          console.error(error);
+        }
+      }
+      handleShow();
+    } else {
+      openStaticDialog && openStaticDialog("Preview", row);
+    }
   };
 
   const handleDelete = (id: number) => {
