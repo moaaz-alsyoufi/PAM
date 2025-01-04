@@ -36,7 +36,7 @@ interface AccordionsProps {
     type: string;
     required: boolean;
   }>;
-  title?: string;
+  title: string;
   addBtn?: boolean;
 }
 

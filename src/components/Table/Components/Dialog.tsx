@@ -26,7 +26,7 @@ interface DialogProps {
   onSuccess: (type: "Add" | "Edit" | "Preview", formData: any) => void;
   inputFields: InputField[];
   previewColumns?: Record<string, string>;
-  title?: string;
+  title: string;
   data?: any[];
 }
 
@@ -209,9 +209,7 @@ const DialogComponent: React.FC<DialogProps> = ({
         >
           ✕
         </button>
-        <h3 className="font-bold text-lg">
-          {dialogType} {title}
-        </h3>
+        <h3 className="font-bold text-lg">{title}</h3>
 
         <form onSubmit={handleSubmit}>
           {dialogType === "Preview" ? (
@@ -220,6 +218,7 @@ const DialogComponent: React.FC<DialogProps> = ({
               tableData={data ?? []}
               inputFields={[]}
               actions={false}
+              title={"Request Details"}
             />
           ) : (
             <div className="space-y-3 my-4">
