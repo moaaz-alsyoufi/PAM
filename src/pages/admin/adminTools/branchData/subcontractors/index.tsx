@@ -4,8 +4,7 @@ import PAMTable from "@/components/Table";
 import useSubcontractors from "./use-subcontractors";
 
 const Subcontractors = () => {
-  const { columns, tableData, inputFields,hasActions } = useSubcontractors();
-
+  const { columns, tableData, inputFields, hasActions } = useSubcontractors();
 
   return (
     <div>
@@ -22,7 +21,8 @@ const Subcontractors = () => {
           tableData={tableData}
           inputFields={inputFields}
           actions={hasActions}
-           />
+          title={""}
+        />
       </div>
     </div>
   );

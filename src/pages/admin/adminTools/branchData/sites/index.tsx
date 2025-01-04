@@ -4,7 +4,7 @@ import PAMTable from "@/components/Table";
 import useSite from "./use-site";
 
 const Sites = () => {
-  const { columns, tableData, inputFields,hasActions } = useSite();
+  const { columns, tableData, inputFields, hasActions } = useSite();
 
   return (
     <div>
@@ -13,10 +13,12 @@ const Sites = () => {
       <PageTitle title={"Sites"} subMenu={"Admin tools"} center="Branch Data" />
       <div>
         <PAMTable
-         columns={columns}
-         tableData={tableData}
-         inputFields={inputFields}
-         actions={hasActions} />
+          columns={columns}
+          tableData={tableData}
+          inputFields={inputFields}
+          actions={hasActions}
+          title={""}
+        />
       </div>
     </div>
   );

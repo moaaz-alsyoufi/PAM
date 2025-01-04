@@ -14,6 +14,7 @@ const Tutorials = () => {
           tableData={[]}
           actions={true}
           inputFields={[]}
+          title={""}
         />
       </div>
     </div>

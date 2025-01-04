@@ -4,7 +4,7 @@ import PAMTable from "@/components/Table";
 import useSuppliers from "./use-suppliers";
 
 const Sites = () => {
-  const { columns, tableData, inputFields,hasActions } = useSuppliers();
+  const { columns, tableData, inputFields, hasActions } = useSuppliers();
   return (
     <div>
       <PageMetaData title={"Sites"} />
@@ -12,11 +12,12 @@ const Sites = () => {
       <PageTitle title={"Sites"} subMenu={"Admin tools"} center="Branch Data" />
       <div>
         <PAMTable
-        columns={columns}
-        tableData={tableData}
-        inputFields={inputFields}
-        actions={hasActions}
-         />
+          columns={columns}
+          tableData={tableData}
+          inputFields={inputFields}
+          actions={hasActions}
+          title={""}
+        />
       </div>
     </div>
   );

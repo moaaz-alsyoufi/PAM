@@ -20,6 +20,7 @@ const PaymentStatistics = () => {
           tableData={tableData}
           inputFields={inputFields}
           actions={hasActions}
+          title={""}
         />
       </div>
     </div>

@@ -4,7 +4,7 @@ import PAMTable from "@/components/Table";
 import useCompanies from "./use-companies";
 
 const Companies = () => {
-  const { columns, tableData, inputFields,hasActions } = useCompanies();
+  const { columns, tableData, inputFields, hasActions } = useCompanies();
 
   return (
     <div>
@@ -12,11 +12,12 @@ const Companies = () => {
 
       <PageTitle title={"Companies"} subMenu={"Admin tools"} />
       <div>
-        <PAMTable 
-        columns={columns}
-        tableData={tableData}
-        inputFields={inputFields}
-        actions={hasActions}
+        <PAMTable
+          columns={columns}
+          tableData={tableData}
+          inputFields={inputFields}
+          actions={hasActions}
+          title={""}
         />
       </div>
     </div>

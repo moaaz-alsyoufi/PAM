@@ -6,7 +6,8 @@ import useSiteStock from "./use-site-stock";
 import { Loader } from "@/components/Loader";
 
 const SiteStock = () => {
-  const { columns, tableData, inputFields, hasActions, loading } = useSiteStock();
+  const { columns, tableData, inputFields, hasActions, loading } =
+    useSiteStock();
 
   return (
     <div>
@@ -22,6 +23,7 @@ const SiteStock = () => {
             tableData={tableData}
             inputFields={inputFields}
             actions={hasActions}
+            title={""}
           />
         )}
       </div>

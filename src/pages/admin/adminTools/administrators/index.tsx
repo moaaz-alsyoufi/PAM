@@ -4,7 +4,7 @@ import PAMTable from "@/components/Table";
 import useadminstrators from "./use-adminstrators";
 
 const Administrators = () => {
-  const { columns, tableData, inputFields,hasActions } = useadminstrators();
+  const { columns, tableData, inputFields, hasActions } = useadminstrators();
 
   return (
     <div>
@@ -12,11 +12,12 @@ const Administrators = () => {
 
       <PageTitle title={"Administrators"} subMenu={"Admin tools"} />
       <div>
-        <PAMTable 
-        columns={columns}
-        tableData={tableData}
-        inputFields={inputFields}
-        actions={hasActions}
+        <PAMTable
+          columns={columns}
+          tableData={tableData}
+          inputFields={inputFields}
+          actions={hasActions}
+          title={""}
         />
       </div>
     </div>
