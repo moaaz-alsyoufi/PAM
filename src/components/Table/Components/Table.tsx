@@ -346,6 +346,7 @@ const TableComponent: React.FC<TableProps> = ({
             <div className="flex items-center justify-end px-5 pb-5 pt-3">
               <Pagination>
                 <Button
+                  type="button"
                   size="sm"
                   aria-label="pagination-prev"
                   className="join-item"
@@ -357,6 +358,7 @@ const TableComponent: React.FC<TableProps> = ({
 
                 {/* Always show the first page */}
                 <Button
+                  type="button"
                   size="sm"
                   className={cn("join-item", {
                     "bg-base-100": currentPage === 1,
@@ -376,6 +378,7 @@ const TableComponent: React.FC<TableProps> = ({
                   if (page > 1 && page < totalPages) {
                     return (
                       <Button
+                        type="button"
                         key={page}
                         size="sm"
                         className={cn("join-item", {
@@ -399,6 +402,7 @@ const TableComponent: React.FC<TableProps> = ({
                 {/* Always show the last page */}
                 {totalPages > 1 && (
                   <Button
+                    type="button"
                     size="sm"
                     className={cn("join-item", {
                       "bg-base-100": currentPage === totalPages,
@@ -411,6 +415,7 @@ const TableComponent: React.FC<TableProps> = ({
                 )}
 
                 <Button
+                  type="button"
                   size="sm"
                   aria-label="pagination-next"
                   className="join-item"
