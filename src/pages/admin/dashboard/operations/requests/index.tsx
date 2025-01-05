@@ -13,8 +13,8 @@ const Requests = () => {
     "Add"
   );
   const [data, setData] = useState<any[]>([]);
-
-  const { getRequestDetails, getNewRequest } = useRequests();
+  const [currentRow, setCurrentRow] = useState();
+  const { getRequestDetails } = useRequests();
   const { authState } = useAuthContext();
   const { dialogRef, handleShow, handleHide } = useDialog();
 
@@ -38,27 +38,17 @@ const Requests = () => {
     row: any
   ) => {
     setDialogType(type);
+    setCurrentRow(row);
 
     if (type === "Preview") {
       try {
         const details = await getRequestDetails(row.materialId);
         setData(details.details);
-        console.log(data);
       } catch (error) {
         console.error(error);
       }
     }
 
-    if (type === "Add") {
-      const siteId = authState.user?.siteid;
-      try {
-        const details = await getNewRequest(siteId);
-        setData(details);
-        console.log(details);
-      } catch (error) {
-        console.error(error);
-      }
-    }
     handleShow();
   };
 
@@ -93,7 +83,7 @@ const Requests = () => {
                 handleHide={handleHide}
                 dialogRef={dialogRef}
                 dialogType={dialogType}
-                current={{}}
+                current={currentRow ?? {}}
                 onSuccess={() => {}}
                 inputFields={inputFields}
                 title={
