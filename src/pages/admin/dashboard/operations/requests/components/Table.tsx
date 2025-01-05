@@ -15,9 +15,18 @@ import {
 import Icon from "@/components/Icon";
 import { cn } from "@/helpers/utils/cn";
 
+interface Column {
+  key: string;
+  label: string;
+  isInput?: boolean;
+  required?: boolean;
+  inputType?: string; // e.g., "text", "number", "date", etc.
+  disabled?: boolean;
+}
+
 interface TableProps {
   tableData: any[];
-  columns: Record<string, string>;
+  columns: Column[];
   actions: boolean;
   showAction?: boolean;
   deleteAction?: boolean;
@@ -34,7 +43,6 @@ const NewRequestTableComponent: React.FC<TableProps> = ({
   const [sortColumn, setSortColumn] = useState<string | null>(null);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [searchQuery, setSearchQuery] = useState<string>("");
-
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage] = useState(10);
 
@@ -101,202 +109,181 @@ const NewRequestTableComponent: React.FC<TableProps> = ({
   };
 
   return (
-    <>
-      <Card className="bg-base-100">
-        <CardBody className="p-0">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-end px-5 pt-5 space-y-4 sm:space-y-0">
-            <div className="form-control flex flex-row items-center rounded-box border border-base-content/20 px-2">
-              <Icon
-                icon={searchIcon}
-                className="text-base-content/60"
-                fontSize={15}
-              />
-              <Input
-                size="sm"
-                placeholder="Search data"
-                bordered={false}
-                borderOffset={false}
-                className="w-full focus:border-transparent focus:outline-0"
-                value={searchQuery}
-                onChange={handleSearchChange}
-              />
-            </div>
+    <Card className="bg-base-100">
+      <CardBody className="p-0">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-end px-5 pt-5 space-y-4 sm:space-y-0">
+          <div className="form-control flex flex-row items-center rounded-box border border-base-content/20 px-2">
+            <Icon
+              icon={searchIcon}
+              className="text-base-content/60"
+              fontSize={15}
+            />
+            <Input
+              size="sm"
+              placeholder="Search data"
+              bordered={false}
+              borderOffset={false}
+              className="w-full focus:border-transparent focus:outline-0"
+              value={searchQuery}
+              onChange={handleSearchChange}
+            />
           </div>
-          <div className="overflow-auto">
-            <table className="w-full border-collapse">
-              <thead>
-                <tr className="hover:bg-base-200/40">
-                  {Object.entries(columns).map(
-                    ([columnKey, columnLabel], index) => (
-                      <th
-                        key={columnKey}
-                        className={cn(
-                          "border-b border-base-content/5 px-2 pl-6 py-3 text-sm text-left font-normal",
-                          {
-                            "pl-6": index === 0,
+        </div>
+        <div className="overflow-auto">
+          <table className="w-full border-collapse">
+            <thead>
+              <tr className="hover:bg-base-200/40">
+                {columns.map(({ key, label }) => (
+                  <th
+                    key={key}
+                    className="border-b border-base-content/5 px-2 pl-6 py-3 text-sm text-left font-normal"
+                  >
+                    <div
+                      className="flex justify-start items-center cursor-pointer"
+                      onClick={() => handleSort(key)}
+                    >
+                      <span>{label}</span>
+                      {sortColumn === key && (
+                        <Icon
+                          icon={
+                            sortOrder === "asc" ? sortAscIcon : sortDescIcon
                           }
-                        )}
+                          className="ml-1"
+                          fontSize={14}
+                        />
+                      )}
+                    </div>
+                  </th>
+                ))}
+                {actions && (
+                  <th className="border-b border-base-content/5 pl-2 pr-6 py-3 text-sm text-right font-normal">
+                    Actions
+                  </th>
+                )}
+              </tr>
+            </thead>
+            <tbody>
+              {paginatedData.map((row, index) => (
+                <tr key={index} className="hover:bg-base-200/40">
+                  {columns.map(
+                    ({ key, isInput, inputType, required, disabled }) => (
+                      <td
+                        key={key}
+                        className="border-y border-base-content/5 px-2 pl-6 py-3 font-medium text-sm"
                       >
-                        <div
-                          className="flex justify-start items-center cursor-pointer"
-                          onClick={() => handleSort(columnKey)}
-                        >
-                          <span>{columnLabel}</span>
-                          {sortColumn === columnKey && (
-                            <Icon
-                              icon={
-                                sortOrder === "asc" ? sortAscIcon : sortDescIcon
-                              }
-                              className="ml-1"
-                              fontSize={14}
-                            />
-                          )}
-                        </div>
-                      </th>
+                        {isInput ? (
+                          <Input
+                            type={inputType}
+                            required={required}
+                            defaultValue={row[key] ?? ""}
+                            className="w-full"
+                            disabled={disabled}
+                          />
+                        ) : (
+                          (row[key] ?? "-")
+                        )}
+                      </td>
                     )
                   )}
-
                   {actions && (
-                    <th className="border-b border-base-content/5 pl-2 pr-6 py-3 text-sm text-right font-normal">
-                      Actions
-                    </th>
+                    <td className="border-y border-base-content/5 px-2 py-3 font-medium text-sm text-right pr-6">
+                      <div className="inline-flex w-fit">
+                        {deleteAction && (
+                          <Button
+                            color="ghost"
+                            className="text-error/70 hover:bg-error/20"
+                            size="sm"
+                            shape="square"
+                            aria-label="Delete Row"
+                            onClick={() => handleDelete(row.id)}
+                          >
+                            <Icon icon={trashIcon} fontSize={16} />
+                          </Button>
+                        )}
+                      </div>
+                    </td>
                   )}
                 </tr>
-              </thead>
-              <tbody>
-                {paginatedData.length > 0 ? (
-                  paginatedData.map((row, index) => (
-                    <tr key={index} className="hover:bg-base-200/40">
-                      {Object.keys(columns).map((columnKey) => (
-                        <td
-                          key={columnKey}
-                          className="border-y border-base-content/5 px-2 pl-6 py-3 font-medium text-sm"
-                        >
-                          {row[columnKey] ?? "-"}
-                        </td>
-                      ))}
-
-                      {actions && (
-                        <td className="border-y border-base-content/5 px-2 py-3 font-medium text-sm text-right pr-6">
-                          <div className="inline-flex w-fit">
-                            {deleteAction && (
-                              <Button
-                                color="ghost"
-                                className="text-error/70 hover:bg-error/20"
-                                size="sm"
-                                shape="square"
-                                aria-label="Delete Row"
-                                onClick={() => handleDelete(row.id)}
-                              >
-                                <Icon icon={trashIcon} fontSize={16} />
-                              </Button>
-                            )}
-                          </div>
-                        </td>
-                      )}
-                    </tr>
-                  ))
-                ) : (
-                  <tr className="cursor-pointer hover:bg-base-200/40">
-                    <td
-                      colSpan={Object.keys(columns).length + (actions ? 1 : 0)}
-                      className="p-2 text-center"
+              ))}
+            </tbody>
+          </table>
+        </div>
+        {totalPages > 1 && (
+          <div className="flex items-center justify-end px-5 pb-5 pt-3">
+            <Pagination>
+              <Button
+                type="button"
+                size="sm"
+                aria-label="pagination-prev"
+                className="join-item"
+                disabled={currentPage === 1}
+                onClick={() => handlePageChange(currentPage - 1)}
+              >
+                <Icon icon={chevronLeftIcon} fontSize={16} />
+              </Button>
+              <Button
+                type="button"
+                size="sm"
+                className={cn("join-item", {
+                  "bg-base-100": currentPage === 1,
+                })}
+                active={currentPage === 1}
+                onClick={() => handlePageChange(1)}
+              >
+                1
+              </Button>
+              {currentPage > 3 && <span className="join-item"> </span>}
+              {Array.from({ length: 3 }, (_, index) => {
+                const page = currentPage - 1 + index;
+                if (page > 1 && page < totalPages) {
+                  return (
+                    <Button
+                      type="button"
+                      key={page}
+                      size="sm"
+                      className={cn("join-item", {
+                        "bg-base-100": currentPage === page,
+                      })}
+                      active={currentPage === page}
+                      onClick={() => handlePageChange(page)}
                     >
-                      No data available
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-          {totalPages > 1 && (
-            <div className="flex items-center justify-end px-5 pb-5 pt-3">
-              <Pagination>
-                <Button
-                  type="button"
-                  size="sm"
-                  aria-label="pagination-prev"
-                  className="join-item"
-                  disabled={currentPage === 1}
-                  onClick={() => handlePageChange(currentPage - 1)}
-                >
-                  <Icon icon={chevronLeftIcon} fontSize={16} />
-                </Button>
-
-                {/* Always show the first page */}
+                      {page}
+                    </Button>
+                  );
+                }
+                return null;
+              })}
+              {currentPage < totalPages - 2 && (
+                <span className="join-item"> </span>
+              )}
+              {totalPages > 1 && (
                 <Button
                   type="button"
                   size="sm"
                   className={cn("join-item", {
-                    "bg-base-100": currentPage === 1,
+                    "bg-base-100": currentPage === totalPages,
                   })}
-                  active={currentPage === 1}
-                  onClick={() => handlePageChange(1)}
+                  active={currentPage === totalPages}
+                  onClick={() => handlePageChange(totalPages)}
                 >
-                  1
+                  {totalPages}
                 </Button>
-
-                {/* Add ellipses if currentPage > 3 */}
-                {currentPage > 3 && <span className="join-item"> </span>}
-
-                {/* Show pages around the current page */}
-                {Array.from({ length: 3 }, (_, index) => {
-                  const page = currentPage - 1 + index;
-                  if (page > 1 && page < totalPages) {
-                    return (
-                      <Button
-                        type="button"
-                        key={page}
-                        size="sm"
-                        className={cn("join-item", {
-                          "bg-base-100": currentPage === page,
-                        })}
-                        active={currentPage === page}
-                        onClick={() => handlePageChange(page)}
-                      >
-                        {page}
-                      </Button>
-                    );
-                  }
-                  return null;
-                })}
-
-                {/* Add ellipses if necessary */}
-                {currentPage < totalPages - 2 && (
-                  <span className="join-item"> </span>
-                )}
-
-                {/* Always show the last page */}
-                {totalPages > 1 && (
-                  <Button
-                    type="button"
-                    size="sm"
-                    className={cn("join-item", {
-                      "bg-base-100": currentPage === totalPages,
-                    })}
-                    active={currentPage === totalPages}
-                    onClick={() => handlePageChange(totalPages)}
-                  >
-                    {totalPages}
-                  </Button>
-                )}
-
-                <Button
-                  type="button"
-                  size="sm"
-                  aria-label="pagination-next"
-                  className="join-item"
-                  disabled={currentPage === totalPages}
-                  onClick={() => handlePageChange(currentPage + 1)}
-                >
-                  <Icon icon={chevronRightIcon} fontSize={16} />
-                </Button>
-              </Pagination>
-            </div>
-          )}
-        </CardBody>
-      </Card>
-    </>
+              )}
+              <Button
+                type="button"
+                size="sm"
+                aria-label="pagination-next"
+                className="join-item"
+                disabled={currentPage === totalPages}
+                onClick={() => handlePageChange(currentPage + 1)}
+              >
+                <Icon icon={chevronRightIcon} fontSize={16} />
+              </Button>
+            </Pagination>
+          </div>
+        )}
+      </CardBody>
+    </Card>
   );
 };
 
