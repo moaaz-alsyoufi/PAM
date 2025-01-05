@@ -26,6 +26,14 @@ const useRequests = () => {
     deliv_percent: "Deliv.%",
   };
 
+  const newRequestColumns = {
+    category: "Category",
+    itemName: "Item",
+    itemUnit: "Unit",
+    code: "Cost Code",
+    quantity: "Qty",
+  };
+
   const previewColumns = {
     itemName: "Item",
     itemUnit: "Unit",
@@ -60,7 +68,11 @@ const useRequests = () => {
   const getRequestDetails = async (materialId: number) => {
     setLoading(true);
     try {
-      const response = await apiRequest(`Requests/requestdetails/${materialId}`, "GET", token);
+      const response = await apiRequest(
+        `Requests/requestdetails/${materialId}`,
+        "GET",
+        token
+      );
       setRequestDetails(response);
       return response;
     } catch (error) {
@@ -74,7 +86,11 @@ const useRequests = () => {
   const getNewRequest = async (siteId: number) => {
     setLoading(true);
     try {
-      const response = await apiRequest(`Requests/newrequest/${siteId}`, "GET", token);
+      const response = await apiRequest(
+        `Requests/newrequest/${siteId}`,
+        "GET",
+        token
+      );
       return response;
     } catch (error) {
       console.error(error);
@@ -84,7 +100,9 @@ const useRequests = () => {
     }
   };
 
-  const exportRequest = async (materialId: number | undefined): Promise<Blob> => {
+  const exportRequest = async (
+    materialId: number | undefined
+  ): Promise<Blob> => {
     if (!materialId) {
       throw new Error("Material ID is undefined");
     }
@@ -100,7 +118,11 @@ const useRequests = () => {
   const fetchNewRequestData = async () => {
     setLoading(true);
     try {
-      const newReqData = await apiRequest(`Requests/newrequest/${siteId}`, "GET", token);
+      const newReqData = await apiRequest(
+        `Requests/newrequest/${siteId}`,
+        "GET",
+        token
+      );
       setNewRequestRefNumber(newReqData.refNumber);
       const subs = await apiRequest("Requests/subcontractors", "GET", token);
       setSubContractors(subs);
@@ -178,6 +200,7 @@ const useRequests = () => {
   return {
     columns,
     previewColumns,
+    newRequestColumns,
     tableData,
     requestDetails,
     inputFields,
