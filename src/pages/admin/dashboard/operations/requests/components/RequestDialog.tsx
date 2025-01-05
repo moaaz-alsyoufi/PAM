@@ -5,6 +5,7 @@ import { useAuthContext } from "@/states/auth";
 import { cn } from "@/helpers/utils/cn";
 import useRequests from "../use-requests";
 import PAMTable from "@/components/Table";
+import NewRequestTableComponent from "./Table";
 
 interface InputField {
   name: string;
@@ -61,7 +62,14 @@ const RequestDialog: React.FC<DialogProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const { toaster } = useToast();
   const { getToken } = useAuthContext();
-  const { exportRequest } = useRequests();
+  const {
+    exportRequest,
+    newRequestColumns,
+    newRequestRefNumber,
+    subContractors,
+
+    fetchNewRequestData,
+  } = useRequests();
 
   // Optional: Update formData when current changes (e.g., when editing a different user)
   useEffect(() => {
@@ -71,6 +79,11 @@ const RequestDialog: React.FC<DialogProps> = ({
         ...current,
       }));
     }
+    if (dialogType === "Add") {
+      fetchNewRequestData();
+    }
+
+    console.log(current);
   }, [current, dialogType]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -87,11 +100,7 @@ const RequestDialog: React.FC<DialogProps> = ({
       }
 
       if (dialogType === "Edit" && current) {
-        // Example: API call to update user
-        // await updateUserApi(formData, token);
       } else if (dialogType === "Add") {
-        // Example: API call to add user
-        // await addUserApi(formData, token);
       } else if (dialogType === "Preview") {
         try {
           const pdfBlob = await exportRequest(current?.materialId);
@@ -130,83 +139,24 @@ const RequestDialog: React.FC<DialogProps> = ({
     handleHide();
   };
 
-  // Dynamically render inputs based on inputFields
-  const renderInput = (field: InputField) => {
-    const { name, type, required, options } = field;
-    {
-      if (type === "select") {
-        return (
-          <label className="input input-sm input-bordered flex items-center xs:gap-4 lg:gap-12 text-sm md:text-base">
-            <span className="font-normal opacity-45 w-20 capitalize">
-              {name}
-            </span>
-            <Select
-              className="w-full border-none focus:outline-none focus:ring-0 bg-transparent"
-              onChange={(e) =>
-                setFormData({ ...formData, [name]: e.target.value })
-              }
-              name={name}
-              value={formData[name]}
-              required={required}
-              onTouchStart={(e) => {
-                if (e.touches.length > 1) {
-                  e.preventDefault();
-                }
-              }}
-            >
-              {(options ?? []).map((option) => (
-                <SelectOption
-                  key={option}
-                  value={option}
-                  className="bg-base-100"
-                >
-                  {option.name}
-                </SelectOption>
-              ))}
-            </Select>
-          </label>
-        );
-      } else {
-        return (
-          <label
-            className="flex flex-col sm:flex-row items-center gap-2 input input-sm input-bordered"
-            key={name}
-          >
-            <span className="font-normal text-sm md:text-base opacity-45 min-w-16 md:w-28">
-              {name.charAt(0).toUpperCase() + name.slice(1)}
-            </span>
-            <input
-              type={type}
-              name={name}
-              className="grow"
-              value={formData[name]}
-              required={required}
-              onChange={(e) =>
-                setFormData({ ...formData, [name]: e.target.value })
-              }
-            />
-          </label>
-        );
-      }
-    }
-  };
-
   return (
     <dialog ref={dialogRef} className="modal" aria-modal="true">
       <div
         className={cn("modal-box relative", {
-          "max-w-7xl": dialogType === "Preview",
+          "max-w-7xl": dialogType === "Preview" || dialogType === "Add",
         })}
       >
-        <button
-          type="button"
-          className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
-          onClick={handleClose}
-          aria-label="Close"
-        >
-          ✕
-        </button>
-        <h3 className="font-bold text-lg">{title}</h3>
+        <div className="w-full flex justify-between items-center pb-4">
+          <button
+            type="button"
+            className="btn btn-sm btn-circle btn-ghost absolute right-4 top-4"
+            onClick={handleClose}
+            aria-label="Close"
+          >
+            ✕
+          </button>
+          <h3 className="font-bold text-lg">{title}</h3>
+        </div>
 
         <form onSubmit={handleSubmit}>
           {dialogType === "Preview" ? (
@@ -218,10 +168,56 @@ const RequestDialog: React.FC<DialogProps> = ({
               title="Request Details"
             />
           ) : (
-            <div className="space-y-3 my-4">
-              {inputFields?.map((field) => (
-                <div key={field.name}>{renderInput(field)}</div>
-              ))}
+            <div className="space-y-4">
+              <div className="flex justify-between items-center space-x-4">
+                <label className="flex flex-col sm:flex-row items-center gap-2 input input-sm input-bordered">
+                  <span className="font-normal text-sm md:text-base opacity-45 min-w-16">
+                    Request
+                  </span>
+                  <input
+                    type="text"
+                    defaultValue={newRequestRefNumber ?? ""}
+                    disabled
+                  />
+                </label>
+                <label className="input input-sm input-bordered flex items-center xs:gap-4 lg:gap-8 text-sm md:text-base">
+                  <span className="font-normal opacity-45 w-20 capitalize">
+                    Subcontractor
+                  </span>
+                  <Select
+                    className="w-full border-none focus:outline-none focus:ring-0 bg-transparent"
+                    onTouchStart={(e) => {
+                      if (e.touches.length > 1) {
+                        e.preventDefault();
+                      }
+                    }}
+                  >
+                    <SelectOption className="bg-base-100" value={0} disabled>
+                      Select Subcontractor
+                    </SelectOption>
+                    {subContractors.map((sub) => (
+                      <SelectOption
+                        key={sub.subId}
+                        value={sub.subId}
+                        className="bg-base-100"
+                      >
+                        {sub.subName}
+                      </SelectOption>
+                    ))}
+                  </Select>
+                </label>
+                <label className="flex flex-col sm:flex-row items-center gap-2 input input-sm input-bordered grow">
+                  <span className="font-normal text-sm md:text-base opacity-45 min-w-16 md:w-28">
+                    Remarks
+                  </span>
+                  <input type="text" name="remarks" className="grow" />
+                </label>
+              </div>
+              <NewRequestTableComponent
+                tableData={[]}
+                columns={newRequestColumns}
+                actions={false}
+              />
             </div>
           )}
 
@@ -233,7 +229,7 @@ const RequestDialog: React.FC<DialogProps> = ({
               loading={isLoading}
             >
               {dialogType === "Add"
-                ? "Add"
+                ? "Send Request"
                 : dialogType === "Edit"
                   ? "Save"
                   : "Export"}
