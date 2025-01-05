@@ -4,10 +4,17 @@ import PAMTable from "@/components/Table";
 import useRequests from "./use-requests";
 import { useAuthContext } from "@/states/auth";
 import { Loader } from "@/components/Loader";
-import DialogComponent from "@/components/Table/Components/Dialog";
 import { useDialog } from "@/components/daisyui";
+import RequestDialog from "./components/RequestDialog";
+import { useState } from "react";
 
 const Requests = () => {
+  const [dialogType, setDialogType] = useState<"Add" | "Edit" | "Preview">(
+    "Add"
+  );
+  const [data, setData] = useState<any[]>([]);
+
+  const { getRequestDetails, getNewRequest } = useRequests();
   const { authState } = useAuthContext();
   const { dialogRef, handleShow, handleHide } = useDialog();
 
@@ -24,15 +31,34 @@ const Requests = () => {
   const roleId = authState.user.roleid;
 
   const canMakeNewRequest =
-    roleId === 1 ||
-    roleId === 4 ||
-    roleId === 5 ||
-    roleId === 7 ||
-    roleId === 10;
+    roleId === 4 || roleId === 5 || roleId === 7 || roleId === 10;
 
-  const handleOpenDialog = (type: string, data: any) => {
-    console.log(type);
-    console.log(data);
+  const handleOpenDialog = async (
+    type: "Add" | "Edit" | "Preview",
+    row: any
+  ) => {
+    setDialogType(type);
+
+    if (type === "Preview") {
+      try {
+        const details = await getRequestDetails(row.materialId);
+        setData(details.details);
+        console.log(data);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    if (type === "Add") {
+      const siteId = authState.user?.siteid;
+      try {
+        const details = await getNewRequest(siteId);
+        setData(details);
+        console.log(details);
+      } catch (error) {
+        console.error(error);
+      }
+    }
     handleShow();
   };
 
@@ -63,18 +89,26 @@ const Requests = () => {
                 openStaticDialog={handleOpenDialog}
               />
 
-              <DialogComponent
+              <RequestDialog
                 handleHide={handleHide}
                 dialogRef={dialogRef}
-                dialogType={"Add"}
+                dialogType={dialogType}
                 current={{}}
-                onSuccess={() => {}} // Pass success handler
+                onSuccess={() => {}}
                 inputFields={inputFields}
-                title=""
+                title={
+                  dialogType === "Edit"
+                    ? "Edit Request"
+                    : dialogType === "Add"
+                      ? "New Request"
+                      : "Request Details"
+                }
+                previewColumns={previewColumns}
+                data={data}
               />
             </>
           ) : (
-            <p>No data available</p> // Ensure this message is conditional
+            <p>No data available</p>
           )}
         </div>
       )}
