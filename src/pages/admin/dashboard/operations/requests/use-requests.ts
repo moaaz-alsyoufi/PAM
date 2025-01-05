@@ -17,6 +17,15 @@ const useRequests = () => {
   const siteId = authState.user?.siteid || 0;
   const token = authState.user?.token || "";
 
+  interface Column {
+    key: string;
+    label: string;
+    isInput?: boolean;
+    required?: boolean;
+    inputType?: string; // e.g., "text", "number", "date", etc.
+    disabled?: boolean;
+  }
+
   const columns = {
     refNo: "Request",
     isApprovedByPm: "PM Approved",
@@ -26,13 +35,41 @@ const useRequests = () => {
     deliv_percent: "Deliv.%",
   };
 
-  const newRequestColumns = {
-    category: "Category",
-    itemName: "Item",
-    itemUnit: "Unit",
-    code: "Cost Code",
-    quantity: "Qty",
-  };
+  const newRequestColumns: Column[] = [
+    {
+      key: "category",
+      label: "Category",
+      isInput: false,
+    },
+    {
+      key: "itemName",
+      label: "Item",
+      isInput: true,
+      required: true,
+      inputType: "text",
+    },
+    {
+      key: "itemUnit",
+      label: "Unit",
+      isInput: true,
+      inputType: "text",
+      disabled: true,
+    },
+    {
+      key: "code",
+      label: "Cost Code",
+      isInput: true,
+      required: true,
+      inputType: "text",
+    },
+    {
+      key: "quantity",
+      label: "Qty",
+      isInput: true,
+      required: true,
+      inputType: "number",
+    },
+  ];
 
   const previewColumns = {
     itemName: "Item",
