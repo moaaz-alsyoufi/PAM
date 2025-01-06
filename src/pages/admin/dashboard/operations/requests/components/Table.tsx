@@ -14,14 +14,16 @@ import {
 } from "@/components/daisyui";
 import Icon from "@/components/Icon";
 import { cn } from "@/helpers/utils/cn";
+import AutoComplete from "@/components/daisyui/AutoComplete/AutoComplete";
 
 interface Column {
   key: string;
   label: string;
   isInput?: boolean;
   required?: boolean;
-  inputType?: string; // e.g., "text", "number", "date", etc.
+  inputType?: string;
   disabled?: boolean;
+  options?: any[];
 }
 
 interface TableProps {
@@ -32,6 +34,7 @@ interface TableProps {
   deleteAction?: boolean;
   editAction?: boolean;
   addBtn?: boolean;
+  items?: any[];
 }
 
 const NewRequestTableComponent: React.FC<TableProps> = ({
@@ -39,6 +42,7 @@ const NewRequestTableComponent: React.FC<TableProps> = ({
   columns,
   actions,
   deleteAction,
+  items,
 }) => {
   const [sortColumn, setSortColumn] = useState<string | null>(null);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
@@ -179,20 +183,41 @@ const NewRequestTableComponent: React.FC<TableProps> = ({
               {paginatedData.map((row, index) => (
                 <tr key={index} className="hover:bg-base-200/40">
                   {columns.map(
-                    ({ key, isInput, inputType, required, disabled }) => (
+                    ({
+                      key,
+                      isInput,
+                      inputType,
+                      required,
+                      disabled,
+                      options,
+                    }) => (
                       <td
                         key={key}
                         className="border-y border-base-content/5 px-2 pl-6 py-3 font-medium text-sm"
                       >
                         {isInput ? (
-                          <Input
-                            type={inputType}
-                            required={required}
-                            size="sm"
-                            defaultValue={row[key] ?? ""}
-                            className="w-full border-none disabled:bg-base-100 focus:outline-none"
-                            disabled={disabled}
-                          />
+                          inputType === "select" &&
+                          options &&
+                          items &&
+                          items.length > 0 ? (
+                            <AutoComplete
+                              options={items}
+                              searchKey="text"
+                              onOptionSelect={(selectedOption) =>
+                                console.log("Selected:", selectedOption)
+                              }
+                              placeholder="Search for items..."
+                            />
+                          ) : (
+                            <Input
+                              type={inputType}
+                              required={required}
+                              size="sm"
+                              defaultValue={row[key] ?? ""}
+                              className="w-full border-none disabled:bg-base-100 focus:outline-none"
+                              disabled={disabled}
+                            />
+                          )
                         ) : (
                           (row[key] ?? "-")
                         )}
