@@ -67,8 +67,6 @@ const RequestDialog: React.FC<DialogProps> = ({
     newRequestColumns,
     newRequestRefNumber,
     subContractors,
-
-    fetchNewRequestData,
   } = useRequests();
 
   // Optional: Update formData when current changes (e.g., when editing a different user)
@@ -79,11 +77,6 @@ const RequestDialog: React.FC<DialogProps> = ({
         ...current,
       }));
     }
-    if (dialogType === "Add") {
-      fetchNewRequestData();
-    }
-
-    console.log(current);
   }, [current, dialogType]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -186,6 +179,7 @@ const RequestDialog: React.FC<DialogProps> = ({
                   </span>
                   <Select
                     className="w-full border-none focus:outline-none focus:ring-0 bg-transparent"
+                    defaultValue={0}
                     onTouchStart={(e) => {
                       if (e.touches.length > 1) {
                         e.preventDefault();
@@ -217,6 +211,7 @@ const RequestDialog: React.FC<DialogProps> = ({
                 tableData={[]}
                 columns={newRequestColumns}
                 actions={false}
+                items={data}
               />
             </div>
           )}

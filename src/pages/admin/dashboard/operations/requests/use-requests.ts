@@ -11,7 +11,7 @@ const useRequests = () => {
   const [newRequestRefNumber, setNewRequestRefNumber] = useState<string>("");
   const [subContractors, setSubContractors] = useState<any[]>([]);
   const [costCodes, setCostCodes] = useState<any[]>([]);
-  const [searchedItems, setSearchedItems] = useState<any[]>([]);
+  const [items, setItems] = useState<any[]>([]);
 
   const { authState } = useAuthContext();
   const siteId = authState.user?.siteid || 0;
@@ -22,8 +22,9 @@ const useRequests = () => {
     label: string;
     isInput?: boolean;
     required?: boolean;
-    inputType?: string; // e.g., "text", "number", "date", etc.
+    inputType?: string;
     disabled?: boolean;
+    options?: any[];
   }
 
   const columns = {
@@ -46,7 +47,8 @@ const useRequests = () => {
       label: "Item",
       isInput: true,
       required: true,
-      inputType: "text",
+      inputType: "select",
+      options: items,
     },
     {
       key: "itemUnit",
@@ -153,7 +155,6 @@ const useRequests = () => {
   };
 
   const fetchNewRequestData = async () => {
-    setLoading(true);
     try {
       const newReqData = await apiRequest(
         `Requests/newrequest/${siteId}`,
@@ -165,29 +166,13 @@ const useRequests = () => {
       setSubContractors(subs);
       const cc = await apiRequest("Requests/costcodes", "GET", token);
       setCostCodes(cc);
+      const itms = await apiRequest("Requests/getitems", "GET", token);
+      setItems(itms);
+      return itms;
     } catch (error) {
       console.error(error);
       throw error;
     } finally {
-      setLoading(false);
-    }
-  };
-
-  const searchItems = async (searchTerm: string) => {
-    setLoading(true);
-    try {
-      const response = await apiRequest(
-        `Requests/searchitems?searchTerm=${encodeURIComponent(searchTerm)}`,
-        "GET",
-        token
-      );
-      setSearchedItems(response);
-      return response;
-    } catch (error) {
-      console.error(error);
-      throw error;
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -246,12 +231,11 @@ const useRequests = () => {
     newRequestRefNumber,
     subContractors,
     costCodes,
-    searchedItems,
+    items,
     getRequestDetails,
     getNewRequest,
     exportRequest,
     fetchNewRequestData,
-    searchItems,
     createNewRequest,
   };
 };
