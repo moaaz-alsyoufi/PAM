@@ -21,7 +21,6 @@ const AutoComplete = ({
     const result = options.filter((option) =>
       (option[searchKey] || "").toLowerCase().includes(inputValue.toLowerCase())
     );
-    console.log("Filtered Options:", options); // Debugging
     return result;
   }, [inputValue, options, searchKey]);
 
@@ -36,14 +35,14 @@ const AutoComplete = ({
     if (onOptionSelect) onOptionSelect(option);
   };
 
-  console.log("options", options);
-
   return (
     <div className="relative">
       <Input
         value={inputValue}
         onChange={handleInputChange}
         placeholder={placeholder}
+        size="sm"
+        className="border-none focus:outline-none"
       />
       {showDropdown && (
         <ul className="absolute z-10 bg-white border border-gray-300 rounded-md shadow-md max-h-60 overflow-auto w-full">
