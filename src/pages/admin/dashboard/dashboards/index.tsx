@@ -8,7 +8,7 @@ import VisitorChart from "./components/VisitorChart";
 const Dashboard = () => {
   return (
     <div>
-      <PageMetaData title={"Dashboard - PAM"} />
+      <PageMetaData title={"Dashboard"} />
       <PageTitle title={"Overview"} subMenu={"Dashboard"} />
       <div className="mt-6">
         <div className="grid gap-5 lg:grid-cols-2 xl:grid-cols-4">
