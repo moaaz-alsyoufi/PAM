@@ -46,16 +46,29 @@ const NewRequestTableComponent: React.FC<TableProps> = ({
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage] = useState(10);
 
+  // Add a default empty row to the data
+  const dataWithEmptyRow = useMemo(() => {
+    const emptyRow = columns.reduce(
+      (acc, column) => {
+        acc[column.key] = "";
+        return acc;
+      },
+      {} as Record<string, any>
+    );
+
+    return [...tableData, emptyRow];
+  }, [tableData, columns]);
+
   const filteredData = useMemo(() => {
     const lowercasedQuery = searchQuery.toLowerCase();
-    return tableData.filter((d) =>
+    return dataWithEmptyRow.filter((d) =>
       Object.values(d).some(
         (value) =>
           typeof value === "string" &&
           value.toLowerCase().includes(lowercasedQuery)
       )
     );
-  }, [searchQuery, tableData]);
+  }, [searchQuery, dataWithEmptyRow]);
 
   const sortedData = useMemo(() => {
     if (!sortColumn) return filteredData;
@@ -175,8 +188,9 @@ const NewRequestTableComponent: React.FC<TableProps> = ({
                           <Input
                             type={inputType}
                             required={required}
+                            size="sm"
                             defaultValue={row[key] ?? ""}
-                            className="w-full"
+                            className="w-full border-none disabled:bg-base-100 focus:outline-none"
                             disabled={disabled}
                           />
                         ) : (
