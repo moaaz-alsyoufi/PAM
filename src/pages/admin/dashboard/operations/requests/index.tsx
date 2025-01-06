@@ -26,6 +26,7 @@ const Requests = () => {
     hasActions,
     loading,
     previewColumns,
+    fetchNewRequestData,
   } = useRequests();
 
   const roleId = authState.user.roleid;
@@ -40,16 +41,25 @@ const Requests = () => {
     setDialogType(type);
     setCurrentRow(row);
 
-    if (type === "Preview") {
+    if (type === "Add") {
       try {
-        const details = await getRequestDetails(row.materialId);
-        setData(details.details);
+        const items = await fetchNewRequestData();
+        setData(items);
+        handleShow();
       } catch (error) {
         console.error(error);
       }
     }
 
-    handleShow();
+    if (type === "Preview") {
+      try {
+        const details = await getRequestDetails(row.materialId);
+        setData(details.details);
+        handleShow();
+      } catch (error) {
+        console.error(error);
+      }
+    }
   };
 
   return (
