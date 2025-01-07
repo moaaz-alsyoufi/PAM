@@ -14,9 +14,8 @@ const AutoComplete = ({
   placeholder = "Type to search...",
 }: AutoCompleteProps): ReactElement => {
   const [inputValue, setInputValue] = useState("");
-  const [showDropdown, setShowDropdown] = useState<boolean>(false);
+  const [showDropdown, setShowDropdown] = useState(false);
 
-  // Filter options based on the input value using the searchKey
   const filteredOptions = useMemo(() => {
     const result = options.filter((option) =>
       (option[searchKey] || "").toLowerCase().includes(inputValue.toLowerCase())
@@ -25,14 +24,15 @@ const AutoComplete = ({
   }, [inputValue, options, searchKey]);
 
   const handleInputChange = (e: any) => {
-    setInputValue(e.target.value);
-    setShowDropdown(e.target.value.length > 0);
+    const value = e.target.value.trim();
+    setInputValue(value);
+    setShowDropdown(value.length > 0);
   };
 
   const handleOptionClick = (option: any) => {
-    setInputValue(option[searchKey]);
+    setInputValue(option[searchKey]); // Set the input value to the selected option's value
     setShowDropdown(false);
-    if (onOptionSelect) onOptionSelect(option);
+    if (onOptionSelect) onOptionSelect(option); // Trigger the callback with the selected option
   };
 
   return (
@@ -49,7 +49,7 @@ const AutoComplete = ({
           {filteredOptions.length === 0 ? (
             <li className="p-2 bg-base-100">No options found</li>
           ) : (
-            filteredOptions.map((option, index) => (
+            filteredOptions.map((option: any, index: any) => (
               <li
                 key={index}
                 onClick={() => handleOptionClick(option)}
