@@ -30,11 +30,17 @@ interface TableProps {
   tableData: any[];
   columns: Column[];
   actions: boolean;
-  showAction?: boolean;
   deleteAction?: boolean;
-  editAction?: boolean;
+  addAction?: boolean;
   addBtn?: boolean;
   items?: any[];
+}
+
+interface Item {
+  itemId: number;
+  quantity: number;
+  costCodeId: number;
+  subId: 0;
 }
 
 const NewRequestTableComponent: React.FC<TableProps> = ({
@@ -42,6 +48,7 @@ const NewRequestTableComponent: React.FC<TableProps> = ({
   columns,
   actions,
   deleteAction,
+  addAction,
   items,
 }) => {
   const [sortColumn, setSortColumn] = useState<string | null>(null);
@@ -49,6 +56,8 @@ const NewRequestTableComponent: React.FC<TableProps> = ({
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage] = useState(10);
+  const [selectedOption, setSelectedOption] = useState<any>(null);
+  const [item, setItem] = useState<Item[]>([]);
 
   // Add a default empty row to the data
   const dataWithEmptyRow = useMemo(() => {
@@ -125,6 +134,15 @@ const NewRequestTableComponent: React.FC<TableProps> = ({
     console.log(`Delete row with ID: ${id}`);
   };
 
+  const handleAdd = (row: any) => {
+    console.log(`added row: ${row}`);
+  };
+
+  const handleOptionSelect = (option: any) => {
+    console.log("Selected Option:", option);
+    setSelectedOption(option); // Update the state with the selected option
+  };
+
   return (
     <Card className="bg-base-100">
       <CardBody className="p-0">
@@ -146,7 +164,7 @@ const NewRequestTableComponent: React.FC<TableProps> = ({
             />
           </div>
         </div>
-        <div className="overflow-auto">
+        <div className="overflow-auto pb-24">
           <table className="w-full border-collapse">
             <thead>
               <tr className="hover:bg-base-200/40">
@@ -203,17 +221,24 @@ const NewRequestTableComponent: React.FC<TableProps> = ({
                             <AutoComplete
                               options={items}
                               searchKey="text"
-                              onOptionSelect={(selectedOption) =>
-                                console.log("Selected:", selectedOption)
-                              }
-                              placeholder="Search for items..."
+                              placeholder="Search item..."
+                              onOptionSelect={handleOptionSelect}
                             />
                           ) : (
                             <Input
                               type={inputType}
                               required={required}
+                              value={
+                                key === "itemUnit" && selectedOption
+                                  ? selectedOption.itemUnit
+                                  : undefined
+                              }
                               size="sm"
-                              defaultValue={row[key] ?? ""}
+                              defaultValue={
+                                key === "itemUnit"
+                                  ? selectedOption?.itemUnit
+                                  : (row[key] ?? "")
+                              }
                               className="w-full border-none disabled:bg-base-100 focus:outline-none"
                               disabled={disabled}
                             />
@@ -227,6 +252,18 @@ const NewRequestTableComponent: React.FC<TableProps> = ({
                   {actions && (
                     <td className="border-y border-base-content/5 px-2 py-3 font-medium text-sm text-right pr-6">
                       <div className="inline-flex w-fit">
+                        {addAction && (
+                          <Button
+                            color="ghost"
+                            className="text-error/70 hover:bg-error/20"
+                            size="sm"
+                            shape="square"
+                            aria-label="Save Row"
+                            onClick={() => handleAdd(row)}
+                          >
+                            <Icon icon={trashIcon} fontSize={16} />
+                          </Button>
+                        )}
                         {deleteAction && (
                           <Button
                             color="ghost"
