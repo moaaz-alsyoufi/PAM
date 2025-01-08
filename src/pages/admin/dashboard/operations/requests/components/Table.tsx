@@ -4,6 +4,7 @@ import searchIcon from "@iconify/icons-lucide/search";
 import sortAscIcon from "@iconify/icons-lucide/chevron-up";
 import sortDescIcon from "@iconify/icons-lucide/chevron-down";
 import trashIcon from "@iconify/icons-lucide/trash";
+import addIcon from "@iconify/icons-lucide/plus-circle";
 import React, { useState, useMemo } from "react";
 import {
   Button,
@@ -27,7 +28,6 @@ interface Column {
 }
 
 interface TableProps {
-  tableData: any[];
   columns: Column[];
   actions: boolean;
   deleteAction?: boolean;
@@ -36,15 +36,7 @@ interface TableProps {
   items?: any[];
 }
 
-interface Item {
-  itemId: number;
-  quantity: number;
-  costCodeId: number;
-  subId: 0;
-}
-
 const NewRequestTableComponent: React.FC<TableProps> = ({
-  tableData,
   columns,
   actions,
   deleteAction,
@@ -57,7 +49,10 @@ const NewRequestTableComponent: React.FC<TableProps> = ({
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage] = useState(10);
   const [selectedOption, setSelectedOption] = useState<any>(null);
-  const [item, setItem] = useState<Item[]>([]);
+  const [tableData, setTableData] = useState<any[]>([]);
+  const [quantity, setQuantity] = useState<number>(0);
+  const [costCodeId, setCostCodeId] = useState<number | null>(null);
+  const [savedRows, setSavedRows] = useState<Set<number>>(new Set());
 
   // Add a default empty row to the data
   const dataWithEmptyRow = useMemo(() => {
@@ -69,7 +64,7 @@ const NewRequestTableComponent: React.FC<TableProps> = ({
       {} as Record<string, any>
     );
 
-    return [...tableData, emptyRow];
+    return [emptyRow, ...tableData];
   }, [tableData, columns]);
 
   const filteredData = useMemo(() => {
@@ -106,12 +101,6 @@ const NewRequestTableComponent: React.FC<TableProps> = ({
     });
   }, [filteredData, sortColumn, sortOrder]);
 
-  const paginatedData = useMemo(() => {
-    const startIndex = (currentPage - 1) * rowsPerPage;
-    const endIndex = startIndex + rowsPerPage;
-    return sortedData.slice(startIndex, endIndex);
-  }, [sortedData, currentPage, rowsPerPage]);
-
   const totalPages = Math.ceil(sortedData.length / rowsPerPage);
 
   const handleSort = (column: string) => {
@@ -130,17 +119,60 @@ const NewRequestTableComponent: React.FC<TableProps> = ({
     setCurrentPage(page);
   };
 
-  const handleDelete = (id: number) => {
-    console.log(`Delete row with ID: ${id}`);
+  const handleDelete = (index: number) => {
+    setTableData((prevData) => {
+      const updatedData = prevData.filter((_, i) => i !== index);
+      return updatedData;
+    });
+
+    setSavedRows((prev) => {
+      const newSavedRows = new Set<number>();
+      prev.forEach((rowIndex) => {
+        if (rowIndex !== index) {
+          // Adjust indices for rows after the deleted one
+          newSavedRows.add(rowIndex > index ? rowIndex - 1 : rowIndex);
+        }
+      });
+      return newSavedRows;
+    });
   };
 
   const handleAdd = (row: any) => {
-    console.log(`added row: ${row}`);
+    // Add the current row to the `savedRows` state after saving
+    const newRow = { ...row }; // Clone the row to preserve the existing data
+    setTableData((prevData) => [newRow, ...prevData]);
+
+    // Mark this row as saved
+    setSavedRows((prev) => new Set(prev).add(tableData.length)); // Add the new row index to savedRows
+    setCostCodeId(null);
+    setQuantity(0);
+    setSelectedOption(null);
   };
 
-  const handleOptionSelect = (option: any) => {
+  const handleOptionSelect = (option: any, rowIndex: number) => {
     console.log("Selected Option:", option);
-    setSelectedOption(option); // Update the state with the selected option
+    setSelectedOption(option);
+
+    // Update the corresponding row in the data
+    const updatedData = [...dataWithEmptyRow];
+    updatedData[rowIndex].itemUnit = option.itemUnit;
+
+    // You may also need to persist this in tableData if needed
+    tableData[rowIndex].itemUnit = option.itemUnit;
+  };
+
+  const handleInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    key: string
+  ) => {
+    const { value } = event.target;
+
+    if (key === "code") {
+      setCostCodeId(parseInt(value));
+    }
+    if (key === "quantity") {
+      setQuantity(parseInt(value));
+    }
   };
 
   return (
@@ -198,7 +230,7 @@ const NewRequestTableComponent: React.FC<TableProps> = ({
               </tr>
             </thead>
             <tbody>
-              {paginatedData.map((row, index) => (
+              {dataWithEmptyRow.map((row, index) => (
                 <tr key={index} className="hover:bg-base-200/40">
                   {columns.map(
                     ({
@@ -222,15 +254,17 @@ const NewRequestTableComponent: React.FC<TableProps> = ({
                               options={items}
                               searchKey="text"
                               placeholder="Search item..."
-                              onOptionSelect={handleOptionSelect}
+                              onOptionSelect={(option) =>
+                                handleOptionSelect(option, index)
+                              }
                             />
                           ) : (
                             <Input
                               type={inputType}
                               required={required}
                               value={
-                                key === "itemUnit" && selectedOption
-                                  ? selectedOption.itemUnit
+                                key === "itemUnit" && row.itemUnit
+                                  ? row.itemUnit
                                   : undefined
                               }
                               size="sm"
@@ -241,6 +275,9 @@ const NewRequestTableComponent: React.FC<TableProps> = ({
                               }
                               className="w-full border-none disabled:bg-base-100 focus:outline-none"
                               disabled={disabled}
+                              onChange={(event) =>
+                                handleInputChange(event, key)
+                              }
                             />
                           )
                         ) : (
@@ -252,26 +289,31 @@ const NewRequestTableComponent: React.FC<TableProps> = ({
                   {actions && (
                     <td className="border-y border-base-content/5 px-2 py-3 font-medium text-sm text-right pr-6">
                       <div className="inline-flex w-fit">
-                        {addAction && (
+                        {!savedRows.has(index) && addAction && (
                           <Button
                             color="ghost"
-                            className="text-error/70 hover:bg-error/20"
+                            className="text-success/70 hover:bg-success/20"
                             size="sm"
                             shape="square"
-                            aria-label="Save Row"
+                            aria-label="Add Row"
+                            type="button"
                             onClick={() => handleAdd(row)}
+                            disabled={
+                              !quantity || !costCodeId || !selectedOption
+                            }
                           >
-                            <Icon icon={trashIcon} fontSize={16} />
+                            <Icon icon={addIcon} fontSize={16} />
                           </Button>
                         )}
-                        {deleteAction && (
+                        {savedRows.has(index) && deleteAction && (
                           <Button
                             color="ghost"
                             className="text-error/70 hover:bg-error/20"
                             size="sm"
                             shape="square"
                             aria-label="Delete Row"
-                            onClick={() => handleDelete(row.id)}
+                            type="button"
+                            onClick={() => handleDelete(index)}
                           >
                             <Icon icon={trashIcon} fontSize={16} />
                           </Button>
@@ -362,5 +404,4 @@ const NewRequestTableComponent: React.FC<TableProps> = ({
     </Card>
   );
 };
-
 export default NewRequestTableComponent;
