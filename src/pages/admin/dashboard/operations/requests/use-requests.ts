@@ -62,7 +62,7 @@ const useRequests = () => {
       label: "Cost Code",
       isInput: true,
       required: true,
-      inputType: "text",
+      inputType: "number",
     },
     {
       key: "quantity",

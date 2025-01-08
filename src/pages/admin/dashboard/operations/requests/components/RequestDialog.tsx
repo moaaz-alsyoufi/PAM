@@ -208,7 +208,6 @@ const RequestDialog: React.FC<DialogProps> = ({
                 </label>
               </div>
               <NewRequestTableComponent
-                tableData={[]}
                 columns={newRequestColumns}
                 items={data}
                 actions={true}
