@@ -13,6 +13,9 @@ const Requests = () => {
     "Add"
   );
   const [data, setData] = useState<any[]>([]);
+  const [costCodes, setCostCodes] = useState<any[]>([]);
+  const [subcontractors, setSubcontractors] = useState<any[]>([]);
+  const [requestRefNb, setRequestRefNb] = useState<any>(null);
   const [currentRow, setCurrentRow] = useState();
   const { getRequestDetails } = useRequests();
   const { authState } = useAuthContext();
@@ -43,8 +46,11 @@ const Requests = () => {
 
     if (type === "Add") {
       try {
-        const items = await fetchNewRequestData();
-        setData(items);
+        const data = await fetchNewRequestData();
+        setData(data.itms);
+        setCostCodes(data.cc);
+        setSubcontractors(data.subs);
+        setRequestRefNb(data.requestRefNb);
         handleShow();
       } catch (error) {
         console.error(error);
@@ -105,6 +111,9 @@ const Requests = () => {
                 }
                 previewColumns={previewColumns}
                 data={data}
+                subContractors={subcontractors}
+                costCodes={costCodes}
+                requestRefNb={requestRefNb}
               />
             </>
           ) : (

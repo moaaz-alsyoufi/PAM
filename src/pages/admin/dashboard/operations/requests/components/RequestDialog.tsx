@@ -29,6 +29,9 @@ interface DialogProps {
   previewColumns?: Record<string, string>;
   title: string;
   data?: any[];
+  subContractors?: any[];
+  costCodes?: any[];
+  requestRefNb?: { refNumber: string; reqNo: number };
 }
 
 const RequestDialog: React.FC<DialogProps> = ({
@@ -41,6 +44,9 @@ const RequestDialog: React.FC<DialogProps> = ({
   title,
   previewColumns,
   data,
+  costCodes,
+  subContractors,
+  requestRefNb,
 }) => {
   // Initialize form data based on inputFields and current data
   const [formData, setFormData] = useState<Record<string, any>>(() => {
@@ -62,12 +68,7 @@ const RequestDialog: React.FC<DialogProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const { toaster } = useToast();
   const { getToken } = useAuthContext();
-  const {
-    exportRequest,
-    newRequestColumns,
-    newRequestRefNumber,
-    subContractors,
-  } = useRequests();
+  const { exportRequest, newRequestColumns } = useRequests();
 
   // Optional: Update formData when current changes (e.g., when editing a different user)
   useEffect(() => {
@@ -169,7 +170,7 @@ const RequestDialog: React.FC<DialogProps> = ({
                   </span>
                   <input
                     type="text"
-                    defaultValue={newRequestRefNumber ?? ""}
+                    defaultValue={requestRefNb?.refNumber ?? ""}
                     disabled
                   />
                 </label>
@@ -177,28 +178,30 @@ const RequestDialog: React.FC<DialogProps> = ({
                   <span className="font-normal opacity-45 w-20 capitalize">
                     Subcontractor
                   </span>
-                  <Select
-                    className="w-full border-none focus:outline-none focus:ring-0 bg-transparent"
-                    defaultValue={0}
-                    onTouchStart={(e) => {
-                      if (e.touches.length > 1) {
-                        e.preventDefault();
-                      }
-                    }}
-                  >
-                    <SelectOption className="bg-base-100" value={0} disabled>
-                      Select Subcontractor
-                    </SelectOption>
-                    {subContractors.map((sub) => (
-                      <SelectOption
-                        key={sub.subId}
-                        value={sub.subId}
-                        className="bg-base-100"
-                      >
-                        {sub.subName}
+                  {subContractors && (
+                    <Select
+                      className="w-full border-none focus:outline-none focus:ring-0 bg-transparent"
+                      defaultValue={0}
+                      onTouchStart={(e) => {
+                        if (e.touches.length > 1) {
+                          e.preventDefault();
+                        }
+                      }}
+                    >
+                      <SelectOption className="bg-base-100" value={0} disabled>
+                        Select Subcontractor
                       </SelectOption>
-                    ))}
-                  </Select>
+                      {subContractors.map((sub) => (
+                        <SelectOption
+                          key={sub.subId}
+                          value={sub.subId}
+                          className="bg-base-100"
+                        >
+                          {sub.subName}
+                        </SelectOption>
+                      ))}
+                    </Select>
+                  )}
                 </label>
                 <label className="flex flex-col sm:flex-row items-center gap-2 input input-sm input-bordered grow">
                   <span className="font-normal text-sm md:text-base opacity-45 min-w-16 md:w-28">
@@ -213,6 +216,7 @@ const RequestDialog: React.FC<DialogProps> = ({
                 actions={true}
                 addAction={true}
                 deleteAction={true}
+                costCodes={costCodes}
               />
             </div>
           )}
