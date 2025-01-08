@@ -9,9 +9,9 @@ import RequestDialog from "./components/RequestDialog";
 import { useState } from "react";
 
 const Requests = () => {
-  const [dialogType, setDialogType] = useState<"Add" | "Edit" | "Preview">(
-    "Add"
-  );
+  const [dialogType, setDialogType] = useState<
+    "Add" | "Edit" | "Preview" | "Select"
+  >("Add");
   const [data, setData] = useState<any[]>([]);
   const [costCodes, setCostCodes] = useState<any[]>([]);
   const [subcontractors, setSubcontractors] = useState<any[]>([]);
@@ -38,7 +38,7 @@ const Requests = () => {
     roleId === 4 || roleId === 5 || roleId === 7 || roleId === 10;
 
   const handleOpenDialog = async (
-    type: "Add" | "Edit" | "Preview",
+    type: "Add" | "Edit" | "Preview" | "Select",
     row: any
   ) => {
     setDialogType(type);

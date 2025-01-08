@@ -21,13 +21,17 @@ interface CurrentData {
 interface DialogProps {
   handleHide: () => void;
   dialogRef: React.RefObject<HTMLDialogElement | null>;
-  dialogType: "Add" | "Edit" | "Preview";
+  dialogType: "Add" | "Edit" | "Preview" | "Select";
   current: CurrentData | null;
-  onSuccess: (type: "Add" | "Edit" | "Preview", formData: any) => void;
+  onSuccess: (
+    type: "Add" | "Edit" | "Preview" | "Select",
+    formData: any
+  ) => void;
   inputFields: InputField[];
   previewColumns?: Record<string, string>;
   title: string;
   data?: any[];
+  onSelect?: (costCode: any) => void; // Add onSelect prop to the dialog component
 }
 
 const DialogComponent: React.FC<DialogProps> = ({
@@ -40,6 +44,7 @@ const DialogComponent: React.FC<DialogProps> = ({
   title,
   previewColumns,
   data,
+  onSelect,
 }) => {
   // Initialize form data based on inputFields and current data
   const [formData, setFormData] = useState<Record<string, any>>(() => {
@@ -73,6 +78,10 @@ const DialogComponent: React.FC<DialogProps> = ({
     }
   }, [current, dialogType]);
 
+  const handleRowSelect = (costCode: any) => {
+    onSelect && onSelect(costCode);
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
@@ -87,11 +96,7 @@ const DialogComponent: React.FC<DialogProps> = ({
       }
 
       if (dialogType === "Edit" && current) {
-        // Example: API call to update user
-        // await updateUserApi(formData, token);
       } else if (dialogType === "Add") {
-        // Example: API call to add user
-        // await addUserApi(formData, token);
       } else if (dialogType === "Preview") {
         const currentPageUrl = location.pathname.split("/").pop();
         if (currentPageUrl === "requests") {
@@ -199,6 +204,7 @@ const DialogComponent: React.FC<DialogProps> = ({
       <div
         className={cn("modal-box relative", {
           "max-w-7xl": dialogType === "Preview",
+          "max-w-5xl": dialogType === "Select",
         })}
       >
         <button
@@ -220,6 +226,16 @@ const DialogComponent: React.FC<DialogProps> = ({
               actions={false}
               title={"Request Details"}
             />
+          ) : dialogType === "Select" ? (
+            <PAMTable
+              columns={previewColumns ?? {}}
+              tableData={data ?? []}
+              inputFields={[]}
+              actions={false}
+              title={"Cost Code"}
+              select
+              onRowSelect={handleRowSelect}
+            />
           ) : (
             <div className="space-y-3 my-4">
               {inputFields.map((field) => (
@@ -228,20 +244,22 @@ const DialogComponent: React.FC<DialogProps> = ({
             </div>
           )}
 
-          <div className="text-right mt-5">
-            <Button
-              className="w-full btn btn-sm"
-              type="submit"
-              disabled={isLoading}
-              loading={isLoading}
-            >
-              {dialogType === "Add"
-                ? "Add"
-                : dialogType === "Edit"
-                  ? "Save"
-                  : "Export"}
-            </Button>
-          </div>
+          {dialogType !== "Select" && (
+            <div className="text-right mt-5">
+              <Button
+                className="w-full btn btn-sm"
+                type="submit"
+                disabled={isLoading}
+                loading={isLoading}
+              >
+                {dialogType === "Add"
+                  ? "Add"
+                  : dialogType === "Edit"
+                    ? "Save"
+                    : "Export"}
+              </Button>
+            </div>
+          )}
         </form>
       </div>
     </dialog>

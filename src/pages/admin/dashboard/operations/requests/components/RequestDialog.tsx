@@ -22,9 +22,12 @@ interface CurrentData {
 interface DialogProps {
   handleHide: () => void;
   dialogRef: React.RefObject<HTMLDialogElement | null>;
-  dialogType: "Add" | "Edit" | "Preview";
+  dialogType: "Add" | "Edit" | "Preview" | "Select";
   current: CurrentData | null;
-  onSuccess: (type: "Add" | "Edit" | "Preview", formData: any) => void;
+  onSuccess: (
+    type: "Add" | "Edit" | "Preview" | "Select",
+    formData: any
+  ) => void;
   inputFields?: InputField[];
   previewColumns?: Record<string, string>;
   title: string;
