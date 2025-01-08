@@ -16,12 +16,17 @@ interface PAMTableProps {
   actions: boolean;
   title: string;
   dynamicDialog?: boolean;
-  openStaticDialog?: (type: "Add" | "Edit" | "Preview", Data?: any) => void;
+  openStaticDialog?: (
+    type: "Add" | "Edit" | "Preview" | "Select",
+    Data?: any
+  ) => void;
   showAction?: boolean;
   deleteAction?: boolean;
   editAction?: boolean;
   loading?: boolean;
   addBtn?: boolean;
+  select?: boolean;
+  onRowSelect?: (selectedRow: any) => void; // Add this prop
 }
 
 const PAMTable: React.FC<PAMTableProps> = ({
@@ -38,6 +43,7 @@ const PAMTable: React.FC<PAMTableProps> = ({
   addBtn,
   dynamicDialog,
   openStaticDialog,
+  onRowSelect,
 }) => {
   return (
     <div className="mt-5">
@@ -59,6 +65,7 @@ const PAMTable: React.FC<PAMTableProps> = ({
               addBtn={addBtn}
               dynamicDialog={dynamicDialog}
               openStaticDialog={openStaticDialog}
+              onRowSelect={onRowSelect}
             />
           </div>
 

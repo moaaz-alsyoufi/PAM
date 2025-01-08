@@ -41,6 +41,7 @@ interface TableProps {
   addBtn?: boolean;
   dynamicDialog?: boolean;
   openStaticDialog?: (type: "Add" | "Edit" | "Preview", Data?: any) => void;
+  onRowSelect?: (selectedRow: any) => void;
 }
 
 const TableComponent: React.FC<TableProps> = ({
@@ -56,6 +57,7 @@ const TableComponent: React.FC<TableProps> = ({
   addBtn,
   dynamicDialog = true,
   openStaticDialog,
+  onRowSelect,
 }) => {
   const [sortColumn, setSortColumn] = useState<string | null>(null);
   const [data, setData] = useState<any[]>([]);
@@ -71,6 +73,12 @@ const TableComponent: React.FC<TableProps> = ({
   const location = useLocation();
   const { getRequestDetails, getNewRequest } = useRequests();
   const { authState } = useAuthContext();
+
+  const handleRowClick = (row: any) => {
+    if (onRowSelect) {
+      onRowSelect(row);
+    }
+  };
 
   const filteredData = useMemo(() => {
     const lowercasedQuery = searchQuery.toLowerCase();
@@ -269,7 +277,11 @@ const TableComponent: React.FC<TableProps> = ({
               <tbody>
                 {paginatedData.length > 0 ? (
                   paginatedData.map((row, index) => (
-                    <tr key={index} className="hover:bg-base-200/40">
+                    <tr
+                      key={index}
+                      className="hover:bg-base-200/40 cursor-pointer"
+                      onClick={() => handleRowClick(row)}
+                    >
                       {Object.keys(columns).map((columnKey) => (
                         <td
                           key={columnKey}
@@ -278,7 +290,6 @@ const TableComponent: React.FC<TableProps> = ({
                           {row[columnKey] ?? "-"}
                         </td>
                       ))}
-
                       {actions && (
                         <td className="border-y border-base-content/5 px-2 py-3 font-medium text-sm text-right pr-6">
                           <div className="inline-flex w-fit">
@@ -287,7 +298,7 @@ const TableComponent: React.FC<TableProps> = ({
                                 color="ghost"
                                 size="sm"
                                 shape="square"
-                                aria-label="preview Row"
+                                aria-label="Preview Row"
                                 onClick={() => openPreviewDialog(row)}
                               >
                                 <Icon
