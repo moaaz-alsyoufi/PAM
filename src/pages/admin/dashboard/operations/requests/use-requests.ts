@@ -104,6 +104,12 @@ const useRequests = () => {
     { name: "qty", label: "Qty", type: "number", required: true },
   ];
 
+  const costCodeColumns = {
+    en: "EN",
+    fr: "FR",
+    code: "Code",
+  };
+
   const getRequestDetails = async (materialId: number) => {
     setLoading(true);
     try {
@@ -238,6 +244,7 @@ const useRequests = () => {
     subContractors,
     costCodes,
     items,
+    costCodeColumns,
     getRequestDetails,
     getNewRequest,
     exportRequest,
