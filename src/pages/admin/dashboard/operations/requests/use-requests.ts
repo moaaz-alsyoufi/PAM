@@ -161,6 +161,7 @@ const useRequests = () => {
         "GET",
         token
       );
+
       setNewRequestRefNumber(newReqData.refNumber);
       const subs = await apiRequest("Requests/subcontractors", "GET", token);
       setSubContractors(subs);
@@ -168,7 +169,12 @@ const useRequests = () => {
       setCostCodes(cc);
       const itms = await apiRequest("Requests/getitems", "GET", token);
       setItems(itms);
-      return itms;
+      return {
+        subs: subs,
+        cc: cc,
+        itms: itms,
+        requestRefNb: newReqData,
+      };
     } catch (error) {
       console.error(error);
       throw error;
