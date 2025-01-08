@@ -12,10 +12,13 @@ import {
   CardBody,
   Input,
   Pagination,
+  useDialog,
 } from "@/components/daisyui";
 import Icon from "@/components/Icon";
 import { cn } from "@/helpers/utils/cn";
 import AutoComplete from "@/components/daisyui/AutoComplete/AutoComplete";
+import DialogComponent from "@/components/Table/Components/Dialog";
+import useRequests from "../use-requests";
 
 interface Column {
   key: string;
@@ -34,6 +37,7 @@ interface TableProps {
   addAction?: boolean;
   addBtn?: boolean;
   items?: any[];
+  costCodes?: any[];
 }
 
 const NewRequestTableComponent: React.FC<TableProps> = ({
@@ -42,6 +46,7 @@ const NewRequestTableComponent: React.FC<TableProps> = ({
   deleteAction,
   addAction,
   items,
+  costCodes,
 }) => {
   const [sortColumn, setSortColumn] = useState<string | null>(null);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
@@ -53,6 +58,9 @@ const NewRequestTableComponent: React.FC<TableProps> = ({
   const [quantity, setQuantity] = useState<number>(0);
   const [costCodeId, setCostCodeId] = useState<number | null>(null);
   const [savedRows, setSavedRows] = useState<Set<number>>(new Set());
+  const { dialogRef, handleShow, handleHide } = useDialog();
+  const { costCodeColumns } = useRequests();
+  const [selectedCostCode, setSelectedCostCode] = useState<any | null>(null); // Track the selected cost code
 
   // Add a default empty row to the data
   const dataWithEmptyRow = useMemo(() => {
@@ -120,20 +128,13 @@ const NewRequestTableComponent: React.FC<TableProps> = ({
   };
 
   const handleDelete = (index: number) => {
-    setTableData((prevData) => {
-      const updatedData = prevData.filter((_, i) => i !== index);
-      return updatedData;
-    });
-
+    setTableData((prevData) =>
+      prevData.filter((_, rowIndex) => rowIndex !== index)
+    );
     setSavedRows((prev) => {
-      const newSavedRows = new Set<number>();
-      prev.forEach((rowIndex) => {
-        if (rowIndex !== index) {
-          // Adjust indices for rows after the deleted one
-          newSavedRows.add(rowIndex > index ? rowIndex - 1 : rowIndex);
-        }
-      });
-      return newSavedRows;
+      const updatedSet = new Set(prev);
+      updatedSet.delete(index);
+      return updatedSet;
     });
   };
 
@@ -150,15 +151,9 @@ const NewRequestTableComponent: React.FC<TableProps> = ({
   };
 
   const handleOptionSelect = (option: any, rowIndex: number) => {
-    console.log("Selected Option:", option);
     setSelectedOption(option);
-
-    // Update the corresponding row in the data
     const updatedData = [...dataWithEmptyRow];
     updatedData[rowIndex].itemUnit = option.itemUnit;
-
-    // You may also need to persist this in tableData if needed
-    tableData[rowIndex].itemUnit = option.itemUnit;
   };
 
   const handleInputChange = (
@@ -175,233 +170,268 @@ const NewRequestTableComponent: React.FC<TableProps> = ({
     }
   };
 
+  const handleOpenCodeDialog = () => {
+    if (costCodeId) return;
+    handleShow();
+  };
+
+  const handleCostCodeSelect = (costCode: any) => {
+    setCostCodeId(costCode.codeId);
+    setSelectedCostCode(costCode);
+    handleHide();
+  };
+
   return (
-    <Card className="bg-base-100">
-      <CardBody className="p-0">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-end px-5 pt-5 space-y-4 sm:space-y-0">
-          <div className="form-control flex flex-row items-center rounded-box border border-base-content/20 px-2">
-            <Icon
-              icon={searchIcon}
-              className="text-base-content/60"
-              fontSize={15}
-            />
-            <Input
-              size="sm"
-              placeholder="Search data"
-              bordered={false}
-              borderOffset={false}
-              className="w-full focus:border-transparent focus:outline-0"
-              value={searchQuery}
-              onChange={handleSearchChange}
-            />
+    <>
+      <Card className="bg-base-100">
+        <CardBody className="p-0">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-end px-5 pt-5 space-y-4 sm:space-y-0">
+            <div className="form-control flex flex-row items-center rounded-box border border-base-content/20 px-2">
+              <Icon
+                icon={searchIcon}
+                className="text-base-content/60"
+                fontSize={15}
+              />
+              <Input
+                size="sm"
+                placeholder="Search data"
+                bordered={false}
+                borderOffset={false}
+                className="w-full focus:border-transparent focus:outline-0"
+                value={searchQuery}
+                onChange={handleSearchChange}
+              />
+            </div>
           </div>
-        </div>
-        <div className="overflow-auto pb-24">
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="hover:bg-base-200/40">
-                {columns.map(({ key, label }) => (
-                  <th
-                    key={key}
-                    className="border-b border-base-content/5 px-2 pl-6 py-3 text-sm text-left font-normal"
-                  >
-                    <div
-                      className="flex justify-start items-center cursor-pointer"
-                      onClick={() => handleSort(key)}
+          <div className="overflow-auto pb-24">
+            <table className="w-full border-collapse">
+              <thead>
+                <tr className="hover:bg-base-200/40">
+                  {columns.map(({ key, label }) => (
+                    <th
+                      key={key}
+                      className="border-b border-base-content/5 px-2 pl-6 py-3 text-sm text-left font-normal"
                     >
-                      <span>{label}</span>
-                      {sortColumn === key && (
-                        <Icon
-                          icon={
-                            sortOrder === "asc" ? sortAscIcon : sortDescIcon
-                          }
-                          className="ml-1"
-                          fontSize={14}
-                        />
-                      )}
-                    </div>
-                  </th>
-                ))}
-                {actions && (
-                  <th className="border-b border-base-content/5 pl-2 pr-6 py-3 text-sm text-right font-normal">
-                    Actions
-                  </th>
-                )}
-              </tr>
-            </thead>
-            <tbody>
-              {dataWithEmptyRow.map((row, index) => (
-                <tr key={index} className="hover:bg-base-200/40">
-                  {columns.map(
-                    ({
-                      key,
-                      isInput,
-                      inputType,
-                      required,
-                      disabled,
-                      options,
-                    }) => (
-                      <td
-                        key={key}
-                        className="border-y border-base-content/5 px-2 pl-6 py-3 font-medium text-sm"
+                      <div
+                        className="flex justify-start items-center cursor-pointer"
+                        onClick={() => handleSort(key)}
                       >
-                        {isInput ? (
-                          inputType === "select" &&
-                          options &&
-                          items &&
-                          items.length > 0 ? (
-                            <AutoComplete
-                              options={items}
-                              searchKey="text"
-                              placeholder="Search item..."
-                              onOptionSelect={(option) =>
-                                handleOptionSelect(option, index)
-                              }
-                            />
-                          ) : (
-                            <Input
-                              type={inputType}
-                              required={required}
-                              value={
-                                key === "itemUnit" && row.itemUnit
-                                  ? row.itemUnit
-                                  : undefined
-                              }
-                              size="sm"
-                              defaultValue={
-                                key === "itemUnit"
-                                  ? selectedOption?.itemUnit
-                                  : (row[key] ?? "")
-                              }
-                              className="w-full border-none disabled:bg-base-100 focus:outline-none"
-                              disabled={disabled}
-                              onChange={(event) =>
-                                handleInputChange(event, key)
-                              }
-                            />
-                          )
-                        ) : (
-                          (row[key] ?? "-")
-                        )}
-                      </td>
-                    )
-                  )}
-                  {actions && (
-                    <td className="border-y border-base-content/5 px-2 py-3 font-medium text-sm text-right pr-6">
-                      <div className="inline-flex w-fit">
-                        {!savedRows.has(index) && addAction && (
-                          <Button
-                            color="ghost"
-                            className="text-success/70 hover:bg-success/20"
-                            size="sm"
-                            shape="square"
-                            aria-label="Add Row"
-                            type="button"
-                            onClick={() => handleAdd(row)}
-                            disabled={
-                              !quantity || !costCodeId || !selectedOption
+                        <span>{label}</span>
+                        {sortColumn === key && (
+                          <Icon
+                            icon={
+                              sortOrder === "asc" ? sortAscIcon : sortDescIcon
                             }
-                          >
-                            <Icon icon={addIcon} fontSize={16} />
-                          </Button>
-                        )}
-                        {savedRows.has(index) && deleteAction && (
-                          <Button
-                            color="ghost"
-                            className="text-error/70 hover:bg-error/20"
-                            size="sm"
-                            shape="square"
-                            aria-label="Delete Row"
-                            type="button"
-                            onClick={() => handleDelete(index)}
-                          >
-                            <Icon icon={trashIcon} fontSize={16} />
-                          </Button>
+                            className="ml-1"
+                            fontSize={14}
+                          />
                         )}
                       </div>
-                    </td>
+                    </th>
+                  ))}
+                  {actions && (
+                    <th className="border-b border-base-content/5 pl-2 pr-6 py-3 text-sm text-right font-normal">
+                      Actions
+                    </th>
                   )}
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        {totalPages > 1 && (
-          <div className="flex items-center justify-end px-5 pb-5 pt-3">
-            <Pagination>
-              <Button
-                type="button"
-                size="sm"
-                aria-label="pagination-prev"
-                className="join-item"
-                disabled={currentPage === 1}
-                onClick={() => handlePageChange(currentPage - 1)}
-              >
-                <Icon icon={chevronLeftIcon} fontSize={16} />
-              </Button>
-              <Button
-                type="button"
-                size="sm"
-                className={cn("join-item", {
-                  "bg-base-100": currentPage === 1,
-                })}
-                active={currentPage === 1}
-                onClick={() => handlePageChange(1)}
-              >
-                1
-              </Button>
-              {currentPage > 3 && <span className="join-item"> </span>}
-              {Array.from({ length: 3 }, (_, index) => {
-                const page = currentPage - 1 + index;
-                if (page > 1 && page < totalPages) {
-                  return (
-                    <Button
-                      type="button"
-                      key={page}
-                      size="sm"
-                      className={cn("join-item", {
-                        "bg-base-100": currentPage === page,
-                      })}
-                      active={currentPage === page}
-                      onClick={() => handlePageChange(page)}
-                    >
-                      {page}
-                    </Button>
-                  );
-                }
-                return null;
-              })}
-              {currentPage < totalPages - 2 && (
-                <span className="join-item"> </span>
-              )}
-              {totalPages > 1 && (
+              </thead>
+              <tbody>
+                {dataWithEmptyRow.map((row, index) => (
+                  <tr key={index} className="hover:bg-base-200/40">
+                    {columns.map(
+                      ({
+                        key,
+                        isInput,
+                        inputType,
+                        required,
+                        disabled,
+                        options,
+                      }) => (
+                        <td
+                          key={key}
+                          className="border-y border-base-content/5 px-2 pl-6 py-3 font-medium text-sm"
+                        >
+                          {isInput ? (
+                            inputType === "select" &&
+                            options &&
+                            items &&
+                            items.length > 0 ? (
+                              <AutoComplete
+                                options={items}
+                                searchKey="text"
+                                placeholder="Search item..."
+                                onOptionSelect={(option) =>
+                                  handleOptionSelect(option, index)
+                                }
+                              />
+                            ) : key === "code" ? (
+                              <label
+                                onClick={handleOpenCodeDialog}
+                                className="cursor-pointer"
+                              >
+                                {selectedCostCode
+                                  ? selectedCostCode.code
+                                  : "Select Cost Code"}
+                              </label>
+                            ) : (
+                              <Input
+                                type={inputType}
+                                required={required}
+                                value={
+                                  key === "itemUnit" && row.itemUnit
+                                    ? row.itemUnit
+                                    : undefined
+                                }
+                                size="sm"
+                                defaultValue={
+                                  key === "itemUnit"
+                                    ? selectedOption?.itemUnit
+                                    : (row[key] ?? "")
+                                }
+                                className="w-full border-none disabled:bg-base-100 focus:outline-none"
+                                disabled={disabled}
+                                onChange={(event) =>
+                                  handleInputChange(event, key)
+                                }
+                              />
+                            )
+                          ) : (
+                            (row[key] ?? "-")
+                          )}
+                        </td>
+                      )
+                    )}
+                    {actions && (
+                      <td className="border-y border-base-content/5 px-2 py-3 font-medium text-sm text-right pr-6">
+                        <div className="inline-flex w-fit">
+                          {!savedRows.has(index) && addAction && (
+                            <Button
+                              color="ghost"
+                              className="text-success/70 hover:bg-success/20"
+                              size="sm"
+                              shape="square"
+                              aria-label="Add Row"
+                              type="button"
+                              onClick={() => handleAdd(row)}
+                              disabled={
+                                !quantity || !costCodeId || !selectedOption
+                              }
+                            >
+                              <Icon icon={addIcon} fontSize={16} />
+                            </Button>
+                          )}
+                          {savedRows.has(index) && deleteAction && (
+                            <Button
+                              color="ghost"
+                              className="text-error/70 hover:bg-error/20"
+                              size="sm"
+                              shape="square"
+                              aria-label="Delete Row"
+                              type="button"
+                              onClick={() => handleDelete(index)}
+                            >
+                              <Icon icon={trashIcon} fontSize={16} />
+                            </Button>
+                          )}
+                        </div>
+                      </td>
+                    )}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          {totalPages > 1 && (
+            <div className="flex items-center justify-end px-5 pb-5 pt-3">
+              <Pagination>
+                <Button
+                  type="button"
+                  size="sm"
+                  aria-label="pagination-prev"
+                  className="join-item"
+                  disabled={currentPage === 1}
+                  onClick={() => handlePageChange(currentPage - 1)}
+                >
+                  <Icon icon={chevronLeftIcon} fontSize={16} />
+                </Button>
                 <Button
                   type="button"
                   size="sm"
                   className={cn("join-item", {
-                    "bg-base-100": currentPage === totalPages,
+                    "bg-base-100": currentPage === 1,
                   })}
-                  active={currentPage === totalPages}
-                  onClick={() => handlePageChange(totalPages)}
+                  active={currentPage === 1}
+                  onClick={() => handlePageChange(1)}
                 >
-                  {totalPages}
+                  1
                 </Button>
-              )}
-              <Button
-                type="button"
-                size="sm"
-                aria-label="pagination-next"
-                className="join-item"
-                disabled={currentPage === totalPages}
-                onClick={() => handlePageChange(currentPage + 1)}
-              >
-                <Icon icon={chevronRightIcon} fontSize={16} />
-              </Button>
-            </Pagination>
-          </div>
-        )}
-      </CardBody>
-    </Card>
+                {currentPage > 3 && <span className="join-item"> </span>}
+                {Array.from({ length: 3 }, (_, index) => {
+                  const page = currentPage - 1 + index;
+                  if (page > 1 && page < totalPages) {
+                    return (
+                      <Button
+                        type="button"
+                        key={page}
+                        size="sm"
+                        className={cn("join-item", {
+                          "bg-base-100": currentPage === page,
+                        })}
+                        active={currentPage === page}
+                        onClick={() => handlePageChange(page)}
+                      >
+                        {page}
+                      </Button>
+                    );
+                  }
+                  return null;
+                })}
+                {currentPage < totalPages - 2 && (
+                  <span className="join-item"> </span>
+                )}
+                {totalPages > 1 && (
+                  <Button
+                    type="button"
+                    size="sm"
+                    className={cn("join-item", {
+                      "bg-base-100": currentPage === totalPages,
+                    })}
+                    active={currentPage === totalPages}
+                    onClick={() => handlePageChange(totalPages)}
+                  >
+                    {totalPages}
+                  </Button>
+                )}
+                <Button
+                  type="button"
+                  size="sm"
+                  aria-label="pagination-next"
+                  className="join-item"
+                  disabled={currentPage === totalPages}
+                  onClick={() => handlePageChange(currentPage + 1)}
+                >
+                  <Icon icon={chevronRightIcon} fontSize={16} />
+                </Button>
+              </Pagination>
+            </div>
+          )}
+        </CardBody>
+      </Card>
+
+      <DialogComponent
+        handleHide={handleHide}
+        dialogRef={dialogRef}
+        dialogType={"Select"}
+        current={null}
+        onSuccess={() => {}}
+        inputFields={[]}
+        title={"Cost Codes"}
+        data={costCodes}
+        previewColumns={costCodeColumns}
+        onSelect={handleCostCodeSelect}
+      />
+    </>
   );
 };
 export default NewRequestTableComponent;
