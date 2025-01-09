@@ -60,7 +60,9 @@ const NewRequestTableComponent: React.FC<TableProps> = ({
   const [savedRows, setSavedRows] = useState<Set<number>>(new Set());
   const { dialogRef, handleShow, handleHide } = useDialog();
   const { costCodeColumns } = useRequests();
-  const [selectedCostCode, setSelectedCostCode] = useState<any | null>(null); // Track the selected cost code
+  const [selectedRoweIndex, setSelectedRoweIndex] = useState<number | null>(
+    null
+  ); // Track the selected cost code
 
   // Add a default empty row to the data
   const dataWithEmptyRow = useMemo(() => {
@@ -72,7 +74,7 @@ const NewRequestTableComponent: React.FC<TableProps> = ({
       {} as Record<string, any>
     );
 
-    return [emptyRow, ...tableData];
+    return [...tableData, emptyRow];
   }, [tableData, columns]);
 
   const filteredData = useMemo(() => {
@@ -139,21 +141,13 @@ const NewRequestTableComponent: React.FC<TableProps> = ({
   };
 
   const handleAdd = (row: any) => {
-    // Add the current row to the `savedRows` state after saving
-    const newRow = { ...row }; // Clone the row to preserve the existing data
+    const newRow = { ...row };
     setTableData((prevData) => [newRow, ...prevData]);
 
-    // Mark this row as saved
-    setSavedRows((prev) => new Set(prev).add(tableData.length)); // Add the new row index to savedRows
+    setSavedRows((prev) => new Set(prev).add(tableData.length));
     setCostCodeId(null);
     setQuantity(0);
     setSelectedOption(null);
-  };
-
-  const handleOptionSelect = (option: any, rowIndex: number) => {
-    setSelectedOption(option);
-    const updatedData = [...dataWithEmptyRow];
-    updatedData[rowIndex].itemUnit = option.itemUnit;
   };
 
   const handleInputChange = (
@@ -162,22 +156,27 @@ const NewRequestTableComponent: React.FC<TableProps> = ({
   ) => {
     const { value } = event.target;
 
-    if (key === "code") {
-      setCostCodeId(parseInt(value));
-    }
     if (key === "quantity") {
       setQuantity(parseInt(value));
     }
   };
 
-  const handleOpenCodeDialog = () => {
-    if (costCodeId) return;
+  const handleOpenCodeDialog = (rowIndex: number) => {
+    setSelectedRoweIndex(rowIndex);
     handleShow();
+  };
+
+  const handleOptionSelect = (option: any, rowIndex: number) => {
+    setSelectedOption(option);
+    const updatedData = [...dataWithEmptyRow];
+    updatedData[rowIndex].itemUnit = option.itemUnit;
   };
 
   const handleCostCodeSelect = (costCode: any) => {
     setCostCodeId(costCode.codeId);
-    setSelectedCostCode(costCode);
+
+    const updatedData = [...dataWithEmptyRow];
+    updatedData[selectedRoweIndex ?? 0].code = costCode.code;
     handleHide();
   };
 
@@ -267,12 +266,10 @@ const NewRequestTableComponent: React.FC<TableProps> = ({
                               />
                             ) : key === "code" ? (
                               <label
-                                onClick={handleOpenCodeDialog}
+                                onClick={() => handleOpenCodeDialog(index)}
                                 className="cursor-pointer"
                               >
-                                {selectedCostCode
-                                  ? selectedCostCode.code
-                                  : "Select Cost Code"}
+                                {row.code ? row.code : "Select Cost Code"}
                               </label>
                             ) : (
                               <Input
