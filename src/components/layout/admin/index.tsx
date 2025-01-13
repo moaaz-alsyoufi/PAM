@@ -13,6 +13,7 @@ import {
 import { adminToolsMenuItems } from "@/data/layout/admin";
 import { useLayoutContext } from "@/states/layout";
 import { IMenuItem } from "@/types/layout/admin";
+import { useAuthContext } from "@/states/auth";
 
 const AdminLayout = ({ children }: { children: any }) => {
   const {
@@ -26,15 +27,37 @@ const AdminLayout = ({ children }: { children: any }) => {
   >([]);
 
   const { pathname } = useLocation();
+  const { restrictedRoles } = useAuthContext();
+
+  const getFilteredAdminRoutes = (items: IMenuItem[]) => {
+    if (restrictedRoles) {
+      // Return only allowed routes for restricted roles
+      return items.filter(
+        (route) =>
+          route.key !== "companies" &&
+          route.key !== "administrators" &&
+          route.key !== "categories-and-items" &&
+          route.key !== "sites" &&
+          route.key !== "users" &&
+          route.key !== "suppliers"
+      );
+    }
+    // If not restricted, return all admin routes
+    return items;
+  };
 
   useEffect(() => {
     toggleLeftbarDrawer(false);
     setActiveMenuItems(
-      leftbar.dashboard ? dashboardMenuItems : adminToolsMenuItems
+      leftbar.dashboard
+        ? dashboardMenuItems
+        : getFilteredAdminRoutes(adminToolsMenuItems)
     );
 
     setMobileActiveMenuItems(
-      leftbar.dashboard ? mobileDashboardMenuItems : mobileAdminToolsMenuItems
+      leftbar.dashboard
+        ? mobileDashboardMenuItems
+        : getFilteredAdminRoutes(mobileAdminToolsMenuItems)
     );
   }, [pathname, leftbar.dashboard]);
 
