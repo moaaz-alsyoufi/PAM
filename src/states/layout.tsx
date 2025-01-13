@@ -52,7 +52,9 @@ const useHook = () => {
     });
   };
 
-  const toggleDashboard = () => {
+  const toggleDashboard = (isRestricted: boolean) => {
+    console.log(isRestricted);
+
     updateState({
       leftbar: {
         ...state.leftbar,
@@ -60,7 +62,11 @@ const useHook = () => {
       },
     });
     if (state.leftbar.dashboard) {
-      navigate(routes.adminTools.companies.index);
+      if (isRestricted) {
+        navigate(routes.adminTools.costCodeLibrary.index);
+      } else {
+        navigate(routes.adminTools.companies.index);
+      }
     } else {
       navigate(routes.dashboard.index);
     }

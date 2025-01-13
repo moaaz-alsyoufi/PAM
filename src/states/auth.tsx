@@ -1,13 +1,12 @@
 import React, { useCallback } from "react";
 import createHookedContext from "@/hooks/create-hooked-context";
 import useSessionStorage from "@/hooks/use-session-storage";
-import { IUser } from "@/types/apps/admintools/users";
 import { IAuthState } from "@/types/auth/state";
 
 interface AuthContextType {
   authState: IAuthState;
   setLoggedInUser: (
-    user: IUser,
+    user: any,
     token: string,
     countries: any[],
     sites: any[]
@@ -53,7 +52,7 @@ const useHook = () => {
   };
 
   const setLoggedInUser = (
-    user: IUser,
+    user: any,
     token: string,
     countries: any[],
     sites: any[]
@@ -86,6 +85,11 @@ const useHook = () => {
     });
   };
 
+  const roleId = authState.user?.roleid;
+
+  const restrictedRoles =
+    roleId === 1 || roleId === 5 || roleId === 7 || roleId === 10;
+
   const getToken: any = () => accessToken;
 
   return {
@@ -95,6 +99,8 @@ const useHook = () => {
     logout,
     getToken,
     updateSiteId,
+    roleId,
+    restrictedRoles,
   };
 };
 
