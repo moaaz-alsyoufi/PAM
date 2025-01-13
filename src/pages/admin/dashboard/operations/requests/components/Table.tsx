@@ -62,9 +62,8 @@ const NewRequestTableComponent: React.FC<TableProps> = ({
   const { costCodeColumns } = useRequests();
   const [selectedRoweIndex, setSelectedRoweIndex] = useState<number | null>(
     null
-  ); // Track the selected cost code
+  );
 
-  // Add a default empty row to the data
   const dataWithEmptyRow = useMemo(() => {
     const emptyRow = columns.reduce(
       (acc, column) => {
@@ -140,24 +139,17 @@ const NewRequestTableComponent: React.FC<TableProps> = ({
     });
   };
 
-  const handleAdd = (row: any) => {
-    const newRow = { ...row };
-    setTableData((prevData) => [newRow, ...prevData]);
-
-    setSavedRows((prev) => new Set(prev).add(tableData.length));
-    setCostCodeId(null);
-    setQuantity(0);
-    setSelectedOption(null);
-  };
-
   const handleInputChange = (
     event: React.ChangeEvent<HTMLInputElement>,
-    key: string
+    key: string,
+    rowIndex: number
   ) => {
     const { value } = event.target;
 
     if (key === "quantity") {
       setQuantity(parseInt(value));
+      const updatedData = [...dataWithEmptyRow];
+      updatedData[rowIndex].quantity = value;
     }
   };
 
@@ -169,6 +161,7 @@ const NewRequestTableComponent: React.FC<TableProps> = ({
   const handleOptionSelect = (option: any, rowIndex: number) => {
     setSelectedOption(option);
     const updatedData = [...dataWithEmptyRow];
+    updatedData[rowIndex].itemName = option.text;
     updatedData[rowIndex].itemUnit = option.itemUnit;
   };
 
@@ -178,6 +171,15 @@ const NewRequestTableComponent: React.FC<TableProps> = ({
     const updatedData = [...dataWithEmptyRow];
     updatedData[selectedRoweIndex ?? 0].code = costCode.code;
     handleHide();
+  };
+
+  const handleAdd = (row: any) => {
+    const newRow = { ...row };
+    setTableData((prevData) => [...prevData, newRow]);
+    setSavedRows((prev) => new Set(prev).add(tableData.length));
+    setCostCodeId(null);
+    setQuantity(0);
+    setSelectedOption(null);
   };
 
   return (
@@ -289,7 +291,7 @@ const NewRequestTableComponent: React.FC<TableProps> = ({
                                 className="w-full border-none disabled:bg-base-100 focus:outline-none"
                                 disabled={disabled}
                                 onChange={(event) =>
-                                  handleInputChange(event, key)
+                                  handleInputChange(event, key, index)
                                 }
                               />
                             )
