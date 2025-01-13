@@ -38,11 +38,6 @@ const useRequests = () => {
 
   const newRequestColumns: Column[] = [
     {
-      key: "category",
-      label: "Category",
-      isInput: false,
-    },
-    {
       key: "itemName",
       label: "Item",
       isInput: true,
