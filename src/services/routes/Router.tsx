@@ -14,20 +14,11 @@ import allRoutes from "@/services/routes/all_routes";
 import { useAuthContext } from "@/states/auth";
 
 const Router = (props: RouteProps) => {
-  // const useAuthContext = () => {
-  //   const role = 4; // Replace with actual logic to fetch the role
-  //   const isLoggedIn = () => true; // Replace with actual auth check
-  //   return { isLoggedIn, getRole: () => role };
-  // };
   const { isLoggedIn, restrictedRoles } = useAuthContext();
   const location = useLocation();
 
-  // Allowed roles for limited admin tools
-
-  // Filter Admin Tools Routes based on the role
   const getFilteredAdminRoutes = () => {
     if (restrictedRoles) {
-      // Return only allowed routes for restricted roles
       return allRoutes.admin.filter(
         (route) =>
           route.name !== "admin-tools.companies.index" &&
@@ -38,11 +29,8 @@ const Router = (props: RouteProps) => {
           route.name !== "admin-tools.branch-data.suppliers.index"
       );
     }
-    // If not restricted, return all admin routes
     return allRoutes.admin;
   };
-
-  console.log("hello", restrictedRoles);
 
   return (
     <Routes>
