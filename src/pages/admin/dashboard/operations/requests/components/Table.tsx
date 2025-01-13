@@ -38,6 +38,7 @@ interface TableProps {
   addBtn?: boolean;
   items?: any[];
   costCodes?: any[];
+  onDataChange?: (data: any[]) => void;
 }
 
 const NewRequestTableComponent: React.FC<TableProps> = ({
@@ -47,6 +48,7 @@ const NewRequestTableComponent: React.FC<TableProps> = ({
   addAction,
   items,
   costCodes,
+  onDataChange,
 }) => {
   const [sortColumn, setSortColumn] = useState<string | null>(null);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
@@ -150,6 +152,10 @@ const NewRequestTableComponent: React.FC<TableProps> = ({
       setQuantity(parseInt(value));
       const updatedData = [...dataWithEmptyRow];
       updatedData[rowIndex].quantity = value;
+
+      if (onDataChange) {
+        onDataChange(updatedData);
+      }
     }
   };
 
@@ -163,6 +169,10 @@ const NewRequestTableComponent: React.FC<TableProps> = ({
     const updatedData = [...dataWithEmptyRow];
     updatedData[rowIndex].itemName = option.text;
     updatedData[rowIndex].itemUnit = option.itemUnit;
+
+    if (onDataChange) {
+      onDataChange(updatedData);
+    }
   };
 
   const handleCostCodeSelect = (costCode: any) => {
@@ -170,6 +180,10 @@ const NewRequestTableComponent: React.FC<TableProps> = ({
 
     const updatedData = [...dataWithEmptyRow];
     updatedData[selectedRoweIndex ?? 0].code = costCode.code;
+
+    if (onDataChange) {
+      onDataChange(updatedData);
+    }
     handleHide();
   };
 
