@@ -35,7 +35,8 @@ import apiRequest from "@/services/api/api"; // Updated import to default export
 
 const Topbar = ({ menuItems }: { menuItems: IMenuItem[] }) => {
   const { toggleLeftbarDrawer, state, toggleDashboard } = useLayoutContext();
-  const { logout, isLoggedIn, authState, updateSiteId } = useAuthContext();
+  const { logout, isLoggedIn, authState, updateSiteId, restrictedRoles } =
+    useAuthContext();
   const navigate = useNavigate();
 
   const [selectedDropdown, setSelectedDropdown] = useState<string | null>(null);
@@ -107,7 +108,7 @@ const Topbar = ({ menuItems }: { menuItems: IMenuItem[] }) => {
   };
 
   const handleToggleDashboard = () => {
-    toggleDashboard();
+    toggleDashboard(restrictedRoles);
   };
 
   const renderMenuItems = (items: IMenuItem[]) => {
