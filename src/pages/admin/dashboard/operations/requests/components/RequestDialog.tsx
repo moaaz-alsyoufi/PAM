@@ -100,8 +100,16 @@ const RequestDialog: React.FC<DialogProps> = ({
     if (items.length === 0) {
       toaster.error("Add items to send the request");
       return;
+    } else if (items.length === 1) {
+      if (
+        items[0].quantity === 0 ||
+        items[0].itemId === 0 ||
+        items[0].costCodeId === 0
+      ) {
+        toaster.error("Click on add item on the table to send the request");
+        return;
+      }
     }
-
     setIsLoading(true);
 
     const updatedItems = items.map((item) => ({
@@ -142,6 +150,10 @@ const RequestDialog: React.FC<DialogProps> = ({
         `${dialogType === "Edit" ? "updated" : "created"} successfully.`
       );
       onSuccess(dialogType, formData);
+
+      setItems([]);
+      setSelectedSubcontractor(0);
+      setRemarks("");
       handleHide();
     } catch (error: any) {
       console.error("Error saving user:", error);
