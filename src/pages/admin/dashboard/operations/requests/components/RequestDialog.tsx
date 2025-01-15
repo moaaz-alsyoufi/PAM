@@ -51,6 +51,7 @@ const RequestDialog: React.FC<DialogProps> = ({
   subContractors,
   requestRefNb,
 }) => {
+  const [items, setItems] = useState<any[]>([]);
   // Initialize form data based on inputFields and current data
   const [formData, setFormData] = useState<Record<string, any>>(() => {
     const initialData: Record<string, any> = {};
@@ -83,11 +84,32 @@ const RequestDialog: React.FC<DialogProps> = ({
     }
   }, [current, dialogType]);
 
+  const handleItemsChange = (updatedData: any[]) => {
+    console.log("Updated Table Data:", updatedData);
+    setItems(updatedData);
+
+    console.log("Items: ", items);
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
 
-    console.log(formData);
+    console.log();
+
+    // {
+    //   "remarks": "string",
+    //   "items": [
+    //     {
+    //       "itemId": 0,
+    //       "quantity": 0,
+    //       "costCodeId": 0,
+    //       "subId": 0
+    //     }
+    //   ]
+    // }
+
+    console.log("formData", formData);
 
     try {
       const token = getToken();
@@ -220,6 +242,7 @@ const RequestDialog: React.FC<DialogProps> = ({
                 addAction={true}
                 deleteAction={true}
                 costCodes={costCodes}
+                onDataChange={handleItemsChange}
               />
             </div>
           )}
