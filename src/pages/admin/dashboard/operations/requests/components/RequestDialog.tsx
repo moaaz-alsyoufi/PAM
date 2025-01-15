@@ -51,6 +51,9 @@ const RequestDialog: React.FC<DialogProps> = ({
   subContractors,
   requestRefNb,
 }) => {
+  const [selectedSubcontractor, setSelectedSubcontractor] = useState<number>(0);
+  const [remarks, setRemarks] = useState("");
+
   const [items, setItems] = useState<any[]>([]);
   // Initialize form data based on inputFields and current data
   const [formData, setFormData] = useState<Record<string, any>>(() => {
@@ -72,7 +75,7 @@ const RequestDialog: React.FC<DialogProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const { toaster } = useToast();
   const { getToken } = useAuthContext();
-  const { exportRequest, newRequestColumns } = useRequests();
+  const { exportRequest, newRequestColumns, createNewRequest } = useRequests();
 
   // Optional: Update formData when current changes (e.g., when editing a different user)
   useEffect(() => {
@@ -85,31 +88,22 @@ const RequestDialog: React.FC<DialogProps> = ({
   }, [current, dialogType]);
 
   const handleItemsChange = (updatedData: any[]) => {
-    console.log("Updated Table Data:", updatedData);
     setItems(updatedData);
-
-    console.log("Items: ", items);
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     setIsLoading(true);
 
-    console.log();
+    const updatedItems = items.map((item) => ({
+      ...item,
+      subId: selectedSubcontractor,
+    }));
+    setItems(updatedItems);
 
-    // {
-    //   "remarks": "string",
-    //   "items": [
-    //     {
-    //       "itemId": 0,
-    //       "quantity": 0,
-    //       "costCodeId": 0,
-    //       "subId": 0
-    //     }
-    //   ]
-    // }
-
-    console.log("formData", formData);
+    const submittedData = {
+      remarks: remarks,
+      items: updatedItems,
+    };
 
     try {
       const token = getToken();
@@ -120,6 +114,9 @@ const RequestDialog: React.FC<DialogProps> = ({
 
       if (dialogType === "Edit" && current) {
       } else if (dialogType === "Add") {
+        const createResponse = await createNewRequest(submittedData);
+
+        console.log(createResponse);
       } else if (dialogType === "Preview") {
         try {
           const pdfBlob = await exportRequest(current?.materialId);
@@ -150,7 +147,7 @@ const RequestDialog: React.FC<DialogProps> = ({
       }
     } finally {
       setIsLoading(false);
-      handleHide();
+      // handleHide();
     }
   };
 
@@ -177,7 +174,7 @@ const RequestDialog: React.FC<DialogProps> = ({
           <h3 className="font-bold text-lg">{title}</h3>
         </div>
 
-        <form onSubmit={handleSubmit}>
+        <div>
           {dialogType === "Preview" ? (
             <PAMTable
               columns={previewColumns ?? {}}
@@ -207,6 +204,10 @@ const RequestDialog: React.FC<DialogProps> = ({
                     <Select
                       className="w-full border-none focus:outline-none focus:ring-0 bg-transparent"
                       defaultValue={0}
+                      value={selectedSubcontractor}
+                      onChange={(e) =>
+                        setSelectedSubcontractor(Number(e.target.value))
+                      }
                       onTouchStart={(e) => {
                         if (e.touches.length > 1) {
                           e.preventDefault();
@@ -232,7 +233,13 @@ const RequestDialog: React.FC<DialogProps> = ({
                   <span className="font-normal text-sm md:text-base opacity-45 min-w-16 md:w-28">
                     Remarks
                   </span>
-                  <input type="text" name="remarks" className="grow" />
+                  <input
+                    type="text"
+                    name="remarks"
+                    className="grow"
+                    value={remarks}
+                    onChange={(e) => setRemarks(e.target.value)}
+                  />
                 </label>
               </div>
               <NewRequestTableComponent
@@ -250,9 +257,10 @@ const RequestDialog: React.FC<DialogProps> = ({
           <div className="text-right mt-5">
             <Button
               className="w-full btn btn-sm"
-              type="submit"
+              type="button"
               disabled={isLoading}
               loading={isLoading}
+              onClick={() => handleSubmit()}
             >
               {dialogType === "Add"
                 ? "Send Request"
@@ -261,7 +269,7 @@ const RequestDialog: React.FC<DialogProps> = ({
                   : "Export"}
             </Button>
           </div>
-        </form>
+        </div>
       </div>
     </dialog>
   );

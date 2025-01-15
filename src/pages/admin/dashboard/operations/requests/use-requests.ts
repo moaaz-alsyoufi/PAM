@@ -183,15 +183,14 @@ const useRequests = () => {
     }
   };
 
-  const createNewRequest = async (remarks: string, items: any[]) => {
+  const createNewRequest = async (data: any) => {
     setLoading(true);
     try {
-      const payload = { remarks, items };
       const response = await apiRequest(
         `Requests/createnewrequest/${siteId}`,
         "POST",
         token,
-        payload
+        data
       );
       return response;
     } catch (error) {
