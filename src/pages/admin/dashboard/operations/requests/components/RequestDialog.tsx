@@ -92,6 +92,16 @@ const RequestDialog: React.FC<DialogProps> = ({
   };
 
   const handleSubmit = async () => {
+    if (selectedSubcontractor === 0) {
+      toaster.error("Select Subcontractor to send the request");
+      return;
+    }
+
+    if (items.length === 0) {
+      toaster.error("Add items to send the request");
+      return;
+    }
+
     setIsLoading(true);
 
     const updatedItems = items.map((item) => ({
@@ -132,6 +142,7 @@ const RequestDialog: React.FC<DialogProps> = ({
         `${dialogType === "Edit" ? "updated" : "created"} successfully.`
       );
       onSuccess(dialogType, formData);
+      handleHide();
     } catch (error: any) {
       console.error("Error saving user:", error);
       if (error.response) {
@@ -147,7 +158,6 @@ const RequestDialog: React.FC<DialogProps> = ({
       }
     } finally {
       setIsLoading(false);
-      // handleHide();
     }
   };
 
