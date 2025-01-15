@@ -66,6 +66,22 @@ const NewRequestTableComponent: React.FC<TableProps> = ({
     null
   );
 
+  const [sentItems, setSentItems] = useState<
+    {
+      itemId: number;
+      quantity: number;
+      costCodeId: number;
+      subId: number;
+    }[]
+  >([
+    {
+      itemId: 0,
+      quantity: 0,
+      costCodeId: 0,
+      subId: 0,
+    },
+  ]);
+
   const dataWithEmptyRow = useMemo(() => {
     const emptyRow = columns.reduce(
       (acc, column) => {
@@ -153,8 +169,13 @@ const NewRequestTableComponent: React.FC<TableProps> = ({
       const updatedData = [...dataWithEmptyRow];
       updatedData[rowIndex].quantity = value;
 
+      const updatedItems = [...sentItems];
+      updatedItems[rowIndex].quantity = parseInt(value);
+
+      setSentItems(updatedItems);
+
       if (onDataChange) {
-        onDataChange(updatedData);
+        onDataChange(updatedItems);
       }
     }
   };
@@ -170,8 +191,11 @@ const NewRequestTableComponent: React.FC<TableProps> = ({
     updatedData[rowIndex].itemName = option.text;
     updatedData[rowIndex].itemUnit = option.itemUnit;
 
+    const updatedItems = [...sentItems];
+    updatedItems[rowIndex].itemId = parseInt(option.itemId);
+
     if (onDataChange) {
-      onDataChange(updatedData);
+      onDataChange(updatedItems);
     }
   };
 
@@ -181,15 +205,26 @@ const NewRequestTableComponent: React.FC<TableProps> = ({
     const updatedData = [...dataWithEmptyRow];
     updatedData[selectedRoweIndex ?? 0].code = costCode.code;
 
+    const updatedItems = [...sentItems];
+    updatedItems[selectedRoweIndex ?? 0].costCodeId = costCode.codeId;
+
     if (onDataChange) {
-      onDataChange(updatedData);
+      onDataChange(updatedItems);
     }
     handleHide();
   };
 
   const handleAdd = (row: any) => {
     const newRow = { ...row };
+    const newItem = {
+      itemId: 0,
+      quantity: 0,
+      costCodeId: 0,
+      subId: 0,
+    };
+
     setTableData((prevData) => [...prevData, newRow]);
+    setSentItems((prevItems) => [...prevItems, newItem]);
     setSavedRows((prev) => new Set(prev).add(tableData.length));
     setCostCodeId(null);
     setQuantity(0);
