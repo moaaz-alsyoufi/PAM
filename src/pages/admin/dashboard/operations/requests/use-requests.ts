@@ -105,6 +105,24 @@ const useRequests = () => {
     code: "Code",
   };
 
+  const getRequests = async () => {
+    apiRequest(`Requests/listrequests/${siteId}`, "GET", token)
+      .then((res: any[]) => {
+        const formattedRes = res.map((item) => ({
+          ...item,
+          isApprovedByPm: item.isApprovedByPm ? "Approved" : "-",
+          date: new Date(item.date).toLocaleDateString("en-GB"),
+        }));
+        setTableData(formattedRes);
+      })
+      .catch((error) => {
+        console.error(error);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
   const getRequestDetails = async (materialId: number) => {
     setLoading(true);
     try {
@@ -204,21 +222,7 @@ const useRequests = () => {
   useEffect(() => {
     setLoading(true);
     if (siteId > 0 && token) {
-      apiRequest(`Requests/listrequests/${siteId}`, "GET", token)
-        .then((res: any[]) => {
-          const formattedRes = res.map((item) => ({
-            ...item,
-            isApprovedByPm: item.isApprovedByPm ? "Approved" : "-",
-            date: new Date(item.date).toLocaleDateString("en-GB"),
-          }));
-          setTableData(formattedRes);
-        })
-        .catch((error) => {
-          console.error(error);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
+      getRequests();
     } else {
       setTableData([]);
       setLoading(false);
@@ -239,6 +243,7 @@ const useRequests = () => {
     costCodes,
     items,
     costCodeColumns,
+    getRequests,
     getRequestDetails,
     getNewRequest,
     exportRequest,
