@@ -30,6 +30,7 @@ const Requests = () => {
     loading,
     previewColumns,
     fetchNewRequestData,
+    getRequests,
   } = useRequests();
 
   const roleId = authState.user.roleid;
@@ -68,6 +69,13 @@ const Requests = () => {
     }
   };
 
+  const handleSuccess = async (type: any) => {
+    console.log("tesssssssssst", type);
+    if (type === "Add" || type === "Edit") {
+      await getRequests();
+    }
+  };
+
   return (
     <div>
       <PageMetaData title={"Requests"} />
@@ -100,7 +108,7 @@ const Requests = () => {
                 dialogRef={dialogRef}
                 dialogType={dialogType}
                 current={currentRow ?? {}}
-                onSuccess={() => {}}
+                onSuccess={handleSuccess}
                 inputFields={inputFields}
                 title={
                   dialogType === "Edit"
