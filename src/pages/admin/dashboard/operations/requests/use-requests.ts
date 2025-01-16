@@ -108,11 +108,19 @@ const useRequests = () => {
   const getRequests = async () => {
     apiRequest(`Requests/listrequests/${siteId}`, "GET", token)
       .then((res: any[]) => {
-        const formattedRes = res.map((item) => ({
-          ...item,
-          isApprovedByPm: item.isApprovedByPm ? "Approved" : "-",
-          date: new Date(item.date).toLocaleDateString("en-GB"),
-        }));
+        const formattedRes = res
+          .map((item) => ({
+            ...item,
+            isApprovedByPm: item.isApprovedByPm ? "Approved" : "-",
+            date: new Date(item.date).toLocaleDateString("en-GB"),
+          }))
+          .sort((a, b) =>
+            b.refNo.localeCompare(a.refNo, undefined, {
+              numeric: true,
+              sensitivity: "base",
+            })
+          );
+
         setTableData(formattedRes);
       })
       .catch((error) => {
