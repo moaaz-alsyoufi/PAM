@@ -56,7 +56,14 @@ const NewRequestTableComponent: React.FC<TableProps> = ({
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage] = useState(10);
   const [selectedOption, setSelectedOption] = useState<any>(null);
-  const [tableData, setTableData] = useState<any[]>([]);
+  const [tableData, setTableData] = useState<any[]>([
+    {
+      itemName: "",
+      itemUnit: "",
+      code: "",
+      quantity: null,
+    },
+  ]);
   const [quantity, setQuantity] = useState<number>(0);
   const [costCodeId, setCostCodeId] = useState<number | null>(null);
   const [savedRows, setSavedRows] = useState<Set<number>>(new Set());
@@ -82,28 +89,16 @@ const NewRequestTableComponent: React.FC<TableProps> = ({
     },
   ]);
 
-  const dataWithEmptyRow = useMemo(() => {
-    const emptyRow = columns.reduce(
-      (acc, column) => {
-        acc[column.key] = "";
-        return acc;
-      },
-      {} as Record<string, any>
-    );
-
-    return [...tableData, emptyRow];
-  }, [tableData, columns]);
-
   const filteredData = useMemo(() => {
     const lowercasedQuery = searchQuery.toLowerCase();
-    return dataWithEmptyRow.filter((d) =>
+    return tableData.filter((d) =>
       Object.values(d).some(
         (value) =>
           typeof value === "string" &&
           value.toLowerCase().includes(lowercasedQuery)
       )
     );
-  }, [searchQuery, dataWithEmptyRow]);
+  }, [searchQuery, tableData]);
 
   const sortedData = useMemo(() => {
     if (!sortColumn) return filteredData;
@@ -166,7 +161,7 @@ const NewRequestTableComponent: React.FC<TableProps> = ({
 
     if (key === "quantity") {
       setQuantity(parseInt(value));
-      const updatedData = [...dataWithEmptyRow];
+      const updatedData = [...tableData];
       updatedData[rowIndex].quantity = value;
 
       const updatedItems = [...sentItems];
@@ -187,7 +182,7 @@ const NewRequestTableComponent: React.FC<TableProps> = ({
 
   const handleOptionSelect = (option: any, rowIndex: number) => {
     setSelectedOption(option);
-    const updatedData = [...dataWithEmptyRow];
+    const updatedData = [...tableData];
     updatedData[rowIndex].itemName = option.text;
     updatedData[rowIndex].itemUnit = option.itemUnit;
 
@@ -202,11 +197,17 @@ const NewRequestTableComponent: React.FC<TableProps> = ({
   const handleCostCodeSelect = (costCode: any) => {
     setCostCodeId(costCode.codeId);
 
-    const updatedData = [...dataWithEmptyRow];
-    updatedData[selectedRoweIndex ?? 0].code = costCode.code;
+    const updatedData = [...tableData];
+    if (selectedRoweIndex !== null) {
+      updatedData[selectedRoweIndex].code = costCode.code;
+      setTableData(updatedData);
+    }
 
     const updatedItems = [...sentItems];
-    updatedItems[selectedRoweIndex ?? 0].costCodeId = costCode.codeId;
+    if (selectedRoweIndex !== null) {
+      updatedItems[selectedRoweIndex].costCodeId = costCode.codeId;
+      setSentItems(updatedItems);
+    }
 
     if (onDataChange) {
       onDataChange(updatedItems);
@@ -214,8 +215,7 @@ const NewRequestTableComponent: React.FC<TableProps> = ({
     handleHide();
   };
 
-  const handleAdd = (row: any) => {
-    const newRow = { ...row };
+  const handleAdd = () => {
     const newItem = {
       itemId: 0,
       quantity: 0,
@@ -223,12 +223,20 @@ const NewRequestTableComponent: React.FC<TableProps> = ({
       subId: 0,
     };
 
-    setTableData((prevData) => [...prevData, newRow]);
+    const emptyRow = {
+      itemId: 0,
+      quantity: null,
+      costCodeId: 0,
+      subId: 0,
+    };
+
+    setTableData((prevData) => [...prevData, emptyRow]);
     setSentItems((prevItems) => [...prevItems, newItem]);
-    setSavedRows((prev) => new Set(prev).add(tableData.length));
+    setSavedRows((prev) => new Set(prev).add(tableData.length - 1));
     setCostCodeId(null);
     setQuantity(0);
     setSelectedOption(null);
+    console.log(tableData);
   };
 
   return (
@@ -287,7 +295,7 @@ const NewRequestTableComponent: React.FC<TableProps> = ({
                 </tr>
               </thead>
               <tbody>
-                {dataWithEmptyRow.map((row, index) => (
+                {tableData.map((row, index) => (
                   <tr key={index} className="hover:bg-base-200/40">
                     {columns.map(
                       ({
@@ -361,7 +369,7 @@ const NewRequestTableComponent: React.FC<TableProps> = ({
                               shape="square"
                               aria-label="Add Row"
                               type="button"
-                              onClick={() => handleAdd(row)}
+                              onClick={() => handleAdd()}
                               disabled={
                                 !quantity || !costCodeId || !selectedOption
                               }
