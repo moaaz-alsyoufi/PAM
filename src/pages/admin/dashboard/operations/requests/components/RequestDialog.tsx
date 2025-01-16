@@ -92,36 +92,27 @@ const RequestDialog: React.FC<DialogProps> = ({
   };
 
   const handleSubmit = async () => {
-    if (selectedSubcontractor === 0) {
-      toaster.error("Select Subcontractor to send the request");
-      return;
-    }
-
-    if (items.length === 0) {
-      toaster.error("Add items to send the request");
-      return;
-    } else if (items.length === 1) {
-      if (
-        items[0].quantity === 0 ||
-        items[0].itemId === 0 ||
-        items[0].costCodeId === 0
-      ) {
-        toaster.error("Click on add item on the table to send the request");
+    if (dialogType === "Add") {
+      if (selectedSubcontractor === 0) {
+        toaster.error("Select Subcontractor to send the request");
         return;
+      }
+
+      if (items.length === 0) {
+        toaster.error("Add items to send the request");
+        return;
+      } else if (items.length === 1) {
+        if (
+          items[0].quantity === 0 ||
+          items[0].itemId === 0 ||
+          items[0].costCodeId === 0
+        ) {
+          toaster.error("Click on add item on the table to send the request");
+          return;
+        }
       }
     }
     setIsLoading(true);
-
-    const updatedItems = items.map((item) => ({
-      ...item,
-      subId: selectedSubcontractor,
-    }));
-    setItems(updatedItems);
-
-    const submittedData = {
-      remarks: remarks,
-      items: updatedItems,
-    };
 
     try {
       const token = getToken();
@@ -132,6 +123,17 @@ const RequestDialog: React.FC<DialogProps> = ({
 
       if (dialogType === "Edit" && current) {
       } else if (dialogType === "Add") {
+        const updatedItems = items.map((item) => ({
+          ...item,
+          subId: selectedSubcontractor,
+        }));
+        setItems(updatedItems);
+
+        const submittedData = {
+          remarks: remarks,
+          items: updatedItems,
+        };
+
         const createResponse = await createNewRequest(submittedData);
 
         console.log(createResponse);
@@ -147,7 +149,7 @@ const RequestDialog: React.FC<DialogProps> = ({
       }
 
       toaster.success(
-        `${dialogType === "Edit" ? "updated" : "created"} successfully.`
+        `${dialogType === "Edit" ? "updated" : dialogType === "Preview" ? "Exported" : "created"} successfully.`
       );
       onSuccess(dialogType, formData);
 
