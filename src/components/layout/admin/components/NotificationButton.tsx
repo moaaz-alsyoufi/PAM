@@ -19,8 +19,6 @@ import useRequests from "@/pages/admin/dashboard/operations/requests/use-request
 import DialogComponent from "@/components/Table/Components/Dialog";
 
 // TODO::
-// 2- then add approve, reject buttons below it
-
 // 3- when he click approve
 // he will go to approve api
 
@@ -32,6 +30,9 @@ const NotificationButton = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [open, setOpen] = useState(false);
   const [data, setData] = useState<any[]>([]);
+  const [selectedMaterialId, setSelectedMaterialId] = useState<number | null>(
+    null
+  );
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const { getRequestDetails, previewColumns } = useRequests();
@@ -67,8 +68,7 @@ const NotificationButton = () => {
   };
 
   const handlePreviewNotification = async (materialId: number) => {
-    console.log(materialId);
-
+    setSelectedMaterialId(materialId);
     try {
       const details = await getRequestDetails(materialId);
       setData(details.details);
@@ -175,17 +175,20 @@ const NotificationButton = () => {
         </Dropdown>
       </div>
 
-      <DialogComponent
-        handleHide={handleHide}
-        dialogRef={dialogRef}
-        dialogType="Accept"
-        title={"Request Details"}
-        previewColumns={previewColumns}
-        data={data}
-        current={null}
-        onSuccess={() => {}}
-        inputFields={[]}
-      />
+      {selectedMaterialId && notifications.length > 0 && (
+        <DialogComponent
+          handleHide={handleHide}
+          dialogRef={dialogRef}
+          dialogType="Approve"
+          title={"Request Details"}
+          previewColumns={previewColumns}
+          data={data}
+          current={null}
+          onSuccess={() => {}}
+          inputFields={[]}
+          materialId={selectedMaterialId}
+        />
+      )}
     </>
   );
 };

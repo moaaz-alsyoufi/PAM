@@ -21,17 +21,18 @@ interface CurrentData {
 interface DialogProps {
   handleHide: () => void;
   dialogRef: React.RefObject<HTMLDialogElement | null>;
-  dialogType: "Add" | "Edit" | "Preview" | "Select" | "Accept";
+  dialogType: "Add" | "Edit" | "Preview" | "Select" | "Approve";
   current: CurrentData | null;
   onSuccess: (
-    type: "Add" | "Edit" | "Preview" | "Select" | "Accept",
+    type: "Add" | "Edit" | "Preview" | "Select" | "Approve",
     formData: any
   ) => void;
   inputFields: InputField[];
   previewColumns?: Record<string, string>;
   title: string;
   data?: any[];
-  onSelect?: (costCode: any) => void; // Add onSelect prop to the dialog component
+  onSelect?: (costCode: any) => void;
+  materialId?: number;
 }
 
 const DialogComponent: React.FC<DialogProps> = ({
@@ -45,6 +46,7 @@ const DialogComponent: React.FC<DialogProps> = ({
   previewColumns,
   data,
   onSelect,
+  materialId,
 }) => {
   // Initialize form data based on inputFields and current data
   const [formData, setFormData] = useState<Record<string, any>>(() => {
@@ -66,7 +68,7 @@ const DialogComponent: React.FC<DialogProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const { toaster } = useToast();
   const { getToken } = useAuthContext();
-  const { exportRequest } = useRequests();
+  const { exportRequest, approveRequest } = useRequests();
 
   // Optional: Update formData when current changes (e.g., when editing a different user)
   useEffect(() => {
@@ -138,9 +140,43 @@ const DialogComponent: React.FC<DialogProps> = ({
     handleHide();
   };
 
-  const handleAccept = () => {
-    console.log("accepted");
-    handleClose();
+  const handleApprove = async () => {
+    setIsLoading(true);
+
+    try {
+      const token = getToken();
+      if (!token) {
+        toaster.error("Token is missing, unable to save.");
+        return;
+      }
+
+      if (dialogType === "Approve") {
+        try {
+          const res = await approveRequest(materialId ?? 0);
+          console.log(res);
+        } catch (error) {
+          console.error("Error approving request:", error);
+        }
+      }
+
+      toaster.success("Request Approved successfully.");
+      handleClose();
+    } catch (error: any) {
+      console.error("Error approve request:", error);
+      if (error.response) {
+        toaster.error(
+          `Failed to approve request. Server responded with status ${error.response.status}: ${error.response.data}`
+        );
+      } else if (error.request) {
+        toaster.error(
+          "Failed to approve request. No response received from the server."
+        );
+      } else {
+        toaster.error(`Failed to approve request. Error: ${error.message}`);
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
   const handleReject = () => {
     console.log("rejected");
@@ -212,7 +248,7 @@ const DialogComponent: React.FC<DialogProps> = ({
     <dialog ref={dialogRef} className="modal" aria-modal="true">
       <div
         className={cn("modal-box relative", {
-          "max-w-7xl": dialogType === "Preview" || dialogType === "Accept",
+          "max-w-7xl": dialogType === "Preview" || dialogType === "Approve",
           "max-w-5xl": dialogType === "Select",
         })}
       >
@@ -227,7 +263,7 @@ const DialogComponent: React.FC<DialogProps> = ({
         <h3 className="font-bold text-lg">{title}</h3>
 
         <form onSubmit={handleSubmit}>
-          {dialogType === "Preview" || dialogType === "Accept" ? (
+          {dialogType === "Preview" || dialogType === "Approve" ? (
             <PAMTable
               columns={previewColumns ?? {}}
               tableData={data ?? []}
@@ -255,16 +291,16 @@ const DialogComponent: React.FC<DialogProps> = ({
 
           {dialogType !== "Select" && (
             <div className="text-right mt-5">
-              {dialogType === "Accept" ? (
+              {dialogType === "Approve" ? (
                 <div className="flex justify-end items-center space-x-4">
                   <Button
                     className="btn btn-sm btn-success"
                     type="button"
                     disabled={isLoading}
                     loading={isLoading}
-                    onClick={handleAccept}
+                    onClick={handleApprove}
                   >
-                    Accept
+                    Approve
                   </Button>
                   <Button
                     className="btn btn-sm btn-error"
