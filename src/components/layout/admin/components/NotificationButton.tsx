@@ -19,7 +19,6 @@ import useRequests from "@/pages/admin/dashboard/operations/requests/use-request
 import DialogComponent from "@/components/Table/Components/Dialog";
 
 // TODO::
-
 // 2- then add approve, reject buttons below it
 
 // 3- when he click approve
@@ -179,7 +178,7 @@ const NotificationButton = () => {
       <DialogComponent
         handleHide={handleHide}
         dialogRef={dialogRef}
-        dialogType={"Preview"}
+        dialogType="Accept"
         title={"Request Details"}
         previewColumns={previewColumns}
         data={data}
