@@ -68,7 +68,7 @@ const DialogComponent: React.FC<DialogProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const { toaster } = useToast();
   const { getToken } = useAuthContext();
-  const { exportRequest, approveRequest } = useRequests();
+  const { exportRequest, approveRequest, rejectRequest } = useRequests();
 
   // Optional: Update formData when current changes (e.g., when editing a different user)
   useEffect(() => {
@@ -159,7 +159,46 @@ const DialogComponent: React.FC<DialogProps> = ({
         }
       }
 
-      toaster.success("Request Approved successfully.");
+      toaster.success("Request Rejected successfully.");
+      handleClose();
+    } catch (error: any) {
+      console.error("Error reject request:", error);
+      if (error.response) {
+        toaster.error(
+          `Failed to reject request. Server responded with status ${error.response.status}: ${error.response.data}`
+        );
+      } else if (error.request) {
+        toaster.error(
+          "Failed to reject request. No response received from the server."
+        );
+      } else {
+        toaster.error(`Failed to reject request. Error: ${error.message}`);
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleReject = async () => {
+    setIsLoading(true);
+
+    try {
+      const token = getToken();
+      if (!token) {
+        toaster.error("Token is missing, unable to save.");
+        return;
+      }
+
+      if (dialogType === "Approve") {
+        try {
+          const res = await rejectRequest(materialId ?? 0);
+          console.log(res);
+        } catch (error) {
+          console.error("Error reject request:", error);
+        }
+      }
+
+      toaster.success("Request Rejected successfully.");
       handleClose();
     } catch (error: any) {
       console.error("Error approve request:", error);
@@ -177,10 +216,6 @@ const DialogComponent: React.FC<DialogProps> = ({
     } finally {
       setIsLoading(false);
     }
-  };
-  const handleReject = () => {
-    console.log("rejected");
-    handleClose();
   };
 
   // Dynamically render inputs based on inputFields
