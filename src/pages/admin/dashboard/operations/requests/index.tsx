@@ -70,7 +70,6 @@ const Requests = () => {
   };
 
   const handleSuccess = async (type: any) => {
-    console.log("tesssssssssst", type);
     if (type === "Add" || type === "Edit") {
       await getRequests();
     }
