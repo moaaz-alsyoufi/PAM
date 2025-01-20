@@ -227,6 +227,24 @@ const useRequests = () => {
     }
   };
 
+  const approveRequest = async (materialId: number) => {
+    setLoading(true);
+    try {
+      const response = await apiRequest(
+        `Requests/approve/${materialId}`,
+        "POST",
+        token,
+        materialId
+      );
+      return response;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     setLoading(true);
     if (siteId > 0 && token) {
@@ -257,6 +275,7 @@ const useRequests = () => {
     exportRequest,
     fetchNewRequestData,
     createNewRequest,
+    approveRequest,
   };
 };
 
