@@ -1,7 +1,7 @@
 import bellIcon from "@iconify/icons-lucide/bell";
 import xIcon from "@iconify/icons-lucide/x";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import {
   Button,
@@ -31,6 +31,7 @@ const NotificationButton = () => {
   const [notifications, setNotifications] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [open, setOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const { authState } = useAuthContext();
   const siteId = authState.user?.siteid || 0;
@@ -59,8 +60,21 @@ const NotificationButton = () => {
     await getNotifications();
   };
 
+  useEffect(() => {
+    const handleClickOutside = (event: any) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        closeMenu();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
-    <div>
+    <div ref={dropdownRef}>
       <Dropdown vertical={"bottom"} end open={open}>
         <DropdownToggle
           className="btn btn-circle btn-ghost btn-sm"
