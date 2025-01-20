@@ -39,16 +39,18 @@ const NotificationButton = () => {
 
   const getNotifications = async () => {
     setLoading(true);
-    apiRequest(`Requests/notifications/${siteId}`, "GET", token)
-      .then((res: any[]) => {
-        setNotifications(res);
-      })
-      .catch((error) => {
-        console.error(error);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    try {
+      const res: any[] = await apiRequest(
+        `Requests/notifications/${siteId}`,
+        "GET",
+        token
+      );
+      setNotifications(res);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const closeMenu = () => {
@@ -61,8 +63,17 @@ const NotificationButton = () => {
   };
 
   useEffect(() => {
-    const handleClickOutside = (event: any) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+    if (siteId) {
+      getNotifications();
+    }
+  }, [siteId]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         closeMenu();
       }
     };
@@ -77,10 +88,13 @@ const NotificationButton = () => {
     <div ref={dropdownRef}>
       <Dropdown vertical={"bottom"} end open={open}>
         <DropdownToggle
-          className="btn btn-circle btn-ghost btn-sm"
+          className="btn btn-circle btn-ghost btn-sm indicator"
           button={false}
           onClick={handleOpenMenu}
         >
+          {notifications.length > 0 && (
+            <span className="indicator-item bg-warning w-1.5 h-1.5 rounded-full mt-1.5 mr-2.5"></span>
+          )}
           <Icon icon={bellIcon} fontSize={20} />
         </DropdownToggle>
         <DropdownMenu className="card card-compact m-1 w-96 p-3 shadow">
