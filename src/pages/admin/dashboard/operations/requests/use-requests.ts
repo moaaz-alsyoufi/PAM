@@ -245,6 +245,24 @@ const useRequests = () => {
     }
   };
 
+  const rejectRequest = async (materialId: number) => {
+    setLoading(true);
+    try {
+      const response = await apiRequest(
+        `Requests/reject/${materialId}`,
+        "POST",
+        token,
+        materialId
+      );
+      return response;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     setLoading(true);
     if (siteId > 0 && token) {
@@ -276,6 +294,7 @@ const useRequests = () => {
     fetchNewRequestData,
     createNewRequest,
     approveRequest,
+    rejectRequest,
   };
 };
 
