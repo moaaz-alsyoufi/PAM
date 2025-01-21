@@ -18,13 +18,6 @@ import { useAuthContext } from "@/states/auth";
 import useRequests from "@/pages/admin/dashboard/operations/requests/use-requests";
 import DialogComponent from "@/components/Table/Components/Dialog";
 
-// TODO::
-// 3- when he click approve
-// he will go to approve api
-
-// 4- when he click reject
-// he will go to reject api
-
 const NotificationButton = () => {
   const [notifications, setNotifications] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -134,40 +127,23 @@ const NotificationButton = () => {
                     <span>Your notifications are clean</span>
                   ) : (
                     notifications.map((notification, index) => (
-                      <div
-                        key={index}
-                        className="my-0.5 flex cursor-pointer items-start gap-3 rounded-box p-1.5 transition-all hover:bg-base-content/5 active:scale-[.98]"
-                        onClick={() =>
-                          handlePreviewNotification(notification.materialId)
-                        }
-                      >
-                        <div className="grow">
-                          <p className="text-sm">{notification.message}</p>
-                          <p className="text-xs text-base-content/60">Now</p>
+                      <>
+                        <div
+                          key={index}
+                          className="my-0.5 flex cursor-pointer items-start gap-3 rounded-box p-1.5 transition-all hover:bg-base-content/5 active:scale-[.98]"
+                          onClick={() =>
+                            handlePreviewNotification(notification.materialId)
+                          }
+                        >
+                          <div className="grow">
+                            <p className="text-sm">{notification.message}</p>
+                            <p className="text-xs text-base-content/60">Now</p>
+                          </div>
                         </div>
-                        <hr />
-                      </div>
+                        <hr className="opacity-10" />
+                      </>
                     ))
                   )}
-                </div>
-                <hr className="-mx-2 mt-2 border-base-content/10" />
-                <div className="flex items-center justify-between pt-2">
-                  <Button
-                    size={"sm"}
-                    color={"ghost"}
-                    className="text-primary hover:bg-primary/10"
-                    disabled={notifications.length === 0}
-                  >
-                    View All
-                  </Button>
-                  <Button
-                    size={"sm"}
-                    color={"ghost"}
-                    className="text-base-content/80 hover:bg-base-content/10"
-                    disabled={notifications.length === 0}
-                  >
-                    Mark as read
-                  </Button>
                 </div>
               </>
             )}
