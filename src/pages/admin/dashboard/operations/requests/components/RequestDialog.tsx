@@ -227,7 +227,6 @@ const RequestDialog: React.FC<DialogProps> = ({
                   {subContractors && (
                     <Select
                       className="w-full border-none focus:outline-none focus:ring-0 bg-transparent"
-                      defaultValue={0}
                       value={selectedSubcontractor}
                       onChange={(e) =>
                         setSelectedSubcontractor(Number(e.target.value))
