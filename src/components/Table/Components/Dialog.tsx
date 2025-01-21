@@ -159,7 +159,7 @@ const DialogComponent: React.FC<DialogProps> = ({
         }
       }
 
-      toaster.success("Request Rejected successfully.");
+      toaster.success("Request Approved successfully.");
       handleClose();
     } catch (error: any) {
       console.error("Error reject request:", error);
