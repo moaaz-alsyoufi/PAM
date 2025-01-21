@@ -154,25 +154,25 @@ const DialogComponent: React.FC<DialogProps> = ({
         try {
           const res = await approveRequest(materialId ?? 0);
           console.log(res);
+          toaster.success("Request Approved successfully.");
+          handleClose();
         } catch (error) {
           console.error("Error approving request:", error);
+          toaster.error("Failed to approve request.");
         }
       }
-
-      toaster.success("Request Approved successfully.");
-      handleClose();
     } catch (error: any) {
-      console.error("Error reject request:", error);
+      console.error("Error approve request:", error);
       if (error.response) {
         toaster.error(
-          `Failed to reject request. Server responded with status ${error.response.status}: ${error.response.data}`
+          `Failed to approve request. Server responded with status ${error.response.status}: ${error.response.data}`
         );
       } else if (error.request) {
         toaster.error(
-          "Failed to reject request. No response received from the server."
+          "Failed to approve request. No response received from the server."
         );
       } else {
-        toaster.error(`Failed to reject request. Error: ${error.message}`);
+        toaster.error(`Failed to approve request. Error: ${error.message}`);
       }
     } finally {
       setIsLoading(false);
@@ -193,25 +193,25 @@ const DialogComponent: React.FC<DialogProps> = ({
         try {
           const res = await rejectRequest(materialId ?? 0);
           console.log(res);
+          toaster.success("Request Rejected successfully.");
+          handleClose();
         } catch (error) {
           console.error("Error reject request:", error);
+          toaster.error("Failed to reject request.");
         }
       }
-
-      toaster.success("Request Rejected successfully.");
-      handleClose();
     } catch (error: any) {
-      console.error("Error approve request:", error);
+      console.error("Error reject request:", error);
       if (error.response) {
         toaster.error(
-          `Failed to approve request. Server responded with status ${error.response.status}: ${error.response.data}`
+          `Failed to reject request. Server responded with status ${error.response.status}: ${error.response.data}`
         );
       } else if (error.request) {
         toaster.error(
-          "Failed to approve request. No response received from the server."
+          "Failed to reject request. No response received from the server."
         );
       } else {
-        toaster.error(`Failed to approve request. Error: ${error.message}`);
+        toaster.error(`Failed to reject request. Error: ${error.message}`);
       }
     } finally {
       setIsLoading(false);
