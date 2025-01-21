@@ -440,17 +440,19 @@ const TableComponent: React.FC<TableProps> = ({
           )}
         </CardBody>
       </Card>
-      <DialogComponent
-        handleHide={handleHide}
-        dialogRef={dialogRef}
-        dialogType={dialogType}
-        current={currentRow}
-        onSuccess={handleSuccess} // Pass success handler
-        inputFields={inputFields}
-        title={title}
-        previewColumns={previewColumns}
-        data={data}
-      />
+      {(addBtn || actions) && (
+        <DialogComponent
+          handleHide={handleHide}
+          dialogRef={dialogRef}
+          dialogType={dialogType}
+          current={currentRow}
+          onSuccess={handleSuccess} // Pass success handler
+          inputFields={inputFields}
+          title={title}
+          previewColumns={previewColumns}
+          data={data}
+        />
+      )}
     </>
   );
 };
