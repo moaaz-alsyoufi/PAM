@@ -20,7 +20,6 @@ import chartpie from "@iconify/icons-lucide/git-compare";
 import compassIcon from "@iconify/icons-lucide/compass";
 import layoutlist from "@iconify/icons-lucide/layout-list";
 import routes from "@/services/routes";
-
 import { IMenuItem } from "@/types/layout/admin";
 
 export const dashboardMenuItems: IMenuItem[] = [
@@ -36,7 +35,6 @@ export const dashboardMenuItems: IMenuItem[] = [
     icon: OperationsIcon,
     isTitle: true,
   },
-
   {
     key: "requests",
     icon: listOrderedIcon,
@@ -67,14 +65,12 @@ export const dashboardMenuItems: IMenuItem[] = [
     label: "Return Slips",
     url: routes.dashboard.returnSlips.index,
   },
-
   {
     key: "Reports",
     label: "Reports",
     icon: OperationsIcon,
     isTitle: true,
   },
-
   {
     key: "site-movement",
     icon: packageCheckIcon,
@@ -98,6 +94,13 @@ export const dashboardMenuItems: IMenuItem[] = [
     icon: warehouseIcon,
     label: "Site Stock",
     url: routes.dashboard.siteStock.index,
+  },
+  // New Stock Out menu item
+  {
+    key: "stock-out",
+    icon: warehouseIcon,
+    label: "Stock Out",
+    url: "/admin/dashboard/reports/stockOut", // or define in routes.dashboard
   },
   {
     key: "Plus",

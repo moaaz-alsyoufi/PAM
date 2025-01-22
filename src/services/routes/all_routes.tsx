@@ -74,7 +74,12 @@ const dashboardRoutes: RoutesProps[] = [
       lazy(() => import("@/pages/admin/dashboard/reports/siteMovement"))
     ),
   },
-
+  {
+    path: "/admin/dashboard/reports/stockOut",
+    name: "dashboard.reports.stock-out.index",
+    element: cw(lazy(() => import("@/pages/admin/dashboard/reports/StockOut"))),
+  },
+  
   {
     path: "/dashboard/reports/procurement-statistics",
     name: "dashboard.reports.procurement-statistics.index",
