@@ -33,6 +33,7 @@ interface DialogProps {
   data?: any[];
   onSelect?: (costCode: any) => void;
   materialId?: number;
+  confirmMsg?: string;
 }
 
 const DialogComponent: React.FC<DialogProps> = ({
@@ -47,6 +48,7 @@ const DialogComponent: React.FC<DialogProps> = ({
   data,
   onSelect,
   materialId,
+  confirmMsg,
 }) => {
   // Initialize form data based on inputFields and current data
   const [formData, setFormData] = useState<Record<string, any>>(() => {
@@ -218,6 +220,12 @@ const DialogComponent: React.FC<DialogProps> = ({
     }
   };
 
+  const handleConfirm = () => {
+    console.log("Confirmed");
+    handleClose();
+    toaster.success("Confirmed Successfully...");
+  };
+
   // Dynamically render inputs based on inputFields
   const renderInput = (field: InputField) => {
     const { name, type, required, options } = field;
@@ -297,7 +305,31 @@ const DialogComponent: React.FC<DialogProps> = ({
         </button>
         <h3 className="font-bold text-lg">{title}</h3>
 
-        {dialogType === "Preview" ? (
+        {dialogType === "Confirm" ? (
+          <div>
+            <p>{confirmMsg}</p>
+            <div className="flex justify-end items-center space-x-4">
+              <Button
+                className="btn btn-sm btn-success"
+                type="button"
+                disabled={isLoading}
+                loading={isLoading}
+                onClick={handleConfirm}
+              >
+                Confirm
+              </Button>
+              <Button
+                className="btn btn-sm btn-error"
+                type="button"
+                disabled={isLoading}
+                loading={isLoading}
+                onClick={handleClose}
+              >
+                Cancel
+              </Button>
+            </div>
+          </div>
+        ) : dialogType === "Preview" ? (
           <form onSubmit={handleSubmit}>
             <PAMTable
               columns={previewColumns ?? {}}
