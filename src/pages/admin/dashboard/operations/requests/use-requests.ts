@@ -245,14 +245,14 @@ const useRequests = () => {
     }
   };
 
-  const rejectRequest = async (materialId: number) => {
+  const rejectRequest = async (materialId: number, rejectionNote: string) => {
     setLoading(true);
+
     try {
       const response = await apiRequest(
-        `Requests/reject/${materialId}`,
+        `Requests/reject/${materialId}?RejectionNote=${rejectionNote}`,
         "POST",
-        token,
-        materialId
+        token
       );
       return response;
     } catch (error) {
