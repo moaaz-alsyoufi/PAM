@@ -8,18 +8,25 @@ import { useAuthContext } from "@/states/auth";
 import apiRequest from "@/services/api/api";
 import useStockOut from "./use-stock-out";
 
+type DialogType = "Add" | "Preview" | "Edit" | "Select" | "SomethingElse";
+
 const StockOutPage = () => {
-  const { columns, tableData, loading } = useStockOut();
+  const { columns, tableData, loading, exportStockOut } = useStockOut();
+
   const { authState } = useAuthContext();
   const token = authState.user?.token || "";
   const siteId = authState.user?.siteid || 0;
   const roleId = authState.user?.roleid;
 
-  // Modal/dialog states
+  // Dialog logic (like in Requests)
   const { dialogRef, handleShow, handleHide } = useDialog();
+  const [dialogType, setDialogType] = useState<DialogType>("Add");
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  // Form states
+  // For editing or previewing a specific row
+  const [, setCurrentRow] = useState<any>(null);
+
+  // Stock Out form states
   const [refNo, setRefNo] = useState("");
   const [outNo, setOutNo] = useState("");
   const [outDate, setOutDate] = useState(new Date().toISOString().split("T")[0]);
@@ -35,7 +42,7 @@ const StockOutPage = () => {
   const [destinationSite, setDestinationSite] = useState("");
   const [remarks, setRemarks] = useState("");
 
-  // Example: simulating data from server for these fields
+  // Example data from server for these fields
   useEffect(() => {
     setRefNo("BS-SITE01-0005");
     setOutNo("OUT123");
@@ -46,9 +53,35 @@ const StockOutPage = () => {
   const canStockOut =
     roleId === 4 || roleId === 5 || roleId === 7 || roleId === 10;
 
-  const handleOpenDialog = () => {
-    setDialogOpen(true);
-    handleShow();
+  /**
+   * This is similar to your Requests code's openStaticDialog usage:
+   *   openStaticDialog={(type, row) => handleOpenDialog(type, row)}
+   */
+  const handleOpenDialog = async (type: DialogType, row?: any) => {
+    setDialogType(type);
+    setCurrentRow(row || null);
+
+    if (type === "Add") {
+      // Show the form for a new Stock Out
+      setDialogOpen(true);
+      handleShow();
+    } else if (type === "Preview" && row) {
+      // Let's do PDF print logic here:
+      try {
+        const pdfBlob = await exportStockOut(row.outId);
+        const pdfUrl = URL.createObjectURL(pdfBlob);
+        window.open(pdfUrl, "_blank");
+      } catch (err) {
+        console.error("Error printing OutStock:", err);
+        alert("Failed to print stock out. See console.");
+      }
+      // If you don't want to open a dialog, just return after printing
+      return;
+    } else {
+      // fallback or other types (Edit, etc.)
+      setDialogOpen(true);
+      handleShow();
+    }
   };
 
   const handleCloseDialog = () => {
@@ -99,7 +132,7 @@ const StockOutPage = () => {
       const resp = await apiRequest("Stock/OutStock", "POST", token, payload);
       if (resp.success) {
         alert("Item saved successfully.");
-        // ... refresh table data if needed
+        // ... optionally refresh table data
       } else {
         alert("Error: " + (resp.message || "Saving failed."));
       }
@@ -125,18 +158,22 @@ const StockOutPage = () => {
               <PAMTable
                 columns={columns}
                 tableData={tableData}
+                inputFields={[]}
                 title="Stock Out"
                 loading={loading}
-                addBtn={canStockOut}
-                showAction={true}
-                actions={false}
-                openStaticDialog={() => handleOpenDialog()}
+                addBtn={canStockOut}  // shows an “Add” button
+                showAction={true}     // show “Action” column
+                actions={true}        // let table render “Preview” or “View” button
+                dynamicDialog={false} // or true if you want the table to open dynamic dialogs
+                openStaticDialog={handleOpenDialog} 
+                // The table should call handleOpenDialog("Preview", row)
+                // when user clicks a “Preview” or “Print” action
               />
 
-              {/* Dialog for Stock Out Form */}
-              {dialogOpen && (
-                <div className="modal modal-open">
-                  <div ref={dialogRef} className="modal-box max-w-5xl">
+              {/** If user clicked “Add” or “Edit”, show the form dialog */}
+              {dialogOpen && dialogType === "Add" && (
+                <dialog ref={dialogRef} className="modal modal-open">
+                  <div className="modal-box max-w-5xl">
                     <h3 className="font-bold text-lg mb-4">Stock Out Form</h3>
 
                     {/* Example form layout */}
@@ -309,7 +346,7 @@ const StockOutPage = () => {
                       </button>
                     </div>
                   </div>
-                </div>
+                </dialog>
               )}
             </>
           ) : (

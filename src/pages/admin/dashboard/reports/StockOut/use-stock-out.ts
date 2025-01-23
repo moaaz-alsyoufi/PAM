@@ -2,7 +2,12 @@ import { useState, useEffect } from "react";
 import apiRequest from "@/services/api/api";
 import { useAuthContext } from "@/states/auth";
 
-const useStockOut = () => {
+/**
+ * This hook mirrors your existing pattern in `useRequests`,
+ * providing tableData, columns, plus an `exportStockOut` method
+ * to fetch a PDF (blob) from the server.
+ */
+function useStockOut() {
   const [tableData, setTableData] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -10,46 +15,61 @@ const useStockOut = () => {
   const siteId = authState.user?.siteid || 0;
   const token = authState.user?.token || "";
 
+  /**
+   * Table columns (no inline “Print” column).
+   * We'll rely on the table's built-in 'actions' approach
+   * for showing an action button to 'Preview' or 'Print'.
+   */
   const columns = {
-    id: "ID",
-    category: "Category",
-    item: "Item",
-    unit: "Unit",
-    qte_requested: "Qty Requested",
-    qte_ordered: "Qty Ordered",
-    qte_received: "Qty Received",
-    qte_consumed: "Qty Consumed",
-    qte_remaining: "Qty Remaining",
+    outNo: "Out No",
+    refNo: "Ref No",
+    quantity: "Quantity",
+    date: "Date",
+    remarks: "Remarks",
+    outStockNote: "Out Stock Note",
   };
 
-  const formatNumber = (value: number) => {
-    return new Intl.NumberFormat("en-US", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(value);
-  };
+  /**
+   * This function fetches a PDF or any printable
+   * document from the server, e.g.:
+   *    GET /Stock/PrintOutStock/{outId}
+   */
+  async function exportStockOut(outId: number) {
+    // If your endpoint differs, adjust the path:
+    // e.g. /Stock/PrintOutStock/{outId} or /Stock/export/{outId}
+    const pdfBlob = await apiRequest(
+      `Stock/PrintOutStock/${outId}`,
+      "GET",
+      token,
+      null,
+      "blob" // let apiRequest handle responseType = 'blob'
+    );
+    return pdfBlob as Blob;
+  }
 
+  /** 
+   * Load data on mount or when site/token changes 
+   */
   useEffect(() => {
     setLoading(true);
+
     if (siteId > 0 && token) {
       apiRequest(`Stock/GetStockOutStatus/${siteId}`, "GET", token)
         .then((res: any[]) => {
-          const mapped = res.map((d, idx) => ({
-            id: idx + 1,
-            category: d.categoryName,
-            item: d.item,
-            unit: d.unit,
-            qte_requested: formatNumber(d.requested),
-            qte_ordered: formatNumber(d.ordered),
-            qte_received: formatNumber(d.received),
-            qte_consumed: formatNumber(d.consumed),
-            qte_remaining: formatNumber(d.received - d.consumed),
+          // Map each row if needed
+          const mapped = res.map((row) => ({
+            ...row,
+            date: row.date ? new Date(row.date).toLocaleDateString() : "",
           }));
           setTableData(mapped);
         })
-        .catch(console.error)
+        .catch((err) => {
+          console.error("Error fetching stock out data:", err);
+          setTableData([]);
+        })
         .finally(() => setLoading(false));
     } else {
+      // No valid site or token => empty table
       setTableData([]);
       setLoading(false);
     }
@@ -59,7 +79,8 @@ const useStockOut = () => {
     columns,
     tableData,
     loading,
+    exportStockOut, // we'll call this when user hits 'Preview' or 'Print'
   };
-};
+}
 
 export default useStockOut;
