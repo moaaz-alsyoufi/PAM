@@ -192,15 +192,18 @@ const AccordionComponent: React.FC<AccordionsProps> = ({
           />
         ))}
       </div>
-      <DialogComponent
-        dialogRef={dialogRef}
-        handleHide={handleHide}
-        dialogType={dialogType}
-        current={currentRow}
-        onSuccess={handleSuccess}
-        inputFields={inputFields}
-        title={title}
-      />
+
+      {(addBtn || actions) && (
+        <DialogComponent
+          dialogRef={dialogRef}
+          handleHide={handleHide}
+          dialogType={dialogType}
+          current={currentRow}
+          onSuccess={handleSuccess}
+          inputFields={inputFields}
+          title={title}
+        />
+      )}
     </>
   );
 };

@@ -21,10 +21,10 @@ interface CurrentData {
 interface DialogProps {
   handleHide: () => void;
   dialogRef: React.RefObject<HTMLDialogElement | null>;
-  dialogType: "Add" | "Edit" | "Preview" | "Select" | "Approve";
+  dialogType: "Add" | "Edit" | "Preview" | "Select" | "Approve" | "Confirm";
   current: CurrentData | null;
   onSuccess: (
-    type: "Add" | "Edit" | "Preview" | "Select" | "Approve",
+    type: "Add" | "Edit" | "Preview" | "Select" | "Approve" | "Confirm",
     formData: any
   ) => void;
   inputFields: InputField[];
@@ -33,6 +33,7 @@ interface DialogProps {
   data?: any[];
   onSelect?: (costCode: any) => void;
   materialId?: number;
+  confirmMsg?: string;
 }
 
 const DialogComponent: React.FC<DialogProps> = ({
@@ -47,6 +48,7 @@ const DialogComponent: React.FC<DialogProps> = ({
   data,
   onSelect,
   materialId,
+  confirmMsg,
 }) => {
   // Initialize form data based on inputFields and current data
   const [formData, setFormData] = useState<Record<string, any>>(() => {
@@ -218,6 +220,12 @@ const DialogComponent: React.FC<DialogProps> = ({
     }
   };
 
+  const handleConfirm = () => {
+    console.log("Confirmed");
+    handleClose();
+    toaster.success("Confirmed Successfully...");
+  };
+
   // Dynamically render inputs based on inputFields
   const renderInput = (field: InputField) => {
     const { name, type, required, options } = field;
@@ -297,8 +305,32 @@ const DialogComponent: React.FC<DialogProps> = ({
         </button>
         <h3 className="font-bold text-lg">{title}</h3>
 
-        <form onSubmit={handleSubmit}>
-          {dialogType === "Preview" || dialogType === "Approve" ? (
+        {dialogType === "Confirm" ? (
+          <div>
+            <p>{confirmMsg}</p>
+            <div className="flex justify-end items-center space-x-4">
+              <Button
+                className="btn btn-sm btn-success"
+                type="button"
+                disabled={isLoading}
+                loading={isLoading}
+                onClick={handleConfirm}
+              >
+                Confirm
+              </Button>
+              <Button
+                className="btn btn-sm btn-error"
+                type="button"
+                disabled={isLoading}
+                loading={isLoading}
+                onClick={handleClose}
+              >
+                Cancel
+              </Button>
+            </div>
+          </div>
+        ) : dialogType === "Preview" ? (
+          <form onSubmit={handleSubmit}>
             <PAMTable
               columns={previewColumns ?? {}}
               tableData={data ?? []}
@@ -306,64 +338,78 @@ const DialogComponent: React.FC<DialogProps> = ({
               actions={false}
               title={"Request Details"}
             />
-          ) : dialogType === "Select" ? (
+
+            <Button
+              className="w-full btn btn-sm"
+              type="submit"
+              disabled={isLoading}
+              loading={isLoading}
+            >
+              Export
+            </Button>
+          </form>
+        ) : dialogType === "Select" ? (
+          <PAMTable
+            columns={previewColumns ?? {}}
+            tableData={data ?? []}
+            inputFields={[]}
+            actions={false}
+            title={"Cost Code"}
+            select
+            onRowSelect={handleRowSelect}
+          />
+        ) : dialogType === "Approve" ? (
+          <>
             <PAMTable
               columns={previewColumns ?? {}}
               tableData={data ?? []}
               inputFields={[]}
               actions={false}
-              title={"Cost Code"}
-              select
-              onRowSelect={handleRowSelect}
+              title={"Request Details"}
             />
-          ) : (
-            <div className="space-y-3 my-4">
+            <div className="text-right mt-5">
+              <div className="flex justify-end items-center space-x-4">
+                <Button
+                  className="btn btn-sm btn-success"
+                  type="button"
+                  disabled={isLoading}
+                  loading={isLoading}
+                  onClick={handleApprove}
+                >
+                  Approve
+                </Button>
+                <Button
+                  className="btn btn-sm btn-error"
+                  type="button"
+                  disabled={isLoading}
+                  loading={isLoading}
+                  onClick={handleReject}
+                >
+                  Reject
+                </Button>
+              </div>
+            </div>
+          </>
+        ) : (
+          <form onSubmit={handleSubmit}>
+            <div>
               {inputFields.map((field) => (
                 <div key={field.name}>{renderInput(field)}</div>
               ))}
-            </div>
-          )}
 
-          {dialogType !== "Select" && (
-            <div className="text-right mt-5">
-              {dialogType === "Approve" ? (
-                <div className="flex justify-end items-center space-x-4">
-                  <Button
-                    className="btn btn-sm btn-success"
-                    type="button"
-                    disabled={isLoading}
-                    loading={isLoading}
-                    onClick={handleApprove}
-                  >
-                    Approve
-                  </Button>
-                  <Button
-                    className="btn btn-sm btn-error"
-                    type="button"
-                    disabled={isLoading}
-                    loading={isLoading}
-                    onClick={handleReject}
-                  >
-                    Reject
-                  </Button>
-                </div>
-              ) : (
+              {(dialogType === "Add" || dialogType === "Edit") && (
                 <Button
                   className="w-full btn btn-sm"
                   type="submit"
                   disabled={isLoading}
                   loading={isLoading}
                 >
-                  {dialogType === "Add"
-                    ? "Add"
-                    : dialogType === "Edit"
-                      ? "Save"
-                      : "Export"}
+                  {dialogType === "Add" ? "Add" : "Save"}
                 </Button>
               )}
             </div>
-          )}
-        </form>
+          </form>
+        )}
       </div>
     </dialog>
   );
