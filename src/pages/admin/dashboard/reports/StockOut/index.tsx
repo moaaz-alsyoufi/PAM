@@ -3,7 +3,7 @@ import PageMetaData from "@/components/PageMetaData";
 import PageTitle from "@/components/PageTitle";
 import PAMTable from "@/components/Table";
 import { Loader } from "@/components/Loader";
-import { useDialog } from "@/components/daisyui"; // same approach as requests
+import { useDialog } from "@/components/daisyui";
 import { useAuthContext } from "@/states/auth";
 import apiRequest from "@/services/api/api";
 import useStockOut from "./use-stock-out";
@@ -19,11 +19,11 @@ const StockOutPage = () => {
   const { dialogRef, handleShow, handleHide } = useDialog();
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  // Preserve your existing form logic
+  // Form states
   const [refNo, setRefNo] = useState("");
   const [outNo, setOutNo] = useState("");
   const [outDate, setOutDate] = useState(new Date().toISOString().split("T")[0]);
-  const [outStockNotePrefix, setOutStockNotePrefix] = useState("SITE-123"); 
+  const [outStockNotePrefix, setOutStockNotePrefix] = useState("SITE-123");
   const [outStockNoteSuffix, setOutStockNoteSuffix] = useState("");
   const [selectedItem, setSelectedItem] = useState("");
   const [unit, setUnit] = useState("");
@@ -35,7 +35,7 @@ const StockOutPage = () => {
   const [destinationSite, setDestinationSite] = useState("");
   const [remarks, setRemarks] = useState("");
 
-  // Example: simulating data from server
+  // Example: simulating data from server for these fields
   useEffect(() => {
     setRefNo("BS-SITE01-0005");
     setOutNo("OUT123");
@@ -127,10 +127,9 @@ const StockOutPage = () => {
                 tableData={tableData}
                 title="Stock Out"
                 loading={loading}
-                // Provide add button if user can do a new stock out
                 addBtn={canStockOut}
                 showAction={true}
-                actions={false} // or true if you want row actions
+                actions={false}
                 openStaticDialog={() => handleOpenDialog()}
               />
 
@@ -139,7 +138,8 @@ const StockOutPage = () => {
                 <div className="modal modal-open">
                   <div ref={dialogRef} className="modal-box max-w-5xl">
                     <h3 className="font-bold text-lg mb-4">Stock Out Form</h3>
-                    {/* Example form layout: */}
+
+                    {/* Example form layout */}
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <label>Ref No</label>
@@ -185,9 +185,7 @@ const StockOutPage = () => {
                             type="text"
                             className="input input-bordered w-2/3"
                             value={outStockNoteSuffix}
-                            onChange={(e) =>
-                              setOutStockNoteSuffix(e.target.value)
-                            }
+                            onChange={(e) => setOutStockNoteSuffix(e.target.value)}
                           />
                         </div>
                       </div>
@@ -204,6 +202,7 @@ const StockOutPage = () => {
                           <option value="">--Select Item--</option>
                           <option value="1">Item 1</option>
                           <option value="2">Item 2</option>
+                          {/* Populate from your actual items list */}
                         </select>
                       </div>
                       <div>
@@ -249,7 +248,8 @@ const StockOutPage = () => {
                           <option value="4">Other Site</option>
                         </select>
                       </div>
-                      {/* If Subcontractor or Other Site, show dynamic fields */}
+
+                      {/* If Subcontractor, show these fields */}
                       {outStockTo === "1" && (
                         <div>
                           <label>Subcontractor</label>
@@ -259,30 +259,32 @@ const StockOutPage = () => {
                             onChange={(e) => setSubcontractor(e.target.value)}
                           >
                             <option value="">--Select Subcontractor--</option>
+                            {/* Populate with your subcontractors list */}
                           </select>
+
                           <label>Contract #</label>
                           <select
                             className="select select-bordered w-full mt-1"
                             value={contractNumber}
-                            onChange={(e) =>
-                              setContractNumber(e.target.value)
-                            }
+                            onChange={(e) => setContractNumber(e.target.value)}
                           >
                             <option value="">---</option>
+                            {/* Populate with contract numbers */}
                           </select>
                         </div>
                       )}
+
+                      {/* If Other Site, show destination site field */}
                       {outStockTo === "4" && (
                         <div>
                           <label>Destination Site</label>
                           <select
                             className="select select-bordered w-full"
                             value={destinationSite}
-                            onChange={(e) =>
-                              setDestinationSite(e.target.value)
-                            }
+                            onChange={(e) => setDestinationSite(e.target.value)}
                           >
                             <option value="">--Select Site--</option>
+                            {/* Populate with site list */}
                           </select>
                         </div>
                       )}
