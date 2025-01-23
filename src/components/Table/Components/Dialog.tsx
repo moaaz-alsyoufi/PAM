@@ -67,6 +67,8 @@ const DialogComponent: React.FC<DialogProps> = ({
     return initialData;
   });
 
+  const [rejectionNote, setRejectionNote] = useState<string>("");
+  const [showRejectionNote, setShowRejectionNote] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState(false);
   const { toaster } = useToast();
   const { getToken } = useAuthContext();
@@ -139,6 +141,9 @@ const DialogComponent: React.FC<DialogProps> = ({
   };
 
   const handleClose = () => {
+    setShowRejectionNote(false);
+    setRejectionNote("");
+    setIsLoading(false);
     handleHide();
   };
 
@@ -182,7 +187,13 @@ const DialogComponent: React.FC<DialogProps> = ({
   };
 
   const handleReject = async () => {
+    if (!showRejectionNote) {
+      setShowRejectionNote(true);
+      return;
+    }
     setIsLoading(true);
+
+    console.log(rejectionNote);
 
     try {
       const token = getToken();
@@ -193,7 +204,7 @@ const DialogComponent: React.FC<DialogProps> = ({
 
       if (dialogType === "Approve") {
         try {
-          const res = await rejectRequest(materialId ?? 0);
+          const res = await rejectRequest(materialId ?? 0, rejectionNote);
           console.log(res);
           toaster.success("Request Rejected successfully.");
           handleClose();
@@ -359,7 +370,7 @@ const DialogComponent: React.FC<DialogProps> = ({
             onRowSelect={handleRowSelect}
           />
         ) : dialogType === "Approve" ? (
-          <>
+          <div className="space-y-5">
             <PAMTable
               columns={previewColumns ?? {}}
               tableData={data ?? []}
@@ -367,7 +378,29 @@ const DialogComponent: React.FC<DialogProps> = ({
               actions={false}
               title={"Request Details"}
             />
-            <div className="text-right mt-5">
+            {showRejectionNote && (
+              <>
+                <label className="flex flex-col sm:flex-row items-center gap-2 input input-sm input-bordered">
+                  <span className="font-normal text-sm md:text-base opacity-45 min-w-16 md:w-28">
+                    Rejection Note
+                  </span>
+                  <input
+                    type="text"
+                    className="grow"
+                    value={rejectionNote}
+                    required={false}
+                    onChange={(e) => setRejectionNote(e.target.value)}
+                  />
+                </label>
+
+                {showRejectionNote && rejectionNote === "" && (
+                  <span className="label-text-alt text-sm text-error !-mt-2">
+                    Enter the rejection reason
+                  </span>
+                )}
+              </>
+            )}
+            <div className="text-right">
               <div className="flex justify-end items-center space-x-4">
                 <Button
                   className="btn btn-sm btn-success"
@@ -379,9 +412,11 @@ const DialogComponent: React.FC<DialogProps> = ({
                   Approve
                 </Button>
                 <Button
-                  className="btn btn-sm btn-error"
+                  className="btn btn-sm btn-error disabled:bg-error/30"
                   type="button"
-                  disabled={isLoading}
+                  disabled={
+                    isLoading || (showRejectionNote && rejectionNote === "")
+                  }
                   loading={isLoading}
                   onClick={handleReject}
                 >
@@ -389,7 +424,7 @@ const DialogComponent: React.FC<DialogProps> = ({
                 </Button>
               </div>
             </div>
-          </>
+          </div>
         ) : (
           <form onSubmit={handleSubmit}>
             <div>
