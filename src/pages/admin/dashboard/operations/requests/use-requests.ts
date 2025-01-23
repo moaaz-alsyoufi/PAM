@@ -32,8 +32,8 @@ const useRequests = () => {
     isApprovedByPm: "PM Approved",
     status: "Status",
     date: "Date",
-    ordered_percent: "Ordered %",
-    deliv_percent: "Deliv.%",
+    orderPercent: "Ordered %",
+    deliveredPercent: "Deliv.%",
   };
 
   const newRequestColumns: Column[] = [
@@ -112,6 +112,8 @@ const useRequests = () => {
           .map((item) => ({
             ...item,
             isApprovedByPm: item.isApprovedByPm ? "Approved" : "-",
+            orderPercent: `${Number(item.orderPercent).toFixed(2)}%`,
+            deliveredPercent: `${Number(item.deliveredPercent).toFixed(2)}%`,
             date: new Date(item.date).toLocaleDateString("en-GB"),
           }))
           .sort((a, b) =>
