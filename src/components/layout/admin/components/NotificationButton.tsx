@@ -71,6 +71,12 @@ const NotificationButton = () => {
     }
   };
 
+  const handleSuccess = async () => {
+    if (window.location.pathname.endsWith("/requests")) {
+      window.location.reload();
+    }
+  };
+
   useEffect(() => {
     if (siteId) {
       getNotifications();
@@ -160,7 +166,7 @@ const NotificationButton = () => {
           previewColumns={previewColumns}
           data={data}
           current={null}
-          onSuccess={() => {}}
+          onSuccess={handleSuccess}
           inputFields={[]}
           materialId={selectedMaterialId}
         />
