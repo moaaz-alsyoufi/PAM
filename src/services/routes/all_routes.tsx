@@ -77,7 +77,7 @@ const dashboardRoutes: RoutesProps[] = [
   {
     path: "/admin/dashboard/reports/stockOut",
     name: "dashboard.reports.stock-out.index",
-    element: cw(lazy(() => import("@/pages/admin/dashboard/reports/StockOut"))),
+    element: cw(lazy(() => import("@/pages/admin/dashboard/reports/StockOut/StockOutPage"))),
   },
   
   {
