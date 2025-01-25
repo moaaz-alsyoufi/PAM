@@ -9,28 +9,28 @@ import useStockOut from "./useStockOut";
 import StockOutDialog from "@/components/StockOutDialog";
 
 const StockOutPage = () => {
-  // For controlling our Dialog
-  const [dialogType, setDialogType] = useState<"Add" | "Edit" | "Preview" | "Select" | null>(null);
+  const [dialogType, setDialogType] =
+    useState<"Add" | "Edit" | "Preview" | "Select" | null>(null);
   const [currentRow, setCurrentRow] = useState<any>(null);
 
-  // Hook that retrieves table data, columns, etc.
   const { columns, tableData, loading, exportStockOut, reloadData } = useStockOut();
-
   const { authState } = useAuthContext();
   const { dialogRef, handleShow, handleHide } = useDialog();
 
   const siteId = authState.user?.siteid || 0;
   const roleId = authState.user?.roleid;
+  const canStockOut =
+    roleId === 4 || roleId === 5 || roleId === 7 || roleId === 10;
 
-  // Who can do stock out?
-  const canStockOut = roleId === 4 || roleId === 5 || roleId === 7 || roleId === 10;
-
-  const handleOpenDialog = async (type: "Add" | "Edit" | "Preview" | "Select", row?: any) => {
+  const handleOpenDialog = async (
+    type: "Add" | "Edit" | "Preview" | "Select",
+    row?: any
+  ) => {
     setDialogType(type);
     setCurrentRow(row || null);
 
     if (type === "Preview" && row) {
-      // PDF Download/Preview
+      // Print / PDF preview
       try {
         const pdfBlob = await exportStockOut(row.outId);
         const pdfUrl = URL.createObjectURL(pdfBlob);
@@ -42,12 +42,11 @@ const StockOutPage = () => {
       return;
     }
 
-    // For “Add” or “Edit” => open the dialog
+    // "Add" or "Edit" => open the dialog
     handleShow();
   };
 
   const handleSuccess = async () => {
-    // Re-fetch the table data after a successful save
     await reloadData();
     handleHide();
   };
@@ -82,7 +81,6 @@ const StockOutPage = () => {
                 inputFields={[]}
               />
 
-              {/* If user clicked Add/Edit, show StockOutDialog */}
               {(dialogType === "Add" || dialogType === "Edit") && (
                 <StockOutDialog
                   dialogRef={dialogRef}

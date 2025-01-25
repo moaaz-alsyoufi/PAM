@@ -10,36 +10,37 @@ function useStockOut() {
   const siteId = authState.user?.siteid || 0;
   const token = authState.user?.token || "";
 
-  // The columns object keys match the fields returned by the backend
+  // Table columns matching the JSON fields from GetStockOutStatus
   const columns = {
     outNo: "Out No",
     refNo: "Ref No",
     itemName: "Item Name",
     quantity: "Qty",
-    date: "Date",            // We'll parse to a string
-    subName: "Entity",       // "Returned to Supplier", "Site Consumption", etc.
+    date: "Date",
+    subName: "Entity",
     contractNumber: "Contract #",
-    outStockNote: "OutStock Note", // might be null
+    outStockNote: "OutStock Note",
   };
 
   async function reloadData() {
     setLoading(true);
     if (siteId > 0 && token) {
       try {
-        // e.g. GET /api/Stock/GetStockOutStatus/{siteId}
-        const result = await apiRequest(`Stock/GetStockOutStatus/${siteId}`, "GET", token);
+        // GET /api/Stock/GetStockOutStatus/{siteId}
+        const result = await apiRequest(
+          `Stock/GetStockOutStatus/${siteId}`,
+          "GET",
+          token
+        );
         if (Array.isArray(result)) {
-          // Convert date to a localized string
-          const mapped = result.map((row: any) => {
-            return {
-              ...row,
-              date: row.date ? new Date(row.date).toLocaleDateString() : "",
-            };
-          });
+          // Convert date to localized string
+          const mapped = result.map((row: any) => ({
+            ...row,
+            date: row.date ? new Date(row.date).toLocaleDateString() : "",
+          }));
           setTableData(mapped);
         } else {
-          // If it's not an array, fallback
-          console.error("Unexpected response format:", result);
+          console.error("Unexpected response:", result);
           setTableData([]);
         }
       } catch (err) {
@@ -49,18 +50,16 @@ function useStockOut() {
         setLoading(false);
       }
     } else {
-      // If no valid siteId/token, reset table
       setTableData([]);
       setLoading(false);
     }
   }
 
-  // For PDF printing
   async function exportStockOut(outId: number) {
-    // e.g. GET /Stock/Download_OutStock?id=xxx
-    // or GET /Stock/PrintOutStock/${outId}
+    // Example: GET /api/Stock/Download_OutStock/{id}
+    // or /Stock/Download_OutStock?id=xxx
     const pdfBlob = await apiRequest(
-      `Stock/PrintOutStock/${outId}`,
+      `Stock/Download_OutStock/${outId}`,
       "GET",
       token,
       null,
