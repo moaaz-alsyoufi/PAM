@@ -51,6 +51,7 @@ const useLogin = () => {
         loginData
       );
       toaster.success("Login successful...");
+      localStorage.setItem("authToken", response.token);
 
       // Fetch user countries
       const countriesResponse: any = await apiRequest(
