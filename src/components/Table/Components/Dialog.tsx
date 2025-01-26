@@ -157,16 +157,15 @@ const DialogComponent: React.FC<DialogProps> = ({
         return;
       }
 
-      if (dialogType === "Approve") {
-        try {
-          const res = await approveRequest(materialId ?? 0);
-          console.log(res);
-          toaster.success("Request Approved successfully.");
-          handleClose();
-        } catch (error) {
-          console.error("Error approving request:", error);
-          toaster.error("Failed to approve request.");
-        }
+      try {
+        await approveRequest(materialId ?? 0);
+        toaster.success("Request Approved successfully.");
+        onSuccess(dialogType, formData);
+
+        handleClose();
+      } catch (error) {
+        console.error("Error approving request:", error);
+        toaster.error("Failed to approve request.");
       }
     } catch (error: any) {
       console.error("Error approve request:", error);
@@ -193,8 +192,6 @@ const DialogComponent: React.FC<DialogProps> = ({
     }
     setIsLoading(true);
 
-    console.log(rejectionNote);
-
     try {
       const token = getToken();
       if (!token) {
@@ -202,16 +199,14 @@ const DialogComponent: React.FC<DialogProps> = ({
         return;
       }
 
-      if (dialogType === "Approve") {
-        try {
-          const res = await rejectRequest(materialId ?? 0, rejectionNote);
-          console.log(res);
-          toaster.success("Request Rejected successfully.");
-          handleClose();
-        } catch (error) {
-          console.error("Error reject request:", error);
-          toaster.error("Failed to reject request.");
-        }
+      try {
+        await rejectRequest(materialId ?? 0, rejectionNote);
+        toaster.success("Request Rejected successfully.");
+        onSuccess(dialogType, formData);
+        handleClose();
+      } catch (error) {
+        console.error("Error reject request:", error);
+        toaster.error("Failed to reject request.");
       }
     } catch (error: any) {
       console.error("Error reject request:", error);
