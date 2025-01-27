@@ -36,11 +36,7 @@ const Requests = () => {
   const roleId = authState.user.roleid;
 
   const canMakeAndUpdateRequest =
-    roleId === 3 ||
-    roleId === 4 ||
-    roleId === 5 ||
-    roleId === 7 ||
-    roleId === 10;
+    roleId === 4 || roleId === 5 || roleId === 7 || roleId === 10;
 
   const handleOpenDialog = async (
     type: "Add" | "Edit" | "Preview" | "Select",
