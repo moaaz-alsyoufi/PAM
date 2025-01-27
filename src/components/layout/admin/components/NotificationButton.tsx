@@ -26,6 +26,8 @@ const NotificationButton = () => {
   const [selectedMaterialId, setSelectedMaterialId] = useState<number | null>(
     null
   );
+  const [showDialog, setShowDialog] = useState<boolean>(false);
+
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const { getRequestDetails, previewColumns } = useRequests();
@@ -55,6 +57,13 @@ const NotificationButton = () => {
     setOpen(false);
   };
 
+  const openDialog = () => {
+    setShowDialog(true);
+    setTimeout(() => {
+      handleShow();
+    });
+  };
+
   const handleOpenMenu = async () => {
     setOpen(true);
     await getNotifications();
@@ -65,7 +74,7 @@ const NotificationButton = () => {
     try {
       const details = await getRequestDetails(materialId);
       setData(details.details);
-      handleShow();
+      openDialog();
     } catch (error) {
       console.error(error);
     }
@@ -74,6 +83,8 @@ const NotificationButton = () => {
   const handleSuccess = async () => {
     if (window.location.pathname.endsWith("/requests")) {
       window.location.reload();
+    } else {
+      setShowDialog(false);
     }
   };
 
@@ -133,9 +144,8 @@ const NotificationButton = () => {
                     <span>Your notifications are clean</span>
                   ) : (
                     notifications.map((notification, index) => (
-                      <>
+                      <div key={index}>
                         <div
-                          key={index}
                           className="my-0.5 flex cursor-pointer items-start gap-3 rounded-box p-1.5 transition-all hover:bg-base-content/5 active:scale-[.98]"
                           onClick={() =>
                             handlePreviewNotification(notification.materialId)
@@ -147,7 +157,7 @@ const NotificationButton = () => {
                           </div>
                         </div>
                         <hr className="opacity-10" />
-                      </>
+                      </div>
                     ))
                   )}
                 </div>
@@ -157,7 +167,7 @@ const NotificationButton = () => {
         </Dropdown>
       </div>
 
-      {selectedMaterialId && notifications.length > 0 && (
+      {showDialog && selectedMaterialId && notifications.length > 0 && (
         <DialogComponent
           handleHide={handleHide}
           dialogRef={dialogRef}
