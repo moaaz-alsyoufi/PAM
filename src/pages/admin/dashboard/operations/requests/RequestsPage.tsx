@@ -35,8 +35,12 @@ const Requests = () => {
 
   const roleId = authState.user.roleid;
 
-  const canMakeNewRequest =
-    roleId === 4 || roleId === 5 || roleId === 7 || roleId === 10;
+  const canMakeAndUpdateRequest =
+    roleId === 3 ||
+    roleId === 4 ||
+    roleId === 5 ||
+    roleId === 7 ||
+    roleId === 10;
 
   const handleOpenDialog = async (
     type: "Add" | "Edit" | "Preview" | "Select",
@@ -52,6 +56,16 @@ const Requests = () => {
         setCostCodes(data.cc);
         setSubcontractors(data.subs);
         setRequestRefNb(data.requestRefNb);
+        handleShow();
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    if (type === "Edit") {
+      try {
+        const details = await getRequestDetails(row.materialId);
+        setData(details.details);
         handleShow();
       } catch (error) {
         console.error(error);
@@ -96,8 +110,9 @@ const Requests = () => {
                 loading={loading}
                 actions={hasActions}
                 showAction={true}
+                editAction={canMakeAndUpdateRequest}
                 previewColumns={previewColumns}
-                addBtn={canMakeNewRequest}
+                addBtn={canMakeAndUpdateRequest}
                 dynamicDialog={false}
                 openStaticDialog={handleOpenDialog}
               />

@@ -33,7 +33,9 @@ const dashboardRoutes: RoutesProps[] = [
     path: "/dashboard/operations/requests",
     name: "dashboard.operations.requests.index",
     element: cw(
-      lazy(() => import("@/pages/admin/dashboard/operations/requests"))
+      lazy(
+        () => import("@/pages/admin/dashboard/operations/requests/RequestsPage")
+      )
     ),
   },
 
@@ -77,9 +79,13 @@ const dashboardRoutes: RoutesProps[] = [
   {
     path: "/admin/dashboard/reports/stockOut",
     name: "dashboard.reports.stock-out.index",
-    element: cw(lazy(() => import("@/pages/admin/dashboard/reports/StockOut/StockOutPage"))),
+    element: cw(
+      lazy(
+        () => import("@/pages/admin/dashboard/reports/StockOut/StockOutPage")
+      )
+    ),
   },
-  
+
   {
     path: "/dashboard/reports/procurement-statistics",
     name: "dashboard.reports.procurement-statistics.index",
