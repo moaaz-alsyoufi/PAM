@@ -108,6 +108,10 @@ const useRequests = () => {
   const getRequests = async () => {
     setLoading(true);
 
+    console.log("GET STARTED");
+    console.log(siteId ? true : false);
+    console.log(token ? true : false);
+
     apiRequest(`Requests/listrequests/${siteId}`, "GET", token)
       .then((res: any[]) => {
         const formattedRes = res
@@ -315,12 +319,16 @@ const useRequests = () => {
   };
 
   useEffect(() => {
-    setLoading(true);
-    if (siteId > 0 && token) {
-      getRequests();
-    } else {
-      setTableData([]);
-      setLoading(false);
+    if (window.location.pathname.endsWith("/requests")) {
+      setLoading(true);
+      if (siteId > 0 && token) {
+        console.log("EFFECT STARTED");
+
+        getRequests();
+      } else {
+        setTableData([]);
+        setLoading(false);
+      }
     }
   }, [siteId, token]);
 
