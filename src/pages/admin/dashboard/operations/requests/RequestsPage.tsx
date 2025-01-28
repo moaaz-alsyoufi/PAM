@@ -20,6 +20,7 @@ const Requests = () => {
   const { getRequestDetails } = useRequests();
   const { authState } = useAuthContext();
   const { dialogRef, handleShow, handleHide } = useDialog();
+  const [showDialog, setShowDialog] = useState<boolean>(false);
 
   const siteId = authState.user?.siteid || 0;
   const {
@@ -52,7 +53,10 @@ const Requests = () => {
         setCostCodes(data.cc);
         setSubcontractors(data.subs);
         setRequestRefNb(data.requestRefNb);
-        handleShow();
+        setShowDialog(true);
+        setTimeout(() => {
+          handleShow();
+        });
       } catch (error) {
         console.error(error);
       }
@@ -61,8 +65,16 @@ const Requests = () => {
     if (type === "Edit") {
       try {
         const details = await getRequestDetails(row.materialId);
+        console.log("details", details);
+
         setData(details.details);
-        handleShow();
+        // setCostCodes(details.cc);
+        // setSubcontractors(details.subs);
+        setRequestRefNb({ refNumber: details.request.refNo });
+        setShowDialog(true);
+        setTimeout(() => {
+          handleShow();
+        });
       } catch (error) {
         console.error(error);
       }
@@ -72,7 +84,10 @@ const Requests = () => {
       try {
         const details = await getRequestDetails(row.materialId);
         setData(details.details);
-        handleShow();
+        setShowDialog(true);
+        setTimeout(() => {
+          handleShow();
+        });
       } catch (error) {
         console.error(error);
       }
@@ -113,26 +128,27 @@ const Requests = () => {
                 openStaticDialog={handleOpenDialog}
               />
 
-              <RequestDialog
-                handleHide={handleHide}
-                dialogRef={dialogRef}
-                dialogType={dialogType}
-                current={currentRow ?? {}}
-                onSuccess={handleSuccess}
-                inputFields={inputFields}
-                title={
-                  dialogType === "Edit"
-                    ? "Edit Request"
-                    : dialogType === "Add"
-                      ? "New Request"
-                      : "Request Details"
-                }
-                previewColumns={previewColumns}
-                data={data}
-                subContractors={subcontractors}
-                costCodes={costCodes}
-                requestRefNb={requestRefNb}
-              />
+              {showDialog && (
+                <RequestDialog
+                  handleHide={handleHide}
+                  dialogRef={dialogRef}
+                  dialogType={dialogType}
+                  current={currentRow ?? {}}
+                  onSuccess={handleSuccess}
+                  title={
+                    dialogType === "Edit"
+                      ? "Edit Request"
+                      : dialogType === "Add"
+                        ? "New Request"
+                        : "Request Details"
+                  }
+                  previewColumns={previewColumns}
+                  data={data}
+                  subContractors={subcontractors}
+                  costCodes={costCodes}
+                  requestRefNb={requestRefNb}
+                />
+              )}
             </>
           ) : (
             <p>No data available</p>
