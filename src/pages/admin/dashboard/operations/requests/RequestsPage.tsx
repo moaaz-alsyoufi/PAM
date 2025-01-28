@@ -54,9 +54,11 @@ const Requests = () => {
         setCostCodes(data.cc);
         setSubcontractors(data.subs);
         setRequestRefNb(data.requestRefNb);
-        setShowDialog(true);
         setTimeout(() => {
-          handleShow();
+          setShowDialog(true);
+          setTimeout(() => {
+            handleShow();
+          });
         });
       } catch (error) {
         console.error(error);

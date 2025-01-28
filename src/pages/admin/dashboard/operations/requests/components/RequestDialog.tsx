@@ -137,8 +137,29 @@ const RequestDialog: React.FC<DialogProps> = ({
   };
 
   const handleClose = () => {
-    handleHide();
+    setItems([]);
+    setSelectedSubcontractor(0);
+    setRemarks("");
+
+    setTimeout(() => {
+      handleHide();
+    });
   };
+
+  useEffect(() => {
+    if (dialogType === "Edit" && data) {
+      console.log("data[0]?.subId", data[0]?.subId);
+      console.log("reqRemarks", reqRemarks);
+
+      setSelectedSubcontractor(data[0]?.subId ?? 0);
+      setRemarks(reqRemarks ?? "");
+      setItems(data ?? []);
+    } else if (dialogType !== "Preview") {
+      setSelectedSubcontractor(0);
+      setRemarks("");
+      setItems([]);
+    }
+  }, [dialogType, data, reqRemarks]);
 
   useEffect(() => {
     if (dialogType === "Edit" && data) {
@@ -230,7 +251,7 @@ const RequestDialog: React.FC<DialogProps> = ({
                     type="text"
                     name="remarks"
                     className="grow"
-                    defaultValue={dialogType === "Edit" ? reqRemarks : remarks}
+                    value={dialogType === "Edit" ? reqRemarks : remarks}
                     onChange={(e) => setRemarks(e.target.value)}
                   />
                 </label>
