@@ -296,6 +296,24 @@ const useRequests = () => {
     }
   };
 
+  const updateRequest = async (materialId: number, data: any) => {
+    setLoading(true);
+    try {
+      const response = await apiRequest(
+        `Requests/edit/${materialId}`,
+        "PUT",
+        token,
+        data
+      );
+      return response;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     setLoading(true);
     if (siteId > 0 && token) {
@@ -330,6 +348,7 @@ const useRequests = () => {
     rejectRequest,
     getCostCodes,
     getSubcontractors,
+    updateRequest,
   };
 };
 
