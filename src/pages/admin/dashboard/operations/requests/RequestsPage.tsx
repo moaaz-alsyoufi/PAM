@@ -13,11 +13,12 @@ const Requests = () => {
     "Add" | "Edit" | "Preview" | "Select"
   >("Add");
   const [data, setData] = useState<any[]>([]);
+  const [reqRemarks, setReqRemarks] = useState<string>("");
   const [costCodes, setCostCodes] = useState<any[]>([]);
   const [subcontractors, setSubcontractors] = useState<any[]>([]);
   const [requestRefNb, setRequestRefNb] = useState<any>(null);
   const [currentRow, setCurrentRow] = useState();
-  const { getRequestDetails } = useRequests();
+  const { getRequestDetails, getCostCodes, getSubcontractors } = useRequests();
   const { authState } = useAuthContext();
   const { dialogRef, handleShow, handleHide } = useDialog();
   const [showDialog, setShowDialog] = useState<boolean>(false);
@@ -66,14 +67,23 @@ const Requests = () => {
       try {
         const details = await getRequestDetails(row.materialId);
         console.log("details", details);
-
         setData(details.details);
-        // setCostCodes(details.cc);
-        // setSubcontractors(details.subs);
+        setReqRemarks(details.request.remarks);
+        console.log("remarks page ", details.request.remarks);
+
         setRequestRefNb({ refNumber: details.request.refNo });
-        setShowDialog(true);
+
+        const cc = await getCostCodes();
+        setCostCodes(cc);
+
+        const subs = await getSubcontractors();
+        setSubcontractors(subs);
+
         setTimeout(() => {
-          handleShow();
+          setShowDialog(true);
+          setTimeout(() => {
+            handleShow();
+          });
         });
       } catch (error) {
         console.error(error);
@@ -147,6 +157,7 @@ const Requests = () => {
                   subContractors={subcontractors}
                   costCodes={costCodes}
                   requestRefNb={requestRefNb}
+                  reqRemarks={reqRemarks}
                 />
               )}
             </>

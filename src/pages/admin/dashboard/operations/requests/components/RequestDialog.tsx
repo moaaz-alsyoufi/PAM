@@ -23,6 +23,7 @@ interface DialogProps {
   subContractors?: any[];
   costCodes?: any[];
   requestRefNb?: { refNumber: string; reqNo: number };
+  reqRemarks?: string;
 }
 
 const RequestDialog: React.FC<DialogProps> = ({
@@ -37,6 +38,7 @@ const RequestDialog: React.FC<DialogProps> = ({
   costCodes,
   subContractors,
   requestRefNb,
+  reqRemarks,
 }) => {
   const [selectedSubcontractor, setSelectedSubcontractor] = useState<number>(0);
   const [remarks, setRemarks] = useState("");
@@ -224,7 +226,7 @@ const RequestDialog: React.FC<DialogProps> = ({
                     type="text"
                     name="remarks"
                     className="grow"
-                    value={remarks}
+                    defaultValue={dialogType === "Edit" ? reqRemarks : remarks}
                     onChange={(e) => setRemarks(e.target.value)}
                   />
                 </label>
