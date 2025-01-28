@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Button, Select, SelectOption } from "@/components/daisyui";
 import useToast from "@/hooks/use-toast";
 import { useAuthContext } from "@/states/auth";
@@ -6,14 +6,6 @@ import { cn } from "@/helpers/utils/cn";
 import useRequests from "../use-requests";
 import PAMTable from "@/components/Table";
 import NewRequestTableComponent from "./Table";
-
-interface InputField {
-  name: string;
-  type: string;
-  value?: any;
-  required?: boolean;
-  options?: any[];
-}
 
 interface CurrentData {
   [key: string]: any;
@@ -24,11 +16,7 @@ interface DialogProps {
   dialogRef: React.RefObject<HTMLDialogElement | null>;
   dialogType: "Add" | "Edit" | "Preview" | "Select";
   current: CurrentData | null;
-  onSuccess: (
-    type: "Add" | "Edit" | "Preview" | "Select",
-    formData: any
-  ) => void;
-  inputFields?: InputField[];
+  onSuccess: (type: "Add" | "Edit" | "Preview" | "Select") => void;
   previewColumns?: Record<string, string>;
   title: string;
   data?: any[];
@@ -43,7 +31,6 @@ const RequestDialog: React.FC<DialogProps> = ({
   dialogType,
   current,
   onSuccess,
-  inputFields,
   title,
   previewColumns,
   data,
@@ -55,37 +42,11 @@ const RequestDialog: React.FC<DialogProps> = ({
   const [remarks, setRemarks] = useState("");
 
   const [items, setItems] = useState<any[]>([]);
-  // Initialize form data based on inputFields and current data
-  const [formData, setFormData] = useState<Record<string, any>>(() => {
-    const initialData: Record<string, any> = {};
-    inputFields?.forEach((field) => {
-      if (
-        dialogType === "Edit" &&
-        current &&
-        current[field.name] !== undefined
-      ) {
-        initialData[field.name] = current[field.name];
-      } else {
-        initialData[field.name] = field.value || "";
-      }
-    });
-    return initialData;
-  });
 
   const [isLoading, setIsLoading] = useState(false);
   const { toaster } = useToast();
   const { getToken } = useAuthContext();
   const { exportRequest, newRequestColumns, createNewRequest } = useRequests();
-
-  // Optional: Update formData when current changes (e.g., when editing a different user)
-  useEffect(() => {
-    if (dialogType === "Edit" && current) {
-      setFormData((prevData) => ({
-        ...prevData,
-        ...current,
-      }));
-    }
-  }, [current, dialogType]);
 
   const handleItemsChange = (updatedData: any[]) => {
     setItems(updatedData);
@@ -134,9 +95,7 @@ const RequestDialog: React.FC<DialogProps> = ({
           items: updatedItems,
         };
 
-        const createResponse = await createNewRequest(submittedData);
-
-        console.log(createResponse);
+        await createNewRequest(submittedData);
       } else if (dialogType === "Preview") {
         try {
           const pdfBlob = await exportRequest(current?.materialId);
@@ -151,7 +110,7 @@ const RequestDialog: React.FC<DialogProps> = ({
       toaster.success(
         `${dialogType === "Edit" ? "updated" : dialogType === "Preview" ? "Exported" : "created"} successfully.`
       );
-      onSuccess(dialogType, formData);
+      onSuccess(dialogType);
 
       setItems([]);
       setSelectedSubcontractor(0);
@@ -179,11 +138,16 @@ const RequestDialog: React.FC<DialogProps> = ({
     handleHide();
   };
 
+  console.log("current", current);
+
   return (
     <dialog ref={dialogRef} className="modal" aria-modal="true">
       <div
         className={cn("modal-box relative", {
-          "max-w-7xl": dialogType === "Preview" || dialogType === "Add",
+          "max-w-7xl":
+            dialogType === "Preview" ||
+            dialogType === "Add" ||
+            dialogType === "Edit",
         })}
       >
         <div className="w-full flex justify-between items-center pb-4">
