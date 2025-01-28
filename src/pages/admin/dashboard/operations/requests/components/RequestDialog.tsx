@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Select, SelectOption } from "@/components/daisyui";
 import useToast from "@/hooks/use-toast";
 import { useAuthContext } from "@/states/auth";
@@ -139,6 +139,12 @@ const RequestDialog: React.FC<DialogProps> = ({
   const handleClose = () => {
     handleHide();
   };
+
+  useEffect(() => {
+    if (dialogType === "Edit" && data) {
+      setSelectedSubcontractor(data[0].subId);
+    }
+  }, [dialogType]);
 
   console.log("current", current);
 

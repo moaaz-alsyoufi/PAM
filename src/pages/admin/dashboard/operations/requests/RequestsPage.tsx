@@ -69,8 +69,6 @@ const Requests = () => {
         console.log("details", details);
         setData(details.details);
         setReqRemarks(details.request.remarks);
-        console.log("remarks page ", details.request.remarks);
-
         setRequestRefNb({ refNumber: details.request.refNo });
 
         const cc = await getCostCodes();
