@@ -39,6 +39,7 @@ interface TableProps {
   items?: any[];
   costCodes?: any[];
   onDataChange?: (data: any[]) => void;
+  isEdit?: boolean;
 }
 
 const NewRequestTableComponent: React.FC<TableProps> = ({
@@ -49,6 +50,7 @@ const NewRequestTableComponent: React.FC<TableProps> = ({
   items,
   costCodes,
   onDataChange,
+  isEdit = false,
 }) => {
   const [sortColumn, setSortColumn] = useState<string | null>(null);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
@@ -236,8 +238,11 @@ const NewRequestTableComponent: React.FC<TableProps> = ({
     setCostCodeId(null);
     setQuantity(0);
     setSelectedOption(null);
-    console.log(tableData);
   };
+
+  console.log("tableData", tableData);
+  console.log("sentItems", sentItems);
+  console.log("--------------------");
 
   return (
     <>

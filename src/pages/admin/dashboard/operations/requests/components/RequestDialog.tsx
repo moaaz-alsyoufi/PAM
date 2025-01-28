@@ -5,7 +5,7 @@ import { useAuthContext } from "@/states/auth";
 import { cn } from "@/helpers/utils/cn";
 import useRequests from "../use-requests";
 import PAMTable from "@/components/Table";
-import NewRequestTableComponent from "./Table";
+import NewRequestTableComponent from "./RequestTable";
 
 interface CurrentData {
   [key: string]: any;
@@ -145,8 +145,6 @@ const RequestDialog: React.FC<DialogProps> = ({
       setSelectedSubcontractor(data[0].subId);
     }
   }, [dialogType]);
-
-  console.log("current", current);
 
   return (
     <dialog ref={dialogRef} className="modal" aria-modal="true">
