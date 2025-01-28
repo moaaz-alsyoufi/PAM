@@ -183,6 +183,24 @@ const useRequests = () => {
     );
   };
 
+  const getCostCodes = async () => {
+    try {
+      const cc = apiRequest("Requests/costcodes", "GET", token);
+      return cc;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const getSubcontractors = async () => {
+    try {
+      const cc = apiRequest("Requests/subcontractors", "GET", token);
+      return cc;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const fetchNewRequestData = async () => {
     try {
       const newReqData = await apiRequest(
@@ -192,9 +210,9 @@ const useRequests = () => {
       );
 
       setNewRequestRefNumber(newReqData.refNumber);
-      const subs = await apiRequest("Requests/subcontractors", "GET", token);
+      const subs = await getSubcontractors();
       setSubContractors(subs);
-      const cc = await apiRequest("Requests/costcodes", "GET", token);
+      const cc = await getCostCodes();
       setCostCodes(cc);
       const itms = await apiRequest("Requests/getitems", "GET", token);
       setItems(itms);
@@ -297,6 +315,8 @@ const useRequests = () => {
     createNewRequest,
     approveRequest,
     rejectRequest,
+    getCostCodes,
+    getSubcontractors,
   };
 };
 
