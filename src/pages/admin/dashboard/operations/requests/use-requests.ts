@@ -106,6 +106,8 @@ const useRequests = () => {
   };
 
   const getRequests = async () => {
+    setLoading(true);
+
     apiRequest(`Requests/listrequests/${siteId}`, "GET", token)
       .then((res: any[]) => {
         const formattedRes = res
@@ -184,24 +186,34 @@ const useRequests = () => {
   };
 
   const getCostCodes = async () => {
+    setLoading(true);
+
     try {
       const cc = apiRequest("Requests/costcodes", "GET", token);
       return cc;
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
   const getSubcontractors = async () => {
+    setLoading(true);
+
     try {
       const cc = apiRequest("Requests/subcontractors", "GET", token);
       return cc;
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
   const fetchNewRequestData = async () => {
+    setLoading(true);
+
     try {
       const newReqData = await apiRequest(
         `Requests/newrequest/${siteId}`,
@@ -226,6 +238,7 @@ const useRequests = () => {
       console.error(error);
       throw error;
     } finally {
+      setLoading(false);
     }
   };
 
