@@ -243,6 +243,7 @@ const RequestDialog: React.FC<DialogProps> = ({
                 deleteAction={true}
                 costCodes={costCodes}
                 onDataChange={handleItemsChange}
+                isEdit={dialogType === "Edit"}
               />
             </div>
           )}

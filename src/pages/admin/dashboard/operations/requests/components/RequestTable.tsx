@@ -240,9 +240,9 @@ const NewRequestTableComponent: React.FC<TableProps> = ({
     setSelectedOption(null);
   };
 
-  console.log("tableData", tableData);
-  console.log("sentItems", sentItems);
-  console.log("--------------------");
+  // console.log("tableData", tableData);
+  // console.log("sentItems", sentItems);
+  // console.log("--------------------");
 
   return (
     <>
