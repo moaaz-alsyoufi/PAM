@@ -9,18 +9,17 @@ import useStockOut from "./useStockOut";
 import StockOutDialog from "@/components/StockOutDialog";
 
 const StockOutPage = () => {
-  const [dialogType, setDialogType] =
-    useState<"Add" | "Edit" | "Preview" | "Select" | null>(null);
+  const [dialogType, setDialogType] = useState<
+    "Add" | "Edit" | "Preview" | "Select" | null
+  >(null);
   const [currentRow, setCurrentRow] = useState<any>(null);
 
-  const { columns, tableData, loading, exportStockOut, reloadData } = useStockOut();
-  const { authState } = useAuthContext();
+  const { columns, tableData, loading, exportStockOut, reloadData } =
+    useStockOut();
+  const { authState, roleHasAccess } = useAuthContext();
   const { dialogRef, handleShow, handleHide } = useDialog();
 
   const siteId = authState.user?.siteid || 0;
-  const roleId = authState.user?.roleid;
-  const canStockOut =
-    roleId === 4 || roleId === 5 || roleId === 7 || roleId === 10;
 
   const handleOpenDialog = async (
     type: "Add" | "Edit" | "Preview" | "Select",
@@ -75,7 +74,7 @@ const StockOutPage = () => {
                 loading={loading}
                 actions={true}
                 showAction={true}
-                addBtn={canStockOut}
+                addBtn={roleHasAccess}
                 dynamicDialog={false}
                 openStaticDialog={handleOpenDialog}
                 inputFields={[]}

@@ -87,7 +87,7 @@ const useHook = () => {
 
   const roleId = authState.user?.roleid;
 
-  const restrictedRoles =
+  const roleHasAccess =
     roleId === 4 || roleId === 5 || roleId === 7 || roleId === 10;
 
   const getToken: any = () => accessToken;
@@ -100,7 +100,7 @@ const useHook = () => {
     getToken,
     updateSiteId,
     roleId,
-    restrictedRoles,
+    roleHasAccess,
   };
 };
 

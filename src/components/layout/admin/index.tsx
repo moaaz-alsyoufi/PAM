@@ -27,10 +27,10 @@ const AdminLayout = ({ children }: { children: any }) => {
   >([]);
 
   const { pathname } = useLocation();
-  const { restrictedRoles } = useAuthContext();
+  const { roleHasAccess } = useAuthContext();
 
   const getFilteredAdminRoutes = (items: IMenuItem[]) => {
-    if (restrictedRoles) {
+    if (roleHasAccess) {
       // Return only allowed routes for restricted roles
       return items.filter(
         (route) =>

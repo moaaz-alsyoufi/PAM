@@ -14,11 +14,11 @@ import allRoutes from "@/services/routes/all_routes";
 import { useAuthContext } from "@/states/auth";
 
 const Router = (props: RouteProps) => {
-  const { isLoggedIn, restrictedRoles } = useAuthContext();
+  const { isLoggedIn, roleHasAccess } = useAuthContext();
   const location = useLocation();
 
   const getFilteredAdminRoutes = () => {
-    if (restrictedRoles) {
+    if (roleHasAccess) {
       return allRoutes.admin.filter(
         (route) =>
           route.name !== "admin-tools.companies.index" &&

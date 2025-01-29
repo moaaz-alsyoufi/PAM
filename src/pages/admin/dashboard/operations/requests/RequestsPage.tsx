@@ -19,7 +19,7 @@ const Requests = () => {
   const [requestRefNb, setRequestRefNb] = useState<any>(null);
   const [currentRow, setCurrentRow] = useState();
   const { getRequestDetails, getCostCodes, getSubcontractors } = useRequests();
-  const { authState } = useAuthContext();
+  const { authState, roleHasAccess } = useAuthContext();
   const { dialogRef, handleShow, handleHide } = useDialog();
   const [showDialog, setShowDialog] = useState<boolean>(false);
 
@@ -34,11 +34,6 @@ const Requests = () => {
     fetchNewRequestData,
     getRequests,
   } = useRequests();
-
-  const roleId = authState.user.roleid;
-
-  const canMakeAndUpdateRequest =
-    roleId === 4 || roleId === 5 || roleId === 7 || roleId === 10;
 
   const handleOpenDialog = async (
     type: "Add" | "Edit" | "Preview" | "Select",
@@ -131,9 +126,9 @@ const Requests = () => {
                 loading={loading}
                 actions={hasActions}
                 showAction={true}
-                editAction={canMakeAndUpdateRequest}
+                editAction={roleHasAccess}
                 previewColumns={previewColumns}
-                addBtn={canMakeAndUpdateRequest}
+                addBtn={roleHasAccess}
                 dynamicDialog={false}
                 openStaticDialog={handleOpenDialog}
               />
