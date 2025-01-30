@@ -74,6 +74,15 @@ const useHook = () => {
     }
   };
 
+  const resetDashboard = () => {
+    updateState({
+      leftbar: {
+        ...state.leftbar,
+        dashboard: true,
+      },
+    });
+  };
+
   const updateState = (newState: Partial<ILayoutState>) => {
     setState({ ...state, ...newState });
   };
@@ -108,6 +117,7 @@ const useHook = () => {
     changeSite,
     changeCompany,
     reset,
+    resetDashboard,
   };
 };
 

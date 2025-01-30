@@ -34,7 +34,8 @@ import bellIcon from "@iconify/icons-lucide/bell";
 import apiRequest from "@/services/api/api"; // Updated import to default export
 
 const Topbar = ({ menuItems }: { menuItems: IMenuItem[] }) => {
-  const { toggleLeftbarDrawer, state, toggleDashboard } = useLayoutContext();
+  const { toggleLeftbarDrawer, state, toggleDashboard, resetDashboard } =
+    useLayoutContext();
   const { logout, isLoggedIn, authState, updateSiteId, roleHasAccess } =
     useAuthContext();
   const navigate = useNavigate();
@@ -91,6 +92,7 @@ const Topbar = ({ menuItems }: { menuItems: IMenuItem[] }) => {
   const isActive = (url?: string) => location.pathname === url;
 
   const doLogout = () => {
+    resetDashboard();
     logout();
     navigate(routes.auth.login);
   };
