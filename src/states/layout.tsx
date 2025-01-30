@@ -53,8 +53,6 @@ const useHook = () => {
   };
 
   const toggleDashboard = (isRestricted: boolean) => {
-    console.log(isRestricted);
-
     updateState({
       leftbar: {
         ...state.leftbar,
@@ -68,7 +66,11 @@ const useHook = () => {
         navigate(routes.adminTools.companies.index);
       }
     } else {
-      navigate(routes.dashboard.index);
+      if (isRestricted) {
+        navigate(routes.pm.siteStock.index);
+      } else {
+        navigate(routes.dashboard.index);
+      }
     }
   };
 
