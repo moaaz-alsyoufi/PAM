@@ -19,15 +19,7 @@ const Router = (props: RouteProps) => {
 
   const getFilteredAdminRoutes = () => {
     if (roleHasAccess) {
-      return allRoutes.admin.filter(
-        (route) =>
-          route.name !== "admin-tools.companies.index" &&
-          route.name !== "admin-tools.administrators.index" &&
-          route.name !== "categoriesAndItems.index" &&
-          route.name !== "admin-tools.branch-data.sites.index" &&
-          route.name !== "admin-tools.branch-data.users.index" &&
-          route.name !== "admin-tools.branch-data.suppliers.index"
-      );
+      return allRoutes.pm;
     }
     return allRoutes.admin;
   };
@@ -39,12 +31,29 @@ const Router = (props: RouteProps) => {
         path="/"
         element={
           isLoggedIn() ? (
-            <Navigate to={routes.dashboard.index} replace />
+            roleHasAccess ? (
+              <Navigate to={routes.pm.siteStock.index} replace />
+            ) : (
+              <Navigate to={routes.dashboard.index} replace />
+            )
           ) : (
             <Navigate to={routes.auth.login} replace />
           )
         }
       />
+
+      {isLoggedIn() && (
+        <Route
+          path="/dashboard"
+          element={
+            roleHasAccess ? (
+              <Navigate to={routes.pm.siteStock.index} replace />
+            ) : (
+              <Navigate to={routes.dashboard.index} replace />
+            )
+          }
+        />
+      )}
 
       {/* Admin routes with AdminLayout */}
       <Route>
