@@ -78,7 +78,16 @@ const useLogin = () => {
       changeCompany(response.companyId);
 
       // Navigate to dashboard
-      navigate(routes.dashboard.index);
+      if (
+        response.roleid === 4 ||
+        response.roleid === 5 ||
+        response.roleid === 7 ||
+        response.roleid === 10
+      ) {
+        navigate(routes.pm.siteStock.index);
+      } else {
+        navigate(routes.dashboard.index);
+      }
     } catch (error) {
       // General error handling
       toaster.error("An error occurred. Please try again.");
