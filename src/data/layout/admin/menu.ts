@@ -123,28 +123,41 @@ export const dashboardMenuItems: IMenuItem[] = [
 
 export const PMDashboardMenuItems: IMenuItem[] = [
   {
-    key: "site-stock",
-    icon: warehouseIcon,
-    label: "Site Stock",
+    key: "dashboard",
+    icon: airplayIcon,
+    label: "Dashboard",
     url: routes.pm.siteStock.index,
   },
   {
-    key: "items-in-transit",
+    key: "site-management",
     icon: warehouseIcon,
-    label: "Items in Transit",
-    url: routes.pm.itemsInTransit.index,
-  },
-  {
-    key: "in-stock",
-    icon: warehouseIcon,
-    label: "In Stock",
-    url: routes.pm.inStock.index,
-  },
-  {
-    key: "out-stock",
-    icon: warehouseIcon,
-    label: "Out Stock",
-    url: routes.pm.outStock.index,
+    label: "Site Management",
+    children: [
+      {
+        key: "dashboard",
+        icon: warehouseIcon,
+        label: "Site Stock",
+        url: routes.pm.siteStock.index,
+      },
+      {
+        key: "items-in-transit",
+        icon: warehouseIcon,
+        label: "Items in Transit",
+        url: routes.pm.itemsInTransit.index,
+      },
+      {
+        key: "in-stock",
+        icon: warehouseIcon,
+        label: "In Stock",
+        url: routes.pm.inStock.index,
+      },
+      {
+        key: "out-stock",
+        icon: warehouseIcon,
+        label: "Out Stock",
+        url: routes.pm.outStock.index,
+      },
+    ],
   },
   {
     key: "material-budget",
