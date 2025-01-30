@@ -1,11 +1,5 @@
 import { Suspense } from "react";
-import {
-  Navigate,
-  Route,
-  RouteProps,
-  Routes,
-  useLocation,
-} from "react-router-dom";
+import { Navigate, Route, RouteProps, Routes } from "react-router-dom";
 
 import AdminLayout from "@/components/layout/admin";
 import AuthLayout from "@/components/layout/auth";
@@ -15,7 +9,6 @@ import { useAuthContext } from "@/states/auth";
 
 const Router = (props: RouteProps) => {
   const { isLoggedIn, roleHasAccess } = useAuthContext();
-  const location = useLocation();
 
   const getFilteredAdminRoutes = () => {
     if (roleHasAccess) {
@@ -65,10 +58,7 @@ const Router = (props: RouteProps) => {
               isLoggedIn() ? (
                 <AdminLayout {...props}>{route.element}</AdminLayout>
               ) : (
-                <Navigate
-                  to={routes.auth.login + `?redirectTo=${location.pathname}`}
-                  replace
-                />
+                <Navigate to={routes.auth.login} replace />
               )
             }
           />
