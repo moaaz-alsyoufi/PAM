@@ -120,7 +120,7 @@ const routes = {
       index: "/admin-tools/cost-code-library",
     },
     subcontractors: {
-      index: "/admin-tools/branch-data/subcontractors",
+      index: "/admin-tools/subcontractors",
     },
   },
 
