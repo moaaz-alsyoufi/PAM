@@ -95,12 +95,11 @@ export const dashboardMenuItems: IMenuItem[] = [
     label: "Site Stock",
     url: routes.dashboard.siteStock.index,
   },
-  // New Stock Out menu item
   {
     key: "stock-out",
     icon: warehouseIcon,
     label: "Stock Out",
-    url: "/admin/dashboard/reports/stockOut", // or define in routes.dashboard
+    url: routes.pm.outStock.index,
   },
   {
     key: "Plus",
@@ -119,6 +118,101 @@ export const dashboardMenuItems: IMenuItem[] = [
     icon: layers,
     label: "tutorials",
     url: routes.dashboard.tutorials.index,
+  },
+];
+
+export const PMDashboardMenuItems: IMenuItem[] = [
+  {
+    key: "site-stock",
+    icon: warehouseIcon,
+    label: "Site Stock",
+    url: routes.pm.siteStock.index,
+  },
+  {
+    key: "items-in-transit",
+    icon: warehouseIcon,
+    label: "Items in Transit",
+    url: routes.pm.itemsInTransit.index,
+  },
+  {
+    key: "in-stock",
+    icon: warehouseIcon,
+    label: "In Stock",
+    url: routes.pm.inStock.index,
+  },
+  {
+    key: "out-stock",
+    icon: warehouseIcon,
+    label: "Out Stock",
+    url: routes.pm.outStock.index,
+  },
+  {
+    key: "material-budget",
+    icon: listOrderedIcon,
+    label: "Material Budget",
+    url: routes.pm.materialBudget.index,
+  },
+  {
+    key: "requests",
+    icon: listOrderedIcon,
+    label: "Requests",
+    url: routes.pm.requests.index,
+  },
+  {
+    key: "purchase-orders",
+    icon: paperIcon,
+    label: "Purchase Orders",
+    url: routes.pm.purchaseOrders.index,
+  },
+  {
+    key: "project-progress",
+    icon: paperIcon,
+    label: "Project Progress",
+    url: routes.pm.projectProgress.index,
+  },
+  {
+    key: "subcontractors-progress",
+    icon: paperIcon,
+    label: "Subcontractors Progress",
+    url: routes.pm.subcontractorsProgress.index,
+  },
+  {
+    key: "company-standards",
+    icon: paperIcon,
+    label: "Company Standards",
+    url: routes.pm.companyStandards.index,
+  },
+  {
+    key: "project-plans-and-drawings",
+    icon: paperIcon,
+    label: "Project Plans And Drawings",
+    url: routes.pm.projectPlansAndDrawings.index,
+  },
+
+  {
+    key: "site-movement",
+    icon: packageCheckIcon,
+    label: "Site Movement",
+    url: routes.pm.siteMovement.index,
+  },
+
+  {
+    key: "Plus",
+    label: "Plus",
+    icon: OperationsIcon,
+    isTitle: true,
+  },
+  {
+    key: "ai",
+    icon: aarrow,
+    label: "AI",
+    url: routes.pm.ai.index,
+  },
+  {
+    key: "tutorials",
+    icon: layers,
+    label: "tutorials",
+    url: routes.pm.tutorials.index,
   },
 ];
 
@@ -183,6 +277,29 @@ export const adminToolsMenuItems: IMenuItem[] = [
     icon: layoutlist,
     label: "Subcontractors",
     url: routes.adminTools.branchData.subcontractors.index,
+  },
+];
+
+export const PMAdminToolsMenuItems: IMenuItem[] = [
+  {
+    key: "admin_tools",
+    label: "Admin Tools",
+    icon: adminIcon,
+    isTitle: true,
+  },
+
+  {
+    key: "cost-code-library",
+    icon: squarelibrary,
+    label: "Cost Code Library",
+    url: routes.pm.costCodeLibrary.index,
+  },
+
+  {
+    key: "subcontractors",
+    icon: layoutlist,
+    label: "Subcontractors",
+    url: routes.pm.subcontractors.index,
   },
 ];
 
