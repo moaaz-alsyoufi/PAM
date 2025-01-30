@@ -201,8 +201,130 @@ const otherRoutes: RoutesProps[] = [
   },
 ];
 
+const PMDashboardRoutes: RoutesProps[] = [
+  {
+    path: "/dashboard/site-stock",
+    name: "siteStock",
+    element: cw(
+      lazy(() => import("@/pages/admin/dashboard/reports/siteStock"))
+    ),
+  },
+  {
+    path: "/dashboard/site-stock/items-in-transit",
+    name: "itemsInTransit",
+    element: cw(
+      lazy(
+        () => import("@/pages/admin/dashboard/reports/StockOut/StockOutPage")
+      )
+    ),
+  },
+  {
+    path: "/dashboard/site-stock/in-stock",
+    name: "inStock",
+    element: cw(
+      lazy(
+        () => import("@/pages/admin/dashboard/reports/StockOut/StockOutPage")
+      )
+    ),
+  },
+  {
+    path: "/dashboard/site-stock/out-stock",
+    name: "outStock",
+    element: cw(
+      lazy(
+        () => import("@/pages/admin/dashboard/reports/StockOut/StockOutPage")
+      )
+    ),
+  },
+  {
+    path: "/dashboard/material-budget",
+    name: "materialBudget",
+    element: cw(
+      lazy(
+        () => import("@/pages/admin/dashboard/reports/StockOut/StockOutPage")
+      )
+    ),
+  },
+  {
+    path: "/dashboard/requests",
+    name: "requests",
+    element: cw(
+      lazy(
+        () => import("@/pages/admin/dashboard/operations/requests/RequestsPage")
+      )
+    ),
+  },
+  {
+    path: "/dashboard/purchase-orders",
+    name: "purchaseOrders",
+    element: cw(
+      lazy(() => import("@/pages/admin/dashboard/operations/purchaseOrders"))
+    ),
+  },
+  {
+    path: "/dashboard/project-progress",
+    name: "projectProgress",
+    element: cw(
+      lazy(() => import("@/pages/admin/dashboard/operations/purchaseOrders"))
+    ),
+  },
+  {
+    path: "/dashboard/subcontractors-progress",
+    name: "subcontractorsProgress",
+    element: cw(
+      lazy(() => import("@/pages/admin/dashboard/operations/purchaseOrders"))
+    ),
+  },
+  {
+    path: "/dashboard/company-standards",
+    name: "companyStandards",
+    element: cw(
+      lazy(() => import("@/pages/admin/dashboard/operations/purchaseOrders"))
+    ),
+  },
+  {
+    path: "/dashboard/project-plans-and-drawings",
+    name: "projectPlansAndDrawings",
+    element: cw(
+      lazy(() => import("@/pages/admin/dashboard/operations/purchaseOrders"))
+    ),
+  },
+  {
+    path: "/dashboard/site-movement",
+    name: "siteMovement",
+    element: cw(
+      lazy(() => import("@/pages/admin/dashboard/reports/siteMovement"))
+    ),
+  },
+  {
+    path: "/dashboard/ai",
+    name: "ai",
+    element: cw(lazy(() => import("@/pages/admin/dashboard/ai"))),
+  },
+  {
+    path: "/dashboard/tutorials",
+    name: "Tutorials",
+    element: cw(lazy(() => import("@/pages/admin/dashboard/tutorials"))),
+  },
+];
+const PMAdminToolsRoutes: RoutesProps[] = [
+  {
+    path: "/admin-tools/cost-code-library",
+    name: "cost-code-library.index",
+    element: cw(lazy(() => import("@/pages/admin/adminTools/costCodeLibrary"))),
+  },
+  {
+    path: "/admin-tools/subcontractors",
+    name: "admin-tools.subcontractors.index",
+    element: cw(
+      lazy(() => import("@/pages/admin/adminTools/branchData/subcontractors"))
+    ),
+  },
+];
+
 const allRoutes = {
   admin: [...dashboardRoutes, ...adminToolsRoutes],
+  pm: [...PMDashboardRoutes, ...PMAdminToolsRoutes],
   auth: authRoutes,
   other: otherRoutes,
 };
