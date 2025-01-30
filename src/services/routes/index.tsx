@@ -71,30 +71,63 @@ const routes = {
       },
     },
   },
-  // Add missing routes
-  landing: "/",
-  dashboards: {
-    ecommerce: "/dashboard",
-  },
-  ui: {
-    components: {
-      accordion: "/ui/components/accordion",
+
+  pm: {
+    siteStock: {
+      index: "/dashboard/site-stock",
+    },
+    itemsInTransit: {
+      index: "/dashboard/site-stock/items-in-transit",
+    },
+    inStock: {
+      index: "/dashboard/site-stock/in-stock",
+    },
+    outStock: {
+      index: "/dashboard/site-stock/out-stock",
+    },
+    materialBudget: {
+      index: "/dashboard/material-budget",
+    },
+    requests: {
+      index: "/dashboard/requests",
+    },
+    purchaseOrders: {
+      index: "/dashboard/purchase-orders",
+    },
+    projectProgress: {
+      index: "/dashboard/project-progress",
+    },
+    subcontractorsProgress: {
+      index: "/dashboard/subcontractors-progress",
+    },
+    companyStandards: {
+      index: "/dashboard/company-standards",
+    },
+    projectPlansAndDrawings: {
+      index: "/dashboard/project-plans-and-drawings",
+    },
+    siteMovement: {
+      index: "/dashboard/site-movement",
+    },
+    ai: {
+      index: "/dashboard/ai",
+    },
+    tutorials: {
+      index: "/dashboard/tutorials",
+    },
+
+    costCodeLibrary: {
+      index: "/admin-tools/cost-code-library",
+    },
+    subcontractors: {
+      index: "/admin-tools/branch-data/subcontractors",
     },
   },
+
   apps: {
     chat: {
       home: "/apps/chat",
     },
-    ecommerce: {
-      orders: {
-        show: (id: number | string) => `/apps/ecommerce/orders/${id}`,
-      },
-    },
-  },
-  externalLinks: {
-    discord: "https://discord.gg/example",
-    purchase: "https://example.com/purchase",
-    daisyui: "https://daisyui.com",
   },
 };
 
